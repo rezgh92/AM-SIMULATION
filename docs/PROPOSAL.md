@@ -256,7 +256,17 @@ This is the binder-agnostic worst-case envelope, with the §1.5 corrections appl
 | 1040 → 600 °C | 3 K/min | — | 4 %H₂/Ar | Reducing on cooldown. |
 | 600 → 25 °C | 5 K/min | — | N₂ | Below the H₂ re-oxidation window. |
 
-**Total ≈ 78 h** for a ≤5 mm section — against Lithoz's 156 h alumina debind + 48 h sinter.
+**Total = 146 h** (ramps 68.4 h + holds 78.0 h), of which the 205–400 °C pyrolysis window alone is **75 h**.
+
+> **Note on a corrected number.** The underlying research report quoted "~78 h" for this segment
+> list. That is wrong — the segments sum to 146.4 h, and the 0.05 K/min ramps through 205–400 °C
+> account for 65 h of it on their own. The corrected figure changes the reading in a useful way:
+> **v0 offers essentially no time advantage over Lithoz's 156 h alumina debind.** It is not
+> supposed to. It is a worst-case envelope whose job is to be safe and to generate anchor data.
+> The interesting comparison is against the design law of §1.3, which puts the exotherm-limited
+> floor for a 5 mm part at 47.7 h — so v0's pyrolysis window is **1.57× the floor**, which is
+> about right for an envelope built on the union of worst cases. **Closing that 1.57× gap, and
+> then attacking the floor itself by raising h, is the optimiser's entire job.**
 
 Everything except the temperatures is literature-anchored; **the temperatures themselves are an educated envelope and should be treated as such.** Run it on coupons, not on anything you care about, with the exhaust-gas observer recording.
 

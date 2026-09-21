@@ -1,0 +1,689 @@
+<title>CUPOLA Copper Cycle Architecture</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --ground:#F6F7F8; --surface:#FFFFFF; --sunk:#EEF1F3;
+    --ink:#15181B; --muted:#5C666E; --rule:#DBE0E4; --rule-soft:#E9EDF0;
+    --accent:#1F5C7A; --copper:#B4622D; --crit:#9E3B2F; --ok:#2E6B4F; --oxide:#8A6A1C;
+    --band-inert:#C8D2D8; --band-ox:#D9BE86; --band-purge:#E3E8EB;
+    --band-weth2:#9FC0AE; --band-dryh2:#8FB3C7;
+    --display:'Archivo',system-ui,sans-serif;
+    --body:'IBM Plex Sans',system-ui,sans-serif;
+    --mono:'IBM Plex Mono',ui-monospace,monospace;
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --ground:#0F1214; --surface:#171B1E; --sunk:#121618;
+      --ink:#E7EBEE; --muted:#93A0A9; --rule:#262C31; --rule-soft:#1E2428;
+      --accent:#69AFD2; --copper:#DB8850; --crit:#E08475; --ok:#6BB694; --oxide:#C9A74E;
+      --band-inert:#39434A; --band-ox:#6B5628; --band-purge:#232A2F;
+      --band-weth2:#2F5644; --band-dryh2:#2C4A5C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --ground:#0F1214; --surface:#171B1E; --sunk:#121618;
+    --ink:#E7EBEE; --muted:#93A0A9; --rule:#262C31; --rule-soft:#1E2428;
+    --accent:#69AFD2; --copper:#DB8850; --crit:#E08475; --ok:#6BB694; --oxide:#C9A74E;
+    --band-inert:#39434A; --band-ox:#6B5628; --band-purge:#232A2F;
+    --band-weth2:#2F5644; --band-dryh2:#2C4A5C;
+  }
+
+  body{background:var(--ground);color:var(--ink);font-family:var(--body);
+       font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased;}
+  *,*::before,*::after{box-sizing:border-box;}
+
+  .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;
+       background:color-mix(in srgb,var(--ground) 92%,transparent);
+       backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);}
+  .bar-in{max-width:1080px;margin:0 auto;padding:10px 20px;
+          display:flex;gap:16px;align-items:baseline;flex-wrap:wrap;}
+  .mark{font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.09em;
+        text-transform:uppercase;color:var(--ink);white-space:nowrap;}
+  .mark span{color:var(--copper);}
+  .bar nav{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--mono);
+           font-size:11.5px;letter-spacing:.04em;}
+  .bar nav a{color:var(--muted);text-decoration:none;white-space:nowrap;}
+  .bar nav a:hover{color:var(--accent);}
+
+  .wrap{max-width:1080px;margin:0 auto;padding-inline:20px;padding-block:0 72px;}
+  .prose{max-width:68ch;}
+
+  header.hero{padding-block:52px 40px;border-bottom:1px solid var(--rule);}
+  .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;
+           text-transform:uppercase;color:var(--muted);margin:0 0 18px;}
+  h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,5.2vw,50px);
+     line-height:1.08;letter-spacing:-.018em;margin:0 0 20px;text-wrap:balance;max-width:19ch;}
+  .lede{font-size:clamp(17px,2.1vw,19.5px);line-height:1.58;color:var(--ink);
+        max-width:60ch;margin:0 0 26px;}
+  .meta{display:flex;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:11.5px;}
+  .tag{border:1px solid var(--rule);border-radius:2px;padding:4px 9px;color:var(--muted);
+       background:var(--surface);}
+  .tag.live{border-color:var(--copper);color:var(--copper);}
+
+  section{padding-block:46px;border-bottom:1px solid var(--rule-soft);}
+  section:last-of-type{border-bottom:0;}
+  .h-row{display:flex;gap:14px;align-items:baseline;margin:0 0 8px;}
+  .num{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--copper);
+       letter-spacing:.06em;padding-top:5px;flex:none;}
+  h2{font-family:var(--display);font-weight:600;font-size:clamp(22px,3.1vw,30px);
+     line-height:1.18;letter-spacing:-.012em;margin:0;text-wrap:balance;}
+  h3{font-family:var(--display);font-weight:600;font-size:17.5px;line-height:1.3;
+     margin:30px 0 8px;letter-spacing:-.005em;}
+  .sub{color:var(--muted);font-size:15px;margin:0 0 26px;max-width:62ch;}
+  p{margin:0 0 15px;}
+  strong{font-weight:600;}
+  a{color:var(--accent);}
+  code,.m{font-family:var(--mono);font-size:.885em;}
+  code{background:var(--sunk);padding:1.5px 5px;border-radius:2px;
+       border:1px solid var(--rule-soft);}
+
+  /* findings */
+  .finds{display:grid;gap:14px;margin:26px 0 0;}
+  @media(min-width:860px){.finds{grid-template-columns:repeat(3,1fr);}}
+  .find{background:var(--surface);border:1px solid var(--rule);border-top:2px solid var(--copper);
+        padding:20px 20px 22px;display:flex;flex-direction:column;gap:9px;}
+  .find .k{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+           color:var(--muted);}
+  .find h4{font-family:var(--display);font-weight:600;font-size:16.5px;line-height:1.3;margin:0;}
+  .find p{font-size:14.5px;line-height:1.55;color:var(--muted);margin:0;}
+  .find .fig{font-family:var(--mono);font-size:13px;color:var(--copper);font-weight:500;
+             margin-top:auto;padding-top:8px;border-top:1px dashed var(--rule);}
+
+  /* callout */
+  .call{border-left:3px solid var(--accent);background:var(--surface);
+        padding:16px 18px;margin:24px 0;max-width:68ch;}
+  .call.warn{border-left-color:var(--crit);}
+  .call .lab{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;
+             color:var(--accent);margin:0 0 6px;}
+  .call.warn .lab{color:var(--crit);}
+  .call p{font-size:14.8px;margin:0 0 9px;}
+  .call p:last-child{margin:0;}
+
+  /* equation */
+  .eq{background:var(--sunk);border:1px solid var(--rule);padding:18px 20px;margin:22px 0;
+      font-family:var(--mono);font-size:15px;text-align:center;overflow-x:auto;
+      color:var(--ink);letter-spacing:-.01em;}
+  .eq .cap{display:block;font-size:11.5px;color:var(--muted);margin-top:9px;letter-spacing:.03em;}
+
+  /* tables */
+  .tw{overflow-x:auto;margin:22px 0;border:1px solid var(--rule);background:var(--surface);}
+  table{border-collapse:collapse;width:100%;min-width:560px;font-size:14px;}
+  th,td{text-align:left;padding:9px 13px;border-bottom:1px solid var(--rule-soft);
+        vertical-align:top;}
+  thead th{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;
+           color:var(--muted);background:var(--sunk);border-bottom:1px solid var(--rule);
+           white-space:nowrap;position:sticky;top:0;}
+  tbody tr:last-child td{border-bottom:0;}
+  td.n{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap;}
+  td.t{font-family:var(--mono);font-variant-numeric:tabular-nums;color:var(--copper);
+       white-space:nowrap;font-weight:500;}
+  .pill{font-family:var(--mono);font-size:10.5px;letter-spacing:.05em;padding:2px 7px;
+        border-radius:2px;white-space:nowrap;display:inline-block;border:1px solid;}
+  .p-crit{color:var(--crit);border-color:var(--crit);}
+  .p-hi{color:var(--oxide);border-color:var(--oxide);}
+  .p-med{color:var(--muted);border-color:var(--rule);}
+  .p-ok{color:var(--ok);border-color:var(--ok);}
+
+  /* chart */
+  .chart{margin:26px 0 8px;border:1px solid var(--rule);background:var(--surface);}
+  .chart .scroll{overflow-x:auto;}
+  .chart svg{display:block;min-width:700px;width:100%;height:auto;}
+  .axis{stroke:var(--rule);stroke-width:1;}
+  .grid{stroke:var(--rule-soft);stroke-width:1;}
+  .tick{font-family:var(--mono);font-size:10px;fill:var(--muted);}
+  .trace{fill:none;stroke:var(--copper);stroke-width:2.2;stroke-linejoin:round;stroke-linecap:round;}
+  .ceil{stroke:var(--crit);stroke-width:1.2;stroke-dasharray:5 4;}
+  .ceil-t{font-family:var(--mono);font-size:10px;fill:var(--crit);}
+  .anno{font-family:var(--mono);font-size:10px;fill:var(--muted);}
+  .brk{stroke:var(--accent);stroke-width:1.2;fill:none;}
+  .brk-t{font-family:var(--mono);font-size:10px;fill:var(--accent);}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 16px;padding:12px 16px 14px;
+          border-top:1px solid var(--rule);font-family:var(--mono);font-size:11px;color:var(--muted);}
+  .legend i{display:inline-block;width:11px;height:11px;margin-right:6px;
+            vertical-align:-1px;border-radius:1px;}
+  figcaption{font-size:13px;color:var(--muted);margin:10px 0 0;max-width:68ch;}
+
+  /* tiers */
+  .tiers{display:flex;flex-direction:column;gap:2px;margin:26px 0;border:1px solid var(--rule);}
+  .tier{display:grid;grid-template-columns:62px 1fr;gap:16px;background:var(--surface);
+        padding:16px 18px;align-items:start;}
+  @media(min-width:760px){.tier{grid-template-columns:62px 1.05fr 1.35fr;}}
+  .tier .id{font-family:var(--mono);font-size:12.5px;font-weight:600;color:var(--accent);
+            letter-spacing:.06em;}
+  .tier h4{font-family:var(--display);font-weight:600;font-size:15.5px;margin:0 0 3px;line-height:1.3;}
+  .tier .r{font-size:13.5px;color:var(--muted);margin:0;line-height:1.5;}
+  .tier .d{font-size:13.5px;color:var(--muted);margin:0;line-height:1.55;}
+  .tier.instr{border-top:2px solid var(--ok);}
+  .tier.instr .id{color:var(--ok);}
+
+  /* steps */
+  ol.steps{counter-reset:s;list-style:none;padding:0;margin:24px 0;max-width:68ch;}
+  ol.steps li{counter-increment:s;position:relative;padding:0 0 18px 40px;}
+  ol.steps li::before{content:counter(s,decimal-leading-zero);position:absolute;left:0;top:1px;
+       font-family:var(--mono);font-size:11.5px;font-weight:600;color:var(--copper);}
+  ol.steps li b{display:block;font-family:var(--display);font-weight:600;font-size:15.5px;
+       margin-bottom:3px;color:var(--ink);}
+  ol.steps li span{font-size:14.5px;color:var(--muted);line-height:1.55;}
+
+  ul.plain{padding-left:20px;margin:14px 0;max-width:68ch;}
+  ul.plain li{margin-bottom:9px;font-size:15px;}
+
+  /* decisions */
+  .decs{display:grid;gap:12px;margin:24px 0;}
+  @media(min-width:800px){.decs{grid-template-columns:1fr 1fr;}}
+  .dec{background:var(--surface);border:1px solid var(--rule);padding:17px 18px;}
+  .dec .q{font-family:var(--display);font-weight:600;font-size:15px;margin:0 0 6px;line-height:1.32;}
+  .dec p{font-size:13.8px;color:var(--muted);margin:0;line-height:1.55;}
+
+  footer{padding-block:34px;color:var(--muted);font-size:13.5px;}
+  footer .rule{height:1px;background:var(--rule);margin-bottom:22px;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+</style>
+
+<div class="bar"><div class="bar-in">
+  <div class="mark">CUPOLA<span>·</span>Cu</div>
+  <nav>
+    <a href="#findings">Findings</a>
+    <a href="#arch">Architecture</a>
+    <a href="#binder">Unknown binder</a>
+    <a href="#cycle">Baseline cycle</a>
+    <a href="#campaign">Campaign</a>
+    <a href="#roadmap">Roadmap</a>
+    <a href="#decide">Decisions</a>
+  </nav>
+</div></div>
+
+<div class="wrap">
+
+<header class="hero">
+  <p class="eyebrow">Proposal for discussion · not yet implemented</p>
+  <h1>Simulating a copper slurry whose binder nobody will tell us</h1>
+  <p class="lede">An architecture for predicting debinding, sintering, shrinkage and distortion of the
+  Lithoz R&amp;D copper photopolymer on the CeraFab Multi 2M30 — and for deriving an optimum thermal
+  cycle without knowing the binder chemistry or its content.</p>
+  <div class="meta">
+    <span class="tag live">CeraFab Multi 2M30 · 35 µm · 450 nm</span>
+    <span class="tag">Binder: proprietary, undisclosed</span>
+    <span class="tag">Cu: no carbide · eutectic 1066 °C</span>
+    <span class="tag">Evidence: 27 agent reports</span>
+  </div>
+</header>
+
+<section id="findings">
+  <div class="h-row"><span class="num">01</span><h2>Three findings that reshape the project</h2></div>
+  <p class="sub">These came out of a ten-dimension literature and data sweep, three competing
+  architectures, and three adversarial design reviews that independently recomputed every
+  load-bearing number.</p>
+
+  <div class="finds">
+    <div class="find">
+      <span class="k">Regime</span>
+      <h4>You mostly do not need to know the binder</h4>
+      <p>Oxidative debinding of a metal-filled photopolymer is not kinetics-limited. It is limited
+      by oxygen delivery and heat removal — so the binder's pre-exponential factor has essentially
+      no leverage on the part-scale cycle.</p>
+      <span class="fig">δ = 9.5 → 1.7×10⁵ vs δ_c = 0.88</span>
+    </div>
+    <div class="find">
+      <span class="k">Structure</span>
+      <h4>It is an ordering problem, not a temperature problem</h4>
+      <p>Copper forms no carbide, so carbon leaves only by gasification. Once porosity closes,
+      residual carbon and reduction steam are sealed in permanently. Both clocks must finish
+      first.</p>
+      <span class="fig">pore closure ≈ 92 % rel. density</span>
+    </div>
+    <div class="find">
+      <span class="k">Missing physics</span>
+      <h4>A reaction every independent design missed</h4>
+      <p>Cu₂O + C → 2Cu + CO is spontaneous above 76 °C — carbon and copper oxide cannot coexist.
+      It is simultaneously the real carbon sink and, because CO is insoluble in copper, the real
+      blistering source.</p>
+      <span class="fig">ΔG = 55 200 − 158.3·T J/mol</span>
+    </div>
+  </div>
+
+  <h3>The design law that makes this tractable</h3>
+  <p>In the heat-removal-limited regime the minimum debinding time has a closed form with no fitted
+  parameters. Temperature does not appear in it.</p>
+
+  <div class="eq">
+    t<sub>min</sub> &nbsp;=&nbsp; ΔH<sub>c</sub> · ρ<sub>b</sub> · (V/A) &nbsp;/&nbsp; (h · ΔT<sub>crit</sub>)
+    <span class="cap">47.7 h at 5 mm half-thickness, h = 20 W/m²K, ΔT_crit = 20 K &nbsp;·&nbsp;
+    9.5 h at h = 100 &nbsp;·&nbsp; reproduces two published industrial cycles with zero fitted parameters</span>
+  </div>
+
+  <p>Three consequences a human schedule-writer will not reach: the optimal debind is
+  <strong>near-isothermal with pO₂ as the throttle</strong>, not a temperature staircase; time scales
+  <strong>linearly</strong> with half-thickness, not quadratically; and the real lever is
+  <strong>h, the gas-side heat transfer coefficient</strong> — a baffle and higher flow, order 1 k€,
+  compresses a 5 mm part from 47.7 h to 9.5 h at identical thermal risk.</p>
+
+  <div class="call warn">
+    <p class="lab">The measurement that decides it</p>
+    <p>All of the above holds at k_eff = 1 W/m·K. At 10 W/m·K — plausible if the copper particles
+    percolate — δ falls to 0.95 at 1 mm, i.e. marginal rather than supercritical, and the claim
+    degrades to <em>"binder kinetics are irrelevant above roughly 2 mm section."</em></p>
+    <p><strong>A laser-flash k_eff on a cured coupon is therefore the single most consequential
+    week-1 measurement in the project.</strong></p>
+  </div>
+
+  <h3>Constraints that turn out to be slack — and the one that is not</h3>
+  <p>Three constraints intuition says should dominate are, on the numbers, inactive. Two of the
+  three competing designs built major machinery around them anyway.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Constraint</th><th>Verdict</th><th>The numbers</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Internal gas pressure (Darcy)</td>
+        <td><span class="pill p-ok">slack 1.5–4 decades</span></td>
+        <td class="n">1.70 / 0.17 / 0.02 bar at ε = 0.02 / 0.05 / 0.10<br>
+            vs green strength 100–230 bar</td>
+      </tr>
+      <tr>
+        <td>Ellingham Cu/Cu₂O oxidation</td>
+        <td><span class="pill p-ok">slack ~9 decades</span></td>
+        <td class="n">546× reducing margin at 1000 °C<br>
+            (1000 ppm H₂, +20 °C dew point)</td>
+      </tr>
+      <tr>
+        <td>Steam efflux as a Darcy problem</td>
+        <td><span class="pill p-med">wrong mechanism</span></td>
+        <td class="n">75 Pa centre overpressure.<br>
+            Real swelling is <em>intraparticle</em>.</td>
+      </tr>
+      <tr>
+        <td><strong>Exotherm / heat-removal budget</strong></td>
+        <td><span class="pill p-crit">binding</span></td>
+        <td class="n">Active throughout pyrolysis.<br>
+            Sets cycle time via the design law.</td>
+      </tr>
+    </tbody>
+  </table></div>
+
+  <h3>Corrections that must be applied</h3>
+  <ul class="plain">
+    <li><strong>The eutectic ceiling is against the solidus, not the eutectic composition.</strong>
+      Oxygen solubility in Cu at 1066 °C is ~0.008 wt% (≈80 ppm), not 0.39 wt%. Any part above
+      ~100 ppm O begins to melt at 1066 °C — so that is a near-permanent ceiling until deoxidation
+      is complete, removing the window where copper densifies fastest.</li>
+    <li><strong>Pore-gas back-pressure is the terminal-density limiter, and nobody had it.</strong>
+      σ<sub>s,eff</sub> = 2γ/r − p<sub>gas</sub>. Just 30 bar of trapped gas at r = 1 µm halts
+      densification entirely. Closed-pore H₂O/CO/CO₂ are all insoluble in copper — unlike H₂, which
+      is exactly why hydrogen sintering works.</li>
+    <li><strong>Hydrogen embrittlement is not a Darcy problem.</strong> It is lattice H diffusing to
+      internal Cu₂O, making insoluble H₂O at grain boundaries. A Darcy efflux constraint will
+      certify parts that embrittle. The control is the ordering constraint.</li>
+    <li><strong>Frank-Kamenetskii δ &lt; 0.88 must never be a hard path constraint.</strong> Two of
+      the three designs imposed it; solving δ(T) = 0.88 caps the debind at 158–214 °C, where nothing
+      decomposes, making their own optimiser infeasible. Keep δ as a regime diagnostic only.</li>
+    <li><strong>Phosphorus.</strong> At 450 nm only BAPO-class acylphosphine oxides and acylgermanes
+      are practical initiators, and the Cu–Cu₃P eutectic is at 714 °C — trace P gives liquid phase
+      mid-debind. Assay for P, Ge, Sn and S, not P alone.</li>
+  </ul>
+</section>
+
+<section id="arch">
+  <div class="h-row"><span class="num">02</span><h2>Architecture</h2></div>
+  <p class="sub">Five tiers plus one instrument. Each tier is independently testable, and each has a
+  written numeric trigger for when the tier above it gets built — model complexity is pre-registered,
+  not decided after the fact.</p>
+
+  <div class="tiers">
+    <div class="tier">
+      <span class="id">T0</span>
+      <div><h4>Thermochemical feasibility</h4>
+        <p class="r">No fitted parameter ever lives here</p></div>
+      <p class="d">Cu–C–O–H predominance diagram; Ellingham lines including the carbothermic
+      channel; Arden Buck dew-point ↔ pH₂O actuator map; water-gas shift; solidus-based eutectic
+      ceiling. Verified in CI against IBM's 785 °C production setpoint.</p>
+    </div>
+    <div class="tier">
+      <span class="id">T1</span>
+      <div><h4>The digital coupon</h4>
+        <p class="r">0-D / 1-D reduced-order model</p></div>
+      <p class="d">13–15 state DAE: thermal, N-component Šesták-Berggren decomposition, parabolic
+      oxidation with PBR eigenstrain, JMAK-with-incubation reduction, carbothermic Cu₂O + C,
+      gasification, Darcy + Klinkenberg with a pre-percolation branch, SOVS with pore-gas
+      back-pressure. NumPy reference <em>and</em> CasADi graph, CI-tested to agree to 1e-8.</p>
+    </div>
+    <div class="tier">
+      <span class="id">T2</span>
+      <div><h4>Retort model</h4>
+        <p class="r">Makes the answer executable</p></div>
+      <p class="d">CSTR tanks-in-series oxygen balance, measured h, radiative lag, MFC and bubbler
+      slew limits. Surface pO₂, pH₂ and pH₂O become algebraic states — so the optimiser physically
+      cannot request an atmosphere the rig can't make.</p>
+    </div>
+    <div class="tier">
+      <span class="id">T3</span>
+      <div><h4>Identification &amp; triage</h4>
+        <p class="r">Runs before furnace hours are spent</p></div>
+      <p class="d">Morris → Sobol → profile likelihood, producing an IDENTIFIED / MARGINALISED /
+      IRRELEVANT verdict per parameter. Isokinetic reparameterisation kills a −0.9999 lnA–E ridge in
+      one line. Hierarchical lot effects. Kennedy-O'Hagan discrepancy on constraint margins only,
+      gated behind a whiteness test.</p>
+    </div>
+    <div class="tier">
+      <span class="id">T4</span>
+      <div><h4>Chance-constrained optimal control</h4>
+        <p class="r">The deliverable layer</p></div>
+      <p class="d">CasADi + IPOPT, Radau IIA collocation, free switching times, outer enumeration
+      over atmosphere topologies {OX, WGS, HYBRID}. Delivers a Pareto front, not a cycle — and
+      compiles to a furnace segment program with the active-constraint timeline attached.</p>
+    </div>
+    <div class="tier">
+      <span class="id">T5</span>
+      <div><h4>3-D thermo-chemo-mechanical</h4>
+        <p class="r">Escalation only</p></div>
+      <p class="d">MOOSE + NEML2. Anisotropic sintering stress, gravity, setter friction, inverse
+      shrinkage compensation. Built only when shrinkage anisotropy exceeds 1.5 percentage points.</p>
+    </div>
+    <div class="tier instr">
+      <span class="id">OBS</span>
+      <div><h4>Exhaust-gas observer</h4>
+        <p class="r">Zirconia pO₂ + dew point + NDIR CO₂</p></div>
+      <p class="d">All three adversarial reviewers independently named this the best single idea in
+      the set. It measures, in real time and <strong>without knowing anything about the binder</strong>,
+      exactly the two quantities every ordering constraint is written on. It converts binder ignorance
+      from a marginalisation problem into a feedback problem, and it is the only instrument that would
+      detect the carbothermic CO burst. Buy it in week 1.</p>
+    </div>
+  </div>
+</section>
+
+<section id="binder">
+  <div class="h-row"><span class="num">03</span><h2>The unknown-binder strategy</h2></div>
+  <p class="sub">The principle: do not try to discover the chemistry — make it mostly irrelevant, and
+  quantify the residue.</p>
+
+  <div class="call warn">
+    <p class="lab">The trap that invalidates the obvious method</p>
+    <p>Copper <em>gains</em> mass by oxidation while the binder loses it: <span class="m">+8.0 wt%</span>
+    at 400 °C, <span class="m">+14.4</span> at 600 °C, <span class="m">+16.8</span> at 800 °C — against
+    a binder inventory of only 7.3–13.6 wt%. <strong>A raw air-TGA of a filled sample can return a
+    negative binder content.</strong> Standard burn-off does not work here.</p>
+  </div>
+
+  <ol class="steps">
+    <li><b>Decouple architecturally</b><span>The binder never appears in the code as a chemistry —
+      only as a measured inventory {solvent, network pseudo-components, char, ash} plus a heteroatom
+      vector in ppm. Identifying monomers is interesting for a paper and irrelevant to the cycle.</span></li>
+    <li><b>Close the mass balance: LOI-then-reduce</b><span>One day, ~200 €, the highest-value
+      experiment in the project. Coupon → 600 °C air → tube furnace 4 %H₂/Ar → m_binder = m₀ − m₂,
+      and the oxygen pickup cancels identically. With the guards reviewers demanded: crush the cake,
+      reduce <em>to constant mass</em>, run a bare-powder control, LECO C and O on the residue.
+      Honest accuracy ±0.2–0.5 wt%, not the ±0.005 that is balance resolution.</span></li>
+    <li><b>Triangulate three independent routes</b><span>LOI-then-reduce, He pycnometry + wax-sealed
+      Archimedes, and switched TGA. They must agree to 0.5 wt% or the feedstock card is rejected by
+      schema validation.</span></li>
+    <li><b>The corrected TGA protocol</b><span>Ramp in argon to 600 °C, then switch to air isothermally
+      in the same run to combust the char and close the balance. Matched bare-Cu blank, subtracted —
+      and an ingestion layer that <em>refuses at runtime</em> to compute conversion without one.
+      Four heating rates, ICTAC-2020 isoconversional stack, blind prediction of a fifth. Always on
+      printed cured material, never neat resin: copper catalyses the decomposition.</span></li>
+    <li><b>Ship a worst-case envelope in week 1</b><span>Union of worst cases over the plausible binder
+      family, pointwise-slowest T(t) and pointwise-lowest pO₂(t). Conservative by construction, it
+      narrows automatically as measurements land — and the code reports the wall-clock hours saved by
+      each measurement, which is how the next experiment gets funded.</span></li>
+    <li><b>Name and price the irreducible unknowns</b><span>The photoinitiator heteroatom; the
+      light-absorbing dye (no published copper VPP study used one, so their encouraging carbon results
+      may be systematically optimistic for this material — the largest threat to external validity);
+      and the physical form of residual carbon, where speciation matters more than ppm.</span></li>
+    <li><b>Ask Lithoz — don't let pride add three weeks</b><span>Under NDA: organic volume fraction;
+      powder grade, D10/50/90, morphology, and as-received oxygen in ppm; initiator class as a yes/no;
+      dye present; and any internal thermal envelope even flagged unvalidated. Also: confirm
+      single-batch supply in writing, keep a sealed reserve, and settle publication terms
+      <em>before</em> the first experiment.</span></li>
+  </ol>
+</section>
+
+<section id="cycle">
+  <div class="h-row"><span class="num">04</span><h2>The baseline cycle</h2></div>
+  <p class="sub">Binder-agnostic worst-case envelope, corrections applied. It exists so the furnace is
+  not idle while the model is built — and so the first validation gate has in-house anchor data with
+  known loading, gas velocity and thermocouple placement.</p>
+
+  <p><strong>Design intent:</strong> throttle oxygen hard throughout rather than debinding in air.
+  That is the lever the regime analysis identifies anyway, and it has a second benefit — it prevents
+  the bulk oxidation (up to 63 % conversion to Cu₂O, +43 vol%) that creates the entire steam-reduction
+  and blistering problem downstream. Accept more char, then gasify it in wet H₂ at 700–850 °C where
+  C + H₂O is kinetically viable and porosity is still open.</p>
+
+  <figure class="chart">
+    <div class="scroll">
+    <svg viewBox="0 0 880 396" role="img" aria-label="Temperature versus time profile of the baseline debinding and sintering cycle, 146 hours to a 1040 degree peak, with atmosphere bands.">
+      <!-- gridlines -->
+      <line class="grid" x1="70" y1="300" x2="850" y2="300"/>
+      <line class="grid" x1="70" y1="250.9" x2="850" y2="250.9"/>
+      <line class="grid" x1="70" y1="201.8" x2="850" y2="201.8"/>
+      <line class="grid" x1="70" y1="152.7" x2="850" y2="152.7"/>
+      <line class="grid" x1="70" y1="103.6" x2="850" y2="103.6"/>
+      <line class="grid" x1="70" y1="54.5"  x2="850" y2="54.5"/>
+      <!-- y labels -->
+      <text class="tick" x="62" y="303.5" text-anchor="end">0</text>
+      <text class="tick" x="62" y="254.4" text-anchor="end">200</text>
+      <text class="tick" x="62" y="205.3" text-anchor="end">400</text>
+      <text class="tick" x="62" y="156.2" text-anchor="end">600</text>
+      <text class="tick" x="62" y="107.1" text-anchor="end">800</text>
+      <text class="tick" x="62" y="58.0"  text-anchor="end">1000</text>
+      <text class="tick" x="62" y="26" text-anchor="end" style="letter-spacing:.08em">°C</text>
+
+      <!-- eutectic ceiling -->
+      <line class="ceil" x1="70" y1="38.4" x2="850" y2="38.4"/>
+      <text class="ceil-t" x="74" y="34">Cu–Cu₂O eutectic 1066 °C — hard ceiling until [O] &lt; 100 ppm</text>
+
+      <!-- pyrolysis bracket: 46.67 h -> 121.67 h  => x 318.6 -> 718.0 -->
+      <path class="brk" d="M318.6 226 L318.6 219 L718.0 219 L718.0 210"/>
+      <text class="brk-t" x="518" y="214" text-anchor="middle">75 h in the 205–400 °C pyrolysis window — 1.57× the exotherm-limited floor</text>
+
+      <!-- trace -->
+      <polyline class="trace" points="70,293.9 79.7,280.4 101.1,280.4 163.2,263.2 227.1,263.2 276.0,249.7 318.6,249.7 487.2,226.4 519.2,226.4 696.7,201.8 718.0,201.8 740.2,189.5 745.5,189.5 761.0,103.6 803.6,103.6 810.7,44.7 826.7,44.7 839.8,152.7 850,293.9"/>
+
+      <!-- peak label -->
+      <text class="anno" x="822" y="38" text-anchor="end">1040 °C · 3 h</text>
+      <text class="anno" x="800" y="99" text-anchor="end">800 °C · 8 h wet H₂</text>
+
+      <!-- axes -->
+      <line class="axis" x1="70" y1="300" x2="850" y2="300"/>
+      <line class="axis" x1="70" y1="30"  x2="70"  y2="300"/>
+
+      <!-- atmosphere band -->
+      <rect x="70"    y="312" width="248.6" height="22" fill="var(--band-inert)"/>
+      <rect x="318.6" y="312" width="399.4" height="22" fill="var(--band-ox)"/>
+      <rect x="718.0" y="312" width="27.5"  height="22" fill="var(--band-purge)"/>
+      <rect x="745.5" y="312" width="58.1"  height="22" fill="var(--band-weth2)"/>
+      <rect x="803.6" y="312" width="36.2"  height="22" fill="var(--band-dryh2)"/>
+      <rect x="839.8" y="312" width="10.2"  height="22" fill="var(--band-inert)"/>
+      <text class="tick" x="62" y="327" text-anchor="end">gas</text>
+
+      <!-- x ticks -->
+      <text class="tick" x="70"    y="352" text-anchor="middle">0</text>
+      <text class="tick" x="197.8" y="352" text-anchor="middle">24</text>
+      <text class="tick" x="325.7" y="352" text-anchor="middle">48</text>
+      <text class="tick" x="453.5" y="352" text-anchor="middle">72</text>
+      <text class="tick" x="581.3" y="352" text-anchor="middle">96</text>
+      <text class="tick" x="709.2" y="352" text-anchor="middle">120</text>
+      <text class="tick" x="837.0" y="352" text-anchor="middle">144</text>
+      <text class="tick" x="460" y="376" text-anchor="middle" style="letter-spacing:.08em">elapsed time (h) — total 146 h</text>
+    </svg>
+    </div>
+    <div class="legend">
+      <span><i style="background:var(--band-inert)"></i>N₂ inert</span>
+      <span><i style="background:var(--band-ox)"></i>N₂ + 2000 ppm O₂ (throttled burn)</span>
+      <span><i style="background:var(--band-purge)"></i>N₂ purge</span>
+      <span><i style="background:var(--band-weth2)"></i>N₂ + 0.1 % H₂, dew point +40 °C</span>
+      <span><i style="background:var(--band-dryh2)"></i>dry 4 % H₂/Ar</span>
+    </div>
+  </figure>
+  <figcaption>Cycle Card v0. Every segment is literature-anchored except the temperatures themselves,
+  which are an educated envelope and should be treated as such. Run it on coupons, with the
+  exhaust-gas observer recording — and run Lithoz's ceramic-style cycle alongside as a control, to
+  establish the failure mode you are actually fixing.</figcaption>
+
+  <div class="tw"><table>
+    <thead><tr><th>Segment</th><th>Ramp</th><th>Hold</th><th>Atmosphere</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td class="t">25 → 80 °C</td><td class="n">0.5 K/min</td><td class="n">4 h</td><td class="n">N₂</td><td>Solvent removal; a 70–140 °C event is documented</td></tr>
+      <tr><td class="t">80 → 150 °C</td><td class="n">0.1 K/min</td><td class="n">12 h</td><td class="n">N₂</td><td>Non-reactive solvent, evaporation-limited</td></tr>
+      <tr><td class="t">150 → 205 °C</td><td class="n">0.1 K/min</td><td class="n">8 h</td><td class="n">N₂</td><td>Onset of network scission</td></tr>
+      <tr><td class="t">205 → 300 °C</td><td class="n">0.05 K/min</td><td class="n">6 h</td><td class="n">N₂ + 2000 ppm O₂</td><td><strong>Exotherm-limited.</strong> O₂ throttled to hold ΔT &lt; 20 K — not ramp-limited</td></tr>
+      <tr><td class="t">300 → 400 °C</td><td class="n">0.05 K/min</td><td class="n">4 h</td><td class="n">N₂ + 2000 ppm O₂</td><td>Deliberately not 2 vol% — an oxygen budget, not just a heat budget</td></tr>
+      <tr><td class="t">400 → 450 °C</td><td class="n">0.2 K/min</td><td class="n">1 h</td><td class="n">N₂ purge</td><td>Complete pyrolysis; purge before any H₂</td></tr>
+      <tr><td class="t">450 → 800 °C</td><td class="n">2 K/min</td><td class="n">8 h</td><td class="n">N₂ + 0.1 % H₂, dp +40 °C</td><td>Gasification <em>and</em> slow reduction, concurrently, while porosity is fully open</td></tr>
+      <tr><td class="t">800 → 1040 °C</td><td class="n">3 K/min</td><td class="n">3 h</td><td class="n">dry 4 % H₂/Ar</td><td>Densification. Ceiling 26 K below the eutectic — never above 1066 °C until [O] is verified</td></tr>
+      <tr><td class="t">1040 → 600 °C</td><td class="n">3 K/min</td><td class="n">—</td><td class="n">4 % H₂/Ar</td><td>Reducing on cooldown</td></tr>
+      <tr><td class="t">600 → 25 °C</td><td class="n">5 K/min</td><td class="n">—</td><td class="n">N₂</td><td>Below the re-oxidation window</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="call">
+    <p class="lab">A number we corrected</p>
+    <p>The underlying research report quoted <span class="m">~78 h</span> for this segment list. It is
+    wrong — the segments sum to <span class="m">146.4 h</span>, with the 0.05 K/min ramps through
+    205–400 °C accounting for 65 h on their own.</p>
+    <p>The correction improves the reading. <strong>v0 offers essentially no time advantage over
+    Lithoz's 156 h alumina debind — and it is not supposed to.</strong> It is a safe envelope whose
+    job is to generate anchor data. The meaningful comparison is against the design law, which puts
+    the exotherm-limited floor for a 5 mm part at 47.7 h. Closing that 1.57× gap, and then attacking
+    the floor itself by raising h, is the optimiser's entire job.</p>
+  </div>
+</section>
+
+<section id="campaign">
+  <div class="h-row"><span class="num">05</span><h2>Experimental campaign</h2></div>
+  <p class="sub">Ordered by information per euro. The slurry, not the furnace, is the binding
+  resource — size the campaign against what was actually delivered and hold a reserve.</p>
+
+  <div class="call">
+    <p class="lab">Decouple from the printer</p>
+    <p>There is no vat parameter set for this slurry, the 450 nm working curve for a copper slurry is
+    unpublished, and 8.96 g/cm³ particles sediment over a long build. Run the feedstock campaign on
+    <strong>flood-cured slurry cast in silicone moulds</strong>. This removes an unbounded schedule
+    risk from the critical path; printing is derisked in parallel.</p>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>#</th><th>Experiment</th><th>Identifies</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td class="n">E0</td><td>Slurry density + He pycnometry + LOI-then-reduce + ICP for P/Ge/Sn/S</td><td>Solids loading, binder content, heteroatom budget</td><td><span class="pill p-crit">critical</span></td></tr>
+      <tr><td class="n">E1</td><td>Multi-rate TGA, Ar→air switched, matched Cu blank, held-out 5th rate</td><td>Binder kinetics, char yield</td><td><span class="pill p-crit">critical</span></td></tr>
+      <tr><td class="n">E2</td><td>Laser-flash k_eff on a cured coupon</td><td>Decides the entire flux-limited thesis</td><td><span class="pill p-crit">critical</span></td></tr>
+      <tr><td class="n">E3</td><td>Bomb calorimetry / DSC for ΔH_c</td><td>The design law scales linearly with it</td><td><span class="pill p-crit">critical</span></td></tr>
+      <tr><td class="n">E4</td><td>Embedded-thermocouple thickness ladder at 2 / 5 / 10 mm</td><td>Directly tests the design law; measures h</td><td><span class="pill p-crit">critical</span></td></tr>
+      <tr><td class="n">E5</td><td>Two-arm fork: oxidise-then-reduce vs never-oxidise-and-gasify</td><td>A genuine binary unknown. Three weeks of furnace time instead of eighteen months of inference.</td><td><span class="pill p-crit">critical</span></td></tr>
+      <tr><td class="n">E6</td><td>Interrupted-quench ladder 600–1000 °C → LECO C+O, XRD, open/closed porosity split</td><td><strong>Locates pore closure and proves the ordering race is won.</strong> If carbon remains when open porosity vanishes, the cycle is unrecoverable.</td><td><span class="pill p-crit">critical</span></td></tr>
+      <tr><td class="n">E7</td><td>σ_t(T, α) hot green strength, interrupted coupons, three orientations</td><td>The denominator of every mechanical constraint. Does not exist for any metal-filled photopolymer.</td><td><span class="pill p-hi">high</span></td></tr>
+      <tr><td class="n">E8</td><td>Multi-rate dilatometry + gravity-loaded overhang bar</td><td>Densification <em>and</em> the deviatoric probe that breaks the σ_s0/η0 degeneracy</td><td><span class="pill p-hi">high</span></td></tr>
+      <tr><td class="n">E9</td><td>Three-axis shrinkage + green density vs build-plate position and height</td><td>Anisotropy and sedimentation gradient — single-axis dilatometry hides this entirely</td><td><span class="pill p-hi">high</span></td></tr>
+      <tr><td class="n">E12</td><td>Blind validation part — geometry and thickness not used in calibration</td><td>The actual validation</td><td><span class="pill p-crit">critical</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <p><strong>Run a reference-material control first.</strong> Putting the whole pipeline through a
+  commercial copper MIM feedstock, or an alumina LCM slurry with a published Lithoz cycle, costs
+  perhaps three weeks and substantially derisks both the project and the paper — you demonstrate the
+  capability works before pointing it at a material whose binder you cannot see.</p>
+</section>
+
+<section id="roadmap">
+  <div class="h-row"><span class="num">06</span><h2>Roadmap</h2></div>
+  <p class="sub">Gates are falsifiable and early. The project should be able to fail cheaply in week 4,
+  not discover at month 14 that a layer was decorative.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Phase</th><th>Weeks</th><th>Deliverable</th><th>Gate</th></tr></thead>
+    <tbody>
+      <tr><td><strong>P0</strong> Baseline</td><td class="n">0–1</td>
+        <td>Cycle Card v0 in the furnace; T0 + T1 screener; verification suite in CI; observer ordered; NDA ask-list sent</td>
+        <td>Screener reproduces three independent published anchors. <strong>Hard check: can the furnace make humidified low-H₂ gas?</strong> If not, buy the bubbler now — ~8 k€, the cheapest capability purchase in the project.</td></tr>
+      <tr><td><strong>P1</strong> Fingerprint &amp; fork</td><td class="n">1–4</td>
+        <td>Feedstock card populated; k_eff and ΔH_c measured; both fork arms run; <strong>real parts out of the furnace</strong></td>
+        <td>≥1 topology gives crack-free ≥5 mm coupons at &gt;88 % density, &lt;500 ppm C. Three binder-content routes agree to 0.5 wt%.</td></tr>
+      <tr><td><strong>P2</strong> Calibrate &amp; optimise</td><td class="n">4–12</td>
+        <td>Dilatometry + deviatoric probe; identifiability report; 1-D validated on the thickness ladder; chance-constrained Cycle Card v2 + Pareto front</td>
+        <td>v2 beats v1 on real parts at &lt;60 % of baseline time. <strong>The optimiser's active-constraint story must match what the metrology says nearly failed</strong> — if not, fix the model, don't add a discrepancy term.</td></tr>
+      <tr><td><strong>P3</strong> Distortion</td><td class="n">12–22</td>
+        <td>MOOSE + NEML2 3-D; three-orientation shrinkage factors; compensated STL</td>
+        <td>Shrinkage within 0.5 pp per axis; distortion RMS within 100 µm on a part the model never saw.</td></tr>
+      <tr><td><strong>P4</strong> Robustness &amp; publication</td><td class="n">22–34</td>
+        <td>Scenario re-solve; retort loading study; two papers submitted</td><td>—</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="call warn">
+    <p class="lab">The one gate that changes the project</p>
+    <p>If the E6 interrupted ladder shows carbon still present at pore closure, the project pivots to
+    a reformulation conversation with Lithoz rather than continuing to optimise a cycle that cannot
+    exist.</p>
+  </div>
+
+  <h3>What this will and will not predict</h3>
+  <p><strong>Well:</strong> shrinkage factors, safe ramp rates, cycle-time scaling with section
+  thickness, the ordering of chemical events, and relative comparisons between candidate cycles.
+  <strong>Not reliably:</strong> absolute final density to better than ~2 percentage points, and
+  absolute probability of cracking on a specific geometry — those depend on flaw populations and
+  binder details that no amount of inference recovers. The deliverable is therefore a cycle
+  <em>with a credible interval and a chance constraint</em>, never a single trajectory presented as
+  truth.</p>
+</section>
+
+<section id="decide">
+  <div class="h-row"><span class="num">07</span><h2>Decisions needed before anything is built</h2></div>
+  <p class="sub">Seven choices that change what gets built. The rest I can take defaults on.</p>
+
+  <div class="decs">
+    <div class="dec"><p class="q">Furnace capability — audit, don't assume</p>
+      <p>H₂-rated retort with interlocks? <strong>Dew-point control hardware — a bubbler and a
+      dew-point meter?</strong> 1100 °C at ±5 °C across the load, measured by survey? Tar trap?
+      Without dew-point control, none of the atmosphere optimisation is executable. Is the dilatometer
+      atmosphere-capable — and note push-rod loads of 20–50 cN will creep a brown body and give false
+      shrinkage, so contactless optical is strongly preferred.</p></div>
+
+    <div class="dec"><p class="q">Scope: cycle only, or cycle + distortion compensation?</p>
+      <p>The 3-D tier roughly doubles the project and changes the experiment matrix. If dimensional
+      accuracy on real geometry is a deliverable it must be in from the start. If the goal is dense,
+      crack-free copper, T0–T4 suffices and the roadmap ends around week 12.</p></div>
+
+    <div class="dec"><p class="q">How hard do we push Lithoz?</p>
+      <p>The NDA ask-list costs nothing scientifically and could remove months. Is there an existing
+      agreement, and who owns that conversation? Are publication terms already settled — including a
+      review window and possible co-authorship?</p></div>
+
+    <div class="dec"><p class="q">How much slurry is there, and is it one batch?</p>
+      <p>This is the binding resource, not furnace time. If a second lot with different binder arrives
+      mid-project, every identified kinetic parameter is void — so single-batch confirmation in
+      writing and a sealed retained sample matter now, not later.</p></div>
+
+    <div class="dec"><p class="q">Powder D50 — do we know it?</p>
+      <p>It flips an architectural decision outright. At 16 µm the Darcy pressure branch is deleted;
+      below 6 µm it is re-enabled and the model gets meaningfully more expensive.</p></div>
+
+    <div class="dec"><p class="q">Who builds what?</p>
+      <p>T0–T4 is a strong Python engineer plus a materials scientist. T5 needs someone who can write
+      MOOSE/NEML2 constitutive models — a distinct and scarce skill. Who is hydrogen-trained? Where is
+      LECO run, and what is the turnaround?</p></div>
+
+    <div class="dec"><p class="q">Reference-material control — in or out?</p>
+      <p>Three weeks to run the pipeline on a known system first. I recommend it; it is the cheapest
+      insurance against a referee asking whether the capability was ever demonstrated on something
+      checkable.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="rule"></div>
+  <p><strong>Evidence base.</strong> 27 verbatim agent reports: ten research dimensions each with an
+  adversarial deep-dive; three competing architectures written to opposed design biases; three hostile
+  design reviews under physical-correctness, feasibility and novelty lenses; one completeness critique.
+  The reviewers independently recomputed load-bearing numbers and caught a 4.8-decade error in one
+  architecture's headline pressure result, a path constraint that made two designs infeasible, and the
+  missing carbothermic reaction shared by all three.</p>
+  <p>Full proposal and the complete report set live in the repository under
+  <span class="m">docs/PROPOSAL.md</span> and <span class="m">docs/research/</span>. Where this page
+  and a research report disagree, this page is the corrected version — the reports are preserved with
+  their errors intact, because the disagreements are themselves informative.</p>
+</footer>
+
+</div>
