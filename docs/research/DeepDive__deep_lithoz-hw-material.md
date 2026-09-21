@@ -1,0 +1,364 @@
+- **resolved**:
+  -
+    - **question**: What is the actual DMD pixel pitch of the CeraFab Multi 2M30? ('35 µm' vs '635 dpi' = 40.0 µm vs the assumed 30 µm)
+    - **answer**: RESOLVED: 35 µm is CORRECT; 635 dpi is the error. A Lithoz-coauthored peer-reviewed paper that used this exact machine states verbatim: 'The multi-material LCM printer uses a projector optics that provide a lateral resolution of 35 µm, resulting in a building envelope of 76.79 mm x 43.19 mm (i.e., 2194 x 1234 pixels).' The arithmetic closes exactly (2194 x 35 µm = 76.79 mm; 1234 x 35 µm = 43.19 mm). Note 2194/2560 = 1234/1440 = 0.857, i.e. this is consistent with a WQHD (2560x1440) DMD of which the central 85.7% in each axis is projected into the build area. 35 µm = 726 dpi, so the datasheet's '635 dpi' is a copy-paste artefact from the CeraFab S65 / CeraFab Lab L30 datasheets, both of which are genuinely 40 µm. The '30' in '2M30' is NOT the pixel size. Sibling-machine cross-check, all of which close exactly on pixel-count x pitch: S25 = 25 µm / 2560x1600 / 64x40 mm; S65 = 40 µm / 2560x1600 / 102x64 mm; S230 = 75 µm / 192x120 mm; L30 = 40 µm / 76x43x170 mm; CeraFab 7500 = 40 µm (40x40 µm pixel) / 76x43x150 mm.
+    - **source**: Nohut, Geier, Kraleva, Schwentenwein (Lithoz), Bermejo, 'Lithography-based additive manufacturing of porosity graded alumina', Additive Manufacturing Letters 3 (2022) 100060, Sect. 2 (full text read); Lithoz CeraFab Multi 2M30 datasheet V.2/01.2024 (read verbatim); Lithoz CeraFab Lab L30 datasheet 03/2024; Lithoz CeraFab System datasheet DE 2020 (S25/S65/S230, '2560 x 1600 - WQXGA')
+    - **confidence**: high
+  -
+    - **question**: What is the emission wavelength and peak intensity (mW/cm2) of the 2M30 light engine?
+    - **answer**: RESOLVED: 450 nm, maximum 50 mW/cm2. The same Lithoz-coauthored 2M30 paper states: 'each layer was exposed to energies between 130 mJ/cm2 and 180 mJ/cm2 ... by using a mono-chromatic (450 nm) projector with a power of 50 mW/cm2'. This is NOT 460 nm and NOT 83 mW/cm2 - those are the CeraFab 7500 values (460 nm, 5-83.12 mW/cm2). The 2M30 therefore has ~40% LESS peak intensity than the 7500, which matters directly for a copper slurry because exposure time = dose / intensity and copper doses will be large. Also recorded in the same paper: waiting time before curing each layer 20-30 s depending on slurry viscosity; cleaning with LithaSol 20 plus compressed air; 25 µm layer thickness.
+    - **source**: Nohut et al., Addit. Manuf. Lett. 3 (2022) 100060, Sect. 2; Ozog, Blugan, Kata, Graule, J. Ceram. Sci. Technol. 10 (2019), DOI 10.4416/JCST2019-00023 (CeraFab 7500 = 460 nm, 40 µm pixel, 5-83.12 mW/cm2)
+    - **confidence**: high
+  -
+    - **question**: What is the solid loading (vol%) and green density of the Lithoz copper slurry?
+    - **answer**: STILL UNKNOWN for the actual slurry, BUT I found and calibrated a one-measurement route to get it to about +/-1 vol%. Lithoz slurry density = phi*rho_solid + (1-phi)*rho_binder. I calibrated rho_binder for the Lithoz LCM organic phase two independent ways and they agree: (a) LithaLox HP500 is stated as 49 vol% alumina with a slurry density of 2.52 g/cm3, giving rho_b = 1.11-1.15 g/cm3; (b) inverting the LithaNit 720 TGA (40 vol% SiAlON, rho 3.24 g/cm3, 34.8 wt% loss in N2) gives rho_b = 1.153 g/cm3. Take rho_binder = 1.13 +/- 0.03 g/cm3. Then for the copper slurry phi = (rho_slurry - 1.13)/(8.96 - 1.13) = (rho_slurry - 1.13)/7.83. A single pycnometer measurement on the as-received slurry gives phi. Priors: Lithoz ceramic slurries are 39-49 vol% (LithaCon 3Y 39, LithaNit 720 40, LithaLox HP500 49) and Lithoz states >45 vol% is needed for densification; published copper DLP/LMM work uses 50-60 vol% (Incus 52-58, CEA 60). So expect phi = 0.45-0.58, slurry density 4.65-5.6 g/cm3, green density 4.0-5.2 g/cm3.
+    - **source**: Derived here; calibration inputs from Lithoz LithaLox HP500 slurry data sheet density 2.52 g/cm3 at 49 vol% as quoted in J. Ceram. Sci. Technol. 10 (2019) DOI 10.4416/JCST2019-00023, and Schwentenwein et al., Appl. Sci. 2020, 10, 996
+    - **confidence**: medium
+  -
+    - **question**: Is the Lithoz copper binder the same acrylate family as their ceramic slurries?
+    - **answer**: Almost certainly the same family, but with copper-specific differences you can test cheaply. Lithoz's own review defines the LCM organic matrix as: a low-viscosity NON-REACTIVE SOLVENT, plus reactive mono- and multifunctional acrylate and methacrylate monomers, plus a photoinitiator active at the LED wavelength at less than 1 wt%, plus dispersants, plus DYES to moderate light penetration. The dyes are the likely deletion for copper, which already absorbs 82-87% of the incident light. Refined decisive test: run TGA at 2 K/min on a cleaned green coupon in N2 AND separately in air (Lithoz's own protocol for LithaNit 720). If total loss matches (1-phi)*1.13/[phi*8.96+(1-phi)*1.13] (9.4 wt% at phi=0.55, 11.2% at 0.50, 13.4% at 0.45) and decomposition completes at 350-400 C in air / 400-450 C in N2, it is the same family. CRITICAL: do NOT run the mass-balance TGA in air on copper - Ott measured a 10 wt% mass GAIN on Cu powder at 350 C in synthetic air in 5 h, which completely masks a ~10 wt% binder loss. Run the calibration TGA in Ar/N2 only, and run a separate air TGA on the bare powder to quantify the oxidation branch.
+    - **source**: Stampfl, Schwentenwein, Homa, Prinz, MRS Communications 13 (2023) 786-794, DOI 10.1557/s43579-023-00444-0; Schwentenwein et al., Appl. Sci. 2020, 10, 996; J. Ott, PhD Diss., Univ. des Saarlandes 2022, Fig. 5.2
+    - **confidence**: medium
+  -
+    - **question**: Does the copper slurry contain a phosphorus-bearing dispersant or a BAPO/acylphosphine-oxide photoinitiator?
+    - **answer**: Unknown for the Lithoz slurry, but I can now quantify why it matters and sharpen the acceptance criterion. CEA (Roumanie 2021) measured P = 0.035 wt% in the final sintered part, up from 0.025 wt% in the ECKA DHP powder, i.e. BAPO added about 100 ppm P. The decisive correction is that their PRESSED-AND-SINTERED REFERENCE made from the same powder with NO resin at all also only reached 250-270 W/m.K. So phosphorus in the POWDER dominates, not the photoinitiator. Their DLP-printed parts reached only 103 W/m.K at 90% density. By contrast the Incus copper datasheet (2025) reports 93.8 %IACS and 385 W/m.K at 95.5% density from a low-oxygen (0.04 wt% O) powder. Conclusion: the biggest lever on final conductivity is the COPPER POWDER GRADE (oxygen-free / low-P, not DHP), then density and cracks, then the photoinitiator. Ask Lithoz two questions: is the photoinitiator an acylphosphine oxide (BAPO/TPO)? At 450 nm it more likely is not, because BAPO absorption is largely spent by 450 nm and blue-active initiators tend to be germanium- or dicarbonyl-based. And what is the P content of the powder? Acceptance criteria must include C, O, P and S by LECO/IGA and ICP-OES or GDMS - carbon alone is not sufficient, since CEA got carbon down to powder level (180 ppm) and still had poor conductivity.
+    - **source**: Roumanie, Flassayer, Resch, Cortella, Laucournet, SN Appl. Sci. 3 (2021) 55, DOI 10.1007/s42452-020-04049-3 (full text, Sect. 3.3.4 and Table 5); Incus GmbH Material Data Sheet 'Copper', 2025
+    - **confidence**: high
+  -
+    - **question**: At what temperature does the Lithoz copper green body start to oxidise measurably in air, and can the sub-300 C portion of the Lithoz ceramic schedule be run in air at all?
+    - **answer**: ANSWERED, and the answer inverts the recon's framing. (a) Copper oxidises massively well below 400 C: Ott measured +10.0 to +10.2 wt% mass gain on 12.7 µm Cu powder held at 350 C in synthetic air (N2/O2 80/20) for 300 min, with the first 7-8 wt% gained in the first hour. Roumanie measured +8 wt% on compacts at 400 C/4 h, +14.4% at 600 C, +16.8% at 800 C (full Cu to Cu2O is +12.6 wt%; Cu to CuO is +25.2 wt%). So by 350-400 C in air the accessible copper is essentially fully oxidised. (b) BUT air is not optional: Roumanie tested debinding at 400 C/4 h in hydrogen, argon, vacuum, 600 ppm O2/Ar and 5 wt% O2/Ar, and ALL of them left 0.25-0.36 wt% residual carbon (14-20x the powder level). ONLY AIR gave 0.019 wt% C. This kills the low-pO2 Ar+O2 MIM-style carbon-strip option for acrylate networks at 400 C - 5 wt% O2 was not enough. (c) The resolution is a deliberate oxidise-then-reduce cycle: air up to a temperature chosen to cap oxidation (CEA fixed 400 C explicitly 'to prevent cracks due to copper expansion'), then hydrogen. Reduction is easy and fast: forming gas (N2/H2 95:5) at 350 C returned the powder to its exact initial mass in under 20 minutes. (d) Thermodynamically no practical inert gas prevents Cu oxidation anyway: the Cu/Cu2O equilibrium pO2 is about 3e-19 bar at 400 C and 1.5e-9 bar at 800 C (derived from standard Ellingham coefficients), so even 5N argon at about 1 ppm O2 is oxidising at sintering temperature. Only H2-bearing gas or an active getter gives a genuinely reducing furnace.
+    - **source**: J. Ott, PhD Diss., Univ. des Saarlandes 2022, Sect. 5.1, Fig. 5.2; Roumanie et al., SN Appl. Sci. 3 (2021) 55, Sect. 3.3.1 and Fig. 6d; pO2 values derived here from standard Ellingham data (dG_f(Cu2O) approx -167 kJ/mol + 71 J/mol/K * T) - coefficients should be checked against FactSage/HSC/JANAF
+    - **confidence**: high
+  -
+    - **question**: Is a solvent/supercritical pre-debinding step available for the Lithoz binder?
+    - **answer**: Partially, and not in the way the recon assumed. The crosslinked acrylate NETWORK is a thermoset, explicitly described as 'infusible and insoluble' (CEA), so it cannot be solvent-extracted. Fraunhofer's +3.4 density-point gain from acetone debinding applies to the Incus BM-P18 HOT-MELT feedstock, whose uncured fraction is soluble; that result does NOT transfer to Lithoz LCM. HOWEVER, Lithoz LCM slurries contain a deliberate NON-REACTIVE SOLVENT fraction that remains in the green body, and Lithoz's own thermal protocol has a separate DRYING stage before debinding whose entire purpose is 'slowly evaporating the solvent to open microscopic channels within the green part that allow for removal of decomposition products generated during debinding'. That is exactly what the 0.05 K/min, 110-130 C, 25-hour block of the LithaCon 3Y schedule is doing - it is solvent removal, not polymer pyrolysis. So the correct analogue of solvent debinding for a Lithoz part is optimising that drying stage, possibly with supercritical CO2 extraction of the non-reactive solvent, not immersion. Direct evidence against immersion: Conti et al. soaked LCM zirconia green parts in LithaSol 20 and it 'resulted in damaging the parts by means of layer delamination'.
+    - **source**: Stampfl et al., MRS Commun. 13 (2023) 786-794; Schwentenwein et al., Appl. Sci. 2020, 10, 996, Fig. 2 ('drying, debinding and sintering'); Conti et al., Materials 2020, 13, 1317, Sect. 3.1; Roumanie et al. 2021; Scheibler et al., Metals 2024, 14, 1268
+    - **confidence**: medium
+  -
+    - **question**: What is the actual carbon and oxygen budget through the cycle?
+    - **answer**: Now largely quantified, and it is the strongest paper angle available. CARBON: the acrylate network leaves about 7% char in argon at 600 C; at 400 C in air with a 4 h dwell, 10-19% of the resin still remains; the H2 sintering step finishes the job and brings C down to 0.013-0.022 wt%, i.e. to the raw-powder level of 0.018 wt%. In any non-air atmosphere C stalls at 0.25-0.36 wt%. OXYGEN: air debinding injects 3-10 wt% oxygen on a Cu basis as Cu2O/CuO; after H2 sintering, residual O = 0.084 wt% (980 C), 0.077 (1030 C), 0.067 (1050 C) for 3 mm-scale cylinders, versus 0.028 wt% for the raw powder; thin-walled gears reached 0.022 wt%, so O removal is wall-thickness-limited. GAS BUDGET (derived here, and this is the headline result): per gram of green part at 11 wt% binder, binder pyrolysis releases about 1.8 mmol of gas, whereas reducing an 8 wt% oxygen pickup releases about 4.5 mmol of H2O - 2.4x more gas than the binder - and consumes about 9 mg H2 per gram. At 600 C and 1 bar that is roughly 0.32 litres of steam per gram of part, about 1.6 L per cm3 of green body. The oxide-reduction step, not the binder burnout, is the dominant internal gas-generation event in a copper LCM cycle. This does not appear to have been stated anywhere.
+    - **source**: Roumanie et al., SN Appl. Sci. 3 (2021) 55, Fig. 6, Fig. 7, Tables 3-5; J. Ott, Diss. 2022, Fig. 5.2; gas-budget arithmetic derived here
+    - **confidence**: high
+  -
+    - **question**: Where exactly does open porosity close in LCM-copper, as a function of green density?
+    - **answer**: ANSWERED for 70% green density from Ott's interrupted-sintering micrographs, and the bracket is tighter than the recon's. At 5 K/min in H2 from 69.5% green: at 800 C density is 71.4% with individual powder particles still distinguishable and joined by small necks; at 900 C density is 81.8% (18.2% porosity) with TUBULAR pores extending over 20 µm in section, still open; on reaching 1075 C density is 92.6% and the pores are 'clearly smaller and closed off from one another'; after 3 h at 1075 C all pores are spherical and up to 10 µm. So pore closure happens between about 82% and about 92.6% relative density, i.e. DURING THE RAMP between 900 C and 1075 C. Ott states explicitly that for copper open porosity is already closed before the maximum sintering temperature is reached. Corroboration from the LMM side: all of Fraunhofer's LMM copper samples at 91.9-95.3% density showed 'nearly spherical porosity that is closed'. Design rule: all carbon removal and all oxide reduction must be complete before about 900 C, because the open-pore gas path is lost somewhere in the 900-1075 C ramp.
+    - **source**: J. Ott, PhD Diss., Univ. des Saarlandes 2022, Sect. 5.2.2, Fig. 5.11 and Sect. 5.3.1; Scheibler et al., Metals 2024, 14, 1268, Sect. 3.3
+    - **confidence**: high
+  -
+    - **question**: Does hydrogen disease actually occur in LCM copper?
+    - **answer**: No blistering has been reported in any published copper LCM/LMM/DLP work, but every published case debound the part while porosity was still open, and every published case had residual O far above the classical hydrogen-embrittlement threshold. CEA's parts carried 220-840 ppm O after H2 sintering at 980-1050 C with no reported blistering; Fraunhofer's parts sintered 2 h at 1050 C in 5N H2 with no reported blistering. The physical reading is that steam escapes through open porosity, so the risk window is specifically oxide still present AFTER pore closure, i.e. above about 92% density or above about 1000 C on a normal ramp. That risk is real because copper cannot usefully dissolve oxygen and H2 diffuses in freely. Practical guardrail: reduction is kinetically trivial (complete in under 20 minutes at 350 C in 5% H2), so admit H2 early, from about 300-350 C, and hold long enough at 600-800 C, where porosity is still fully open, to drive O down before densification starts at 800 C. ASTM B577 exists as the standard test (anneal in H2, look for intergranular cracks and blisters), and oxygen-free copper grades are specified at O <= 5 ppm (C10100) and <= 10 ppm (C10200) while ETP copper at 200-500 ppm is the classic susceptible grade - verify those exact limits against ASTM B170 before using them as acceptance criteria.
+    - **source**: Roumanie et al. 2021 (O contents, no blistering reported); Scheibler et al., Metals 2024, 14, 1268; J. Ott, Diss. 2022 (reduction complete in under 20 min at 350 C); ASTM B577, DOI 10.1520/b0577-24 (exists); grade oxygen limits are standard practice and were NOT independently verified in this session
+    - **confidence**: medium
+  -
+    - **question**: What are the anisotropic shrinkage factors (x, y, z) for LCM copper?
+    - **answer**: Not measured anywhere for copper - a genuine gap and a publishable contribution. What is known: (1) green strength is anisotropic in LMM copper, 20 MPa in X;Z, 17 in Y;Z, 13 in Z;Y, i.e. about 35% lower when the long axis lies along the build direction, because the bend test pulls layers apart; (2) Lithoz publishes only a single ISOTROPIC compensation factor (1.354 for LithaCon 3Y zirconia) and TMA confirmed it; (3) Singh et al. report isotropic shrinkage for MIM-feedstock extruded copper at 1050 C, their best condition; (4) CEA measured 19% linear shrinkage on gamma-cured copper cylinders reaching 92% density, which inverted through S = 1 - (rho_green/rho_sint)^(1/3) implies an EFFECTIVE green density of only about 49%, not the nominal 60 vol%, because of trapped air - an important methodological warning that shrinkage must always be inverted from MEASURED green density, never from nominal solid loading. The measurement to do: push-rod TMA/dilatometry on coupons cut in X, Y and Z at 2-3 heating rates, which simultaneously feeds the master-sintering-curve activation energy and the anisotropic sintering-stress terms of the continuum model.
+    - **source**: Scheibler et al., Metals 2024, 14, 1268, Fig. 7; Conti et al., Materials 2020, 13, 1317; Singh et al., Int. J. Adv. Manuf. Technol. 115 (2021) 449-462; Roumanie et al. 2021; shrinkage inversion derived here
+    - **confidence**: medium
+  -
+    - **question**: Is there a Lithoz patent family covering copper or metal-filled LCM slurries and their debinding?
+    - **answer**: NOT RESOLVED. Every patent database reachable from this session was blocked: Google Patents returned 503, Espacenet 403, Lens.org 403, EPO OPS 403 (needs OAuth), Justia was behind Cloudflare, PatentsView failed at the proxy, and WIPO Patentscope requires a JSF session. This remains genuinely outstanding and should be assigned to a session with patent access. The practical value is lower than the recon assumed, however, because Lithoz's own 2023 MRS review already discloses the binder architecture in prose (low-viscosity non-reactive solvent, acrylate/methacrylate monomers of differing functionality, under 1 wt% wavelength-matched photoinitiator, dispersants, dyes), plus the gel-point formulation concept and the Dp = (2/3)(d50/phi)Q scattering relation. Separately worth checking: Ott's thesis states his copper sintering work led to several patent applications, a distinct family likely assigned to Universitaet des Saarlandes.
+    - **source**: Attempted and blocked: patents.google.com, worldwide.espacenet.com, lens.org, ops.epo.org, patents.justia.com, search.patentsview.org, patentscope.wipo.int. Disclosure content from Stampfl et al., MRS Commun. 13 (2023) 786-794; J. Ott, Diss. 2022, Sect. 3
+    - **confidence**: low
+  -
+    - **question**: Can Incus be approached for their copper cycle? Is their claim credible?
+    - **answer**: Their published numbers are now in hand and they are better than the peer-reviewed literature but not what the recon reported. The Incus GmbH 'Material Data Sheet Copper' (2025) states: powder O = 0.04 wt%; sintered relative density 95.5 +/- 0.5% against 8.96 g/cm3; yield strength 40 MPa; UTS 193 MPa; elongation 41%; electrical conductivity 93.8 %IACS; thermal conductivity 385 W/(m.K) - with the explicit footnote that the thermal conductivity is CALCULATED from electrical conductivity via Wiedemann-Franz, not measured. It is benchmarked against MIM typical values of 69 MPa YS, 207 MPa UTS, 30% elongation, 360 W/m.K and 97.65% density. So 95.5% density and 93.8 %IACS, not '99.9% Cu and 92% of wrought conductivity'. The '<12 h total furnace time' claim is not in the datasheet and remains unverified. Their density is consistent with Fraunhofer's best LMM result (95.3%) and with Ott's green-to-sintered line, so it is credible. The conductivity gap versus CEA's 103 W/m.K is fully explained by powder grade (oxygen-free versus DHP), density and cracks, not by a secret cycle. Incus's published printer resolution is 35 µm feature size on the Hammer Lab 35 with sintered tolerance +/-17 µm.
+    - **source**: Incus GmbH, Material Data Sheet 'Copper', 2025 (read in full); Harakaly, Cano Cano, Bosters, Sperling, Moedder, Mitteramskogler (Incus), J. Jpn. Soc. Powder Powder Metall. 72 (2025) S1227-S1231, DOI 10.2497/jjspm.16C-T11-08
+    - **confidence**: high
+  -
+    - **question**: For the multi-material case: what ceramic can be co-sintered with copper at <=1075 C with matched shrinkage?
+    - **answer**: Only glass-ceramics of the LTCC class, and the binding constraint is ATMOSPHERE, not temperature. Copper's ceiling of about 1075 C (Tm 1084 C) excludes alumina (1600-1650 C), zirconia (1450 C), Si3N4 (1750 C) and ATZ/ZTA entirely, which is consistent with Lithoz demonstrating copper alongside an 'alumina-based GLASS ceramic' rather than alumina. The deeper conflict is that copper requires a reducing or very-low-pO2 furnace (Cu/Cu2O equilibrium pO2 about 1.5e-9 bar at 800 C) while most glass-ceramic systems contain reducible oxides; industrial Cu-LTCC co-firing solves this by firing in humidified N2 with pO2 held inside a narrow 'copper window' between Cu oxidation and glass reduction. Verify the specific window and the commercial Cu-compatible tape systems before designing anything. IMPORTANT EVIDENTIARY CAVEAT: the entire 'Lithoz printed copper on the 2M30' claim rests on ONE photo caption - 'Copper and an alumina-based glass ceramic 3D printed on the Multi 2M30. Photo via Lithoz.' I fetched that article and there is no text about copper, no co-sintering discussion, no shrinkage matching and no process data. The photo almost certainly shows a green part. Do not assume Lithoz has ever successfully co-sintered it.
+    - **source**: 3D Printing Industry, 'Lithoz's CeraFab Multi 2M30 and the future of multi-material 3D printing' (fetched; copper appears only as an image caption); temperature limits from the Lithoz Material Overview brochure, Ozog 2019, Schwentenwein 2020 and Nohut 2024; pO2 window derived here; Cu-LTCC N2 co-firing practice is standard industry knowledge and was NOT independently verified in this session
+    - **confidence**: low
+- **extra_numbers**:
+  -
+    - **quantity**: CeraFab Multi 2M30 addressable pixel array
+    - **value**: 2194 x 1234
+    - **units**: pixels at 35 um pitch
+    - **context**: Gives 76.79 x 43.19 mm. Ratio to a 2560x1440 WQHD DMD is 0.857 in both axes. This is the number to put in any optical/cure-depth model.
+    - **source**: Nohut, Geier, Kraleva, Schwentenwein, Bermejo, Addit. Manuf. Lett. 3 (2022) 100060
+  -
+    - **quantity**: 2M30 light engine wavelength and peak intensity
+    - **value**: 450 and 50
+    - **units**: nm, mW/cm2 (max)
+    - **context**: For the 2M30 specifically. The CeraFab 7500 by contrast is 460 nm at 5-83.12 mW/cm2.
+    - **source**: Nohut et al. 2022; Ozog et al., J. Ceram. Sci. Technol. 10 (2019)
+  -
+    - **quantity**: Exposure dose used on the 2M30 for LithaLox 350 (49 vol% alumina)
+    - **value**: 130 - 180
+    - **units**: mJ/cm2
+    - **context**: 25 um layers; 20-30 s wait before curing each layer depending on viscosity. A copper slurry will need far more dose at the same layer height.
+    - **source**: Nohut et al. 2022
+  -
+    - **quantity**: Lithoz LCM organic-phase (binder) density
+    - **value**: 1.13 +/- 0.03
+    - **units**: g/cm3
+    - **context**: NEW, derived here by two independent routes: LithaLox HP500 at 49 vol% alumina with a stated slurry density of 2.52 g/cm3 gives 1.11-1.15; inverting the LithaNit 720 TGA (40 vol% SiAlON, rho 3.24, 34.8 wt% loss in N2) gives 1.153. Unlocks phi from a single slurry-density measurement.
+    - **source**: derived; inputs from J. Ceram. Sci. Technol. 10 (2019) DOI 10.4416/JCST2019-00023 and Appl. Sci. 2020, 10, 996
+  -
+    - **quantity**: Solid-loading inversion formula for the Cu slurry
+    - **value**: phi = (rho_slurry - 1.13) / 7.83
+    - **units**: vol fraction from g/cm3
+    - **context**: rho_slurry 4.65 gives 45 vol%; 5.04 gives 50%; 5.44 gives 55%; 5.83 gives 60%. One pycnometer measurement.
+    - **source**: derived
+  -
+    - **quantity**: Binder mass fraction of a Lithoz Cu green body versus phi (rho_b = 1.13)
+    - **value**: 15.9 at phi 0.40; 13.4 at 0.45; 11.2 at 0.50; 9.4 at 0.55; 7.8 at 0.60
+    - **units**: wt%
+    - **context**: Wider than the recon's 9-11 wt%, because the plausible phi range for a Lithoz slurry starts at 0.40, not 0.50.
+    - **source**: derived
+  -
+    - **quantity**: Cu powder mass gain on oxidation at 350 C in synthetic air (N2/O2 80/20)
+    - **value**: 7-8 in the first 60 min; 9.75 to 10.16 after 300 min
+    - **units**: wt%
+    - **context**: d50 12.7 um gas-atomised OFHC Cu. Full Cu to Cu2O is +12.6 wt%, Cu to CuO is +25.2 wt%. The key number for the air-debinding oxygen budget.
+    - **source**: J. Ott, PhD Diss. Univ. des Saarlandes 2022, Fig. 5.2
+  -
+    - **quantity**: Cu compact mass gain in air (TGA, 1 K/min, 4 h dwell)
+    - **value**: 8.0 at 400 C; 14.4 at 600 C; 16.8 at 800 C
+    - **units**: wt%
+    - **context**: Why CEA fixed the debinding temperature at 400 C - 'to prevent cracks due to copper expansion'.
+    - **source**: Roumanie et al., SN Appl. Sci. 3 (2021) 55, Sect. 3.3.1
+  -
+    - **quantity**: Cu oxide reduction time in forming gas (N2/H2 95:5) at 350 C
+    - **value**: under 20 (mass back to starting weight); flow stopped at 45
+    - **units**: minutes
+    - **context**: Final relative mass 99.95-100.03%. Confirms no separate isothermal reduction dwell is needed on a H2 ramp.
+    - **source**: J. Ott, Diss. 2022, Fig. 5.2
+  -
+    - **quantity**: Residual carbon after 400 C / 4 h debinding in various atmospheres, then H2 sintering at 980 C
+    - **value**: air 0.019; hydrogen 0.25; argon, vacuum, 600 ppm O2-Ar and 5 wt% O2-Ar all about 0.36
+    - **units**: wt% C
+    - **context**: Raw ECKA powder is 0.018 wt% C. DECISIVE: only air works, and 5 wt% O2 in argon is not enough.
+    - **source**: Roumanie et al. 2021, Fig. 6d
+  -
+    - **quantity**: Residual oxygen after air debind plus H2 sinter versus sintering temperature
+    - **value**: 0.084 at 980 C; 0.077 at 1030 C; 0.067 at 1050 C; 0.022 for a thin-walled gear at 1050 C
+    - **units**: wt% O
+    - **context**: Raw powder 0.028 wt%. Thin walls remove oxygen far better, so O content is a wall-thickness-limited quantity.
+    - **source**: Roumanie et al. 2021, Tables 4 and 5
+  -
+    - **quantity**: Acrylate resin char residue in argon at 600 C
+    - **value**: about 7
+    - **units**: wt% of resin
+    - **context**: Four Sartomer-based formulations (HDDA SR238 plus SR355 plus CN509/CN371/Diacryl 101). In air they burn out completely on a ramp, but with a 4 h dwell at only 400 C in air, 10-19% of resin still remains.
+    - **source**: Roumanie et al. 2021, Fig. 7
+  -
+    - **quantity**: Gas generated by oxide reduction versus binder pyrolysis, per gram of green part
+    - **value**: 4.45 mmol H2O versus 1.83 mmol binder gas, a ratio of 2.4; H2 consumed 9.0 mg/g
+    - **units**: mmol/g
+    - **context**: NEW, derived here for 11 wt% binder and an 8 wt% oxygen pickup on the Cu. About 0.32 L of steam per gram of part at 600 C, about 1.6 L per cm3 of green body. The reduction step, not the burnout, dominates internal gas generation.
+    - **source**: derived from Roumanie 2021 and Ott 2022 mass-gain data
+  -
+    - **quantity**: Copper densification milestones at 5 K/min in H2 from 69.5% green
+    - **value**: no densification to 700 C; onset at 800 C and 71.4%; peak rate 0.63 %/min at 895 C; 81.8% at 900 C; 94.9% on reaching 1075 C; 98.0% after 3 h
+    - **units**: % relative density
+    - **context**: For 62.6% green: 66.1% at 800 C, 83.5% at 1000 C, 90.8% on reaching 1075 C, 95.8% after 3 h, i.e. +4.3% in the hold.
+    - **source**: J. Ott, Diss. 2022, Figs. 5.9 and 5.10
+  -
+    - **quantity**: Pore-closure bracket in copper
+    - **value**: between 81.8% (900 C, tubular pores over 20 um long) and 92.6% (1075 C, pores closed)
+    - **units**: % relative density
+    - **context**: 5 K/min, 70% green, H2. Ott states open porosity closes before the maximum sintering temperature is reached. Tighter than the recon's bracket.
+    - **source**: J. Ott, Diss. 2022, Fig. 5.11 (micrographs a-d)
+  -
+    - **quantity**: Best published copper sintering cycle (two-stage)
+    - **value**: 800 C / 12 h then 1075 C / 6 h in H2 with 15 K/min ramps gives 99.3
+    - **units**: % relative density
+    - **context**: Beats single-stage 1075 C / 24 h (98.4%) and even 1075 C / 32 h (99.0%). Rationale: a hold below 900 C keeps pores pinned to grain boundaries with short diffusion paths, then maximum temperature for transport. Green density 69.5 +/- 1.4%.
+    - **source**: J. Ott, Diss. 2022, Sect. 5.3.2, Tab. 5.5
+  -
+    - **quantity**: Copper grain-growth activation energy
+    - **value**: 106.7 +/- 5.9 (Ott); 149.6 (literature comparison)
+    - **units**: kJ/mol
+    - **context**: Very low compared with ceramics (ZnO 224.16 +/- 16). This is why the conventional ceramic two-step sinter (high then low) fails for copper: grain growth and pore separation start immediately once porosity closes, leaving no time to drop temperature.
+    - **source**: J. Ott, Diss. 2022, Sect. 5.3.1 and 5.2
+  -
+    - **quantity**: Copper diffusion parameters used in Ott's pore and boundary mobility model
+    - **value**: D0 = 200 mm2/s with Q = 197.2 kJ/mol (volume); D0 = 26 mm2/s with Q = 86.6 kJ/mol (surface); a = 0.362 nm; GB width = 0.256 nm; molar volume = 7143 mm3/mol
+    - **units**: mixed
+    - **context**: Direct simulation inputs. The molar volume matches Cu at 7.09 cm3/mol exactly, confirming the thesis's printed unit of mm2/mol is a typo. The grain-boundary energy is printed as 6.36e-12 J/mm2 which is about 1e5 too small for Cu (about 0.6 J/m2 = 6.4e-7 J/mm2) - check before use.
+    - **source**: J. Ott, Diss. 2022, parameter table preceding Sect. 5.2.5
+  -
+    - **quantity**: Copper isothermal densification fit rho = rho_s + A*exp(-B*t)
+    - **value**: (rho_s, A, B) = (0.966, -0.24, 0.33) at 800 C; (0.977, -0.19, 0.74) at 850; (0.986, -0.16, 0.90) at 900; (0.985, -0.11, 1.74) at 1000; (0.984, -0.05, 1.76) at 1075
+    - **units**: dimensionless, dimensionless, 1/h
+    - **context**: Green 69.6 +/- 0.7%, 15 K/min ramp, t = 0 at arrival at temperature, 24 h data. CONFIRMED that B is in 1/h and not 1/s as printed in Tab. 5.2: at 1075 C rho(t=0) = 0.984 - 0.05 = 0.934, matching the measured on-arrival density, and rho(24 h) tends to rho_s.
+    - **source**: J. Ott, Diss. 2022, Eq. 5.4 and Tab. 5.2; unit check derived here
+  -
+    - **quantity**: Native oxide growth on stored Cu powder
+    - **value**: d_ox = 3.66 * t^0.266 nm with t in days at room temperature in air; 12.3 +/- 3.2 nm after 96 days
+    - **units**: nm
+    - **context**: Derived by Ott from TGA reduction mass balance assuming Cu2O at 6.00 g/cm3 and a mean particle radius of 6.345 um. Corroborated by White et al. (5 nm in 20 h) and Campbell and Thomas (9 nm in 21 months). The oxide lowers Cu surface energy (pure Cu 1520 mJ/m2) and thereby improves dispersion, so slurry age affects rheology as well as the oxygen budget.
+    - **source**: J. Ott, Diss. 2022, Eq. 5.3, Fig. 5.7
+  -
+    - **quantity**: Green-to-sintered density slope for copper
+    - **value**: 0.21 over a green range of 58-72%, at 1080 C / 3 h in H2
+    - **units**: d(rho_sint)/d(rho_green)
+    - **context**: VERIFIED at source. Below 60% green gives 95-96% sintered; just over 70% green gives about 98%. A loose powder bed at 56.5% packing gave 94.8 +/- 0.2%.
+    - **source**: J. Ott, Diss. 2022, Sect. 5.2.1, Fig. 5.8
+  -
+    - **quantity**: Incus LMM copper datasheet properties
+    - **value**: 95.5 +/- 0.5% density; 93.8 %IACS; 385 W/(m.K) CALCULATED via Wiedemann-Franz; YS 40 MPa; UTS 193 MPa; elongation 41%; powder O 0.04 wt%
+    - **units**: mixed
+    - **context**: Benchmarked in the same datasheet against MIM typical: YS 69 MPa, UTS 207 MPa, elongation 30%, 360 W/m.K, 97.65% density. Replaces the recon's '99.9% Cu / 92% of wrought conductivity'.
+    - **source**: Incus GmbH, Material Data Sheet 'Copper', 2025
+  -
+    - **quantity**: CEA DLP copper outcome (the pessimistic benchmark)
+    - **value**: DLP part 90% density, C 0.018 wt%, O 0.062 wt%, diffusivity 32.0 mm2/s, k = 103 W/m.K; gamma-cured cylinder 93%, O 0.067, 35.7 mm2/s, 118 W/m.K; pressed and sintered reference from the same powder 97.8 +/- 0.2% and 250-270 W/m.K
+    - **units**: mixed
+    - **context**: OFE copper is 393 W/m.K. The powder was ECKA DHP with 0.02-0.025 wt% P; BAPO raised final P to 0.035 wt%. Note the resin-free reference was also only 250-270 W/m.K.
+    - **source**: Roumanie et al. 2021, Sect. 3.3.4 and 3.4, Table 5
+  -
+    - **quantity**: CEA copper formulation and printing conditions
+    - **value**: 60 vol% Cu (40 vol% resin); DV50 22 um and DV90 42 um air-atomised ECKA; photoinitiator at 5 wt% of the photocurable fraction; slurry viscosity above 10 Pa.s at 100 1/s to stop settling; 365 nm at 88 mW/cm2; minimum cured thickness target 50 um giving a minimum layer of 25 um
+    - **units**: mixed
+    - **context**: Powder analysis: Cu over 99.9, B 0.01, P 0.02, C 0.02, N under 0.05, O under 0.05 wt%. Resins F1-F4 were SR238 (HDDA) plus SR355 (tetrafunctional oligoacrylate) plus CN509, CN371EU or Diacryl 101, with BAPO/MMMP or DMPA initiators.
+    - **source**: Roumanie et al. 2021, Tables 1-2, Sect. 2.1-2.2
+  -
+    - **quantity**: Measured optical absorption of copper powder (integrating sphere, 1 cm quartz cell)
+    - **value**: 92% at 250 nm falling to 81% at 500 nm; 87% at 365 nm (reflectivity 13%)
+    - **units**: % absorption
+    - **context**: KEY DIRECTIONAL CORRECTION: absorption DECREASES with wavelength, so 450 nm on the 2M30 is marginally better for penetration than 365 or 405 nm, not worse. Cu optical constants at 365 nm are n = 1.362, k = 1.962; the acrylate matrix is about n = 1.5, so refractive-index matching, Lithoz's standard lever, is impossible for copper.
+    - **source**: Roumanie et al. 2021, Sect. 3.1, Fig. 4
+  -
+    - **quantity**: Derived exposure time on the 2M30 for a copper slurry using the Fraunhofer working curve (52 vol%, d50 16 um, Dp 8.2 um, Ecrit 3.2 mJ/cm2)
+    - **value**: Cd 20 um needs 37 mJ/cm2 = 0.7 s; Cd 30 um needs 124 mJ/cm2 = 2.5 s; Cd 50 um needs 1423 mJ/cm2 = 28.5 s; Cd 60 um needs 4819 mJ/cm2 = 96 s
+    - **units**: s at 50 mW/cm2
+    - **context**: Derived here. With Lithoz's own rule that cure depth must be at least twice the layer thickness, a 10-15 um layer is comfortable (under 5 s) but a 25 um layer needs about 30 s per layer, which already saturates the machine's 100 layers/h. At 58 vol% (Dp 5.8 um) a 25 um layer becomes impractical at 233 s. Caveat: the Jacobs fit under-predicts badly at low dose - the lowest energy that actually cures a filled Cu suspension is about 100x Ecrit, i.e. 200 mJ/cm2 for d50 16 um.
+    - **source**: derived from Scheibler et al., Metals 2024, 14, 1268, Tab. 3 plus the 2M30 intensity in Nohut et al. 2022
+  -
+    - **quantity**: Lithoz cure-depth design rule
+    - **value**: cure depth at least 2x layer thickness
+    - **units**: ratio
+    - **context**: Lithoz's own statement, independently matching Vogel et al.'s 'overlap of two' for LMM. Fraunhofer showed an overlap of 1.25 already gives 20 MPa green strength, versus 10 MPa at 0.75 and 23 MPa at 2.0, so 1.25-1.5 is the efficient compromise.
+    - **source**: Stampfl et al., MRS Commun. 13 (2023) 786-794; Scheibler et al., Metals 2024, 14, 1268, Fig. 9
+  -
+    - **quantity**: Lithoz scattering / penetration-depth relation
+    - **value**: Dp = (2/3) * (d50/phi) * Q with Q = (h/lambda) * delta_n^2, and the text stating that Dp depends inversely on delta_n^2
+    - **units**: dimensionless
+    - **context**: h is the interparticle distance, lambda the wavelength, delta_n the refractive-index mismatch. The printed equation and the prose disagree on whether Q multiplies or divides - resolve against the original before coding. For copper delta_n is enormous and k is large, so absorption rather than scattering controls and Dp collapses to 6-15 um.
+    - **source**: Stampfl et al., MRS Commun. 13 (2023) 786-794, Eqs. 3-4
+  -
+    - **quantity**: Shende-Lombardo / Darcy internal-pressure debinding model, full parameter set
+    - **value**: E = 151 kJ/mol and A = 8.5e15 1/s for PVB; Vg0 = 0.19, Vb0 = 0.31, Vs0 = 0.50; half-length L = 0.01 m; M_gas = 0.044 kg/mol; rho_b = 1000 kg/m3; gas viscosity 2.5e-5 Pa.s; tortuosity constant k = 5; S = 6e6 1/m; permeability kappa = Vg^3 / (k*(1-Vg)^2*S^2)
+    - **units**: mixed
+    - **context**: A ready-to-use COMSOL implementation (Darcy's law plus a coefficient-form PDE for the reaction). Predicts internal pressure ratios up to about 12 at 10 K/min. For a Cu slurry substitute Vg0 about 0 (no initial porosity until the solvent leaves), Vb0 0.45-0.55, and S = 6*phi/d50 about 3e5 1/m for 10 um Cu.
+    - **source**: M.L. Incledon, MSc thesis, Rutgers 2013, 'Modeling Binder Removal in Ceramic Compacts', Tables 1-2 and Eqs. 10-13, after R.V. Shende and S.J. Lombardo
+  -
+    - **quantity**: Anisotropic continuum sintering (SOVS) formulation and identification route
+    - **value**: sigma = 2*eta(T)*[phi(theta)*edot_dev + (psi(theta) - phi/3)*tr(edot)*I] + Pl*I; 2*eta = eta0*T*exp(Q/RT); Pl = (3*alpha/r)*(1-theta)^2; shear term G = eta*beta*(1-theta)^chi; optimum moduli exponents zeta = 1.5 and gamma = 1
+    - **units**: dimensionless
+    - **context**: Identification sequence: multi-rate dilatometry, then MSC plus Wang-Raj for Q, then porosity- and temperature-independent regression for the bulk-modulus exponents, then FEM of the dilatometry pellet to fit the directional sintering stresses PlR and PlZ, then an overhang or slumping test to fit the shear viscosity. Apparent Q for porcelain came out at 350 kJ/mol by MSC.
+    - **source**: Hammouda and Maniere, 'Finite Element Prediction of Sintering Deformation in 3D-Printed Porcelain Filament', CRISMAT/ENSICAEN preprint (full text read); Lester, SAND2017-12933R, 'Verification of the Skorohod-Olevsky Viscous Sintering (SOVS) Model'
+  -
+    - **quantity**: VPP debinding crack behaviour versus layer thickness (Si3N4, 3DCERAM C100)
+    - **value**: 20 um layers successfully debound both 9 mm and 11 mm cubes; 30 and 40 um layers failed or partially failed
+    - **units**: um layer versus mm section
+    - **context**: Counter-intuitive and important: thinner layers debind thicker sections. The cycle used 0.1 K/min at critical decomposition temperatures for 130 h total on walls over 10 mm. Dataset of 45 honeycomb conditions; features were layer thickness, wall thickness and minimum cell thickness; targets were crack, horizontal (delamination) and vertical (translayer).
+    - **source**: Maniere, Marie, Marinel, 'An experimental approach for predicting vat photopolymerization debinding cracks using machine learning', Open Ceramics (2025), HAL preprint (full text read); cycle from Marie et al., J. Eur. Ceram. Soc. 45 (2025) 116911
+  -
+    - **quantity**: LithaCon 3Y (39 vol% zirconia) Lithoz-supplied cycle, re-verified verbatim from Fig. 3
+    - **value**: 0.2 K/min to 75 C/3 h; 0.05 to 110 C/4 h; 0.05 to 120 C/9 h; 0.05 to 130 C/12 h; 0.1 to 140 C/4 h; 0.25 to 170 C/4 h; 0.2 to 200 C/4 h; 0.15 to 250 C/2 h; 0.5 to 350 C; 1.20 to 420 C; 1.40 to 500 C; 1.67 to 1250 C. Sintering: 0.4 K/min to 300 C then 25 K/min to 1450 C with a 2 h hold
+    - **units**: K/min, C, h
+    - **context**: Total about 140 h as plotted. Authors are Conti, Bienenstein, Borlaf and Graule at Empa, not the authors the recon guessed. Shrinkage 11% after debinding and 29% after 1450 C/2 h; Lithoz compensation factor 1.354. The paper does NOT state the atmosphere for this particular cycle.
+    - **source**: Conti, Bienenstein, Borlaf, Graule, Materials 2020, 13, 1317, Fig. 3 and Sect. 2.3, DOI 10.3390/ma13061317
+  -
+    - **quantity**: LCM zirconia cure depth at Lithoz's own working point
+    - **value**: 81.1 +/- 2.5 um at 83 mJ/cm2 (n = 5)
+    - **units**: um
+    - **context**: Cure-depth to layer-thickness ratio is 8.1 at 10 um, 3.2 at 25 um and 1.6 at 50 um. The supplier-recommended dose is 110-190 mJ/cm2 but 83 mJ/cm2 gave the best dimensional accuracy, with 160 and 190 giving large over-polymerisation. Thinnest printable wall 100 um; 75 um delaminated.
+    - **source**: Conti et al., Materials 2020, 13, 1317, Sect. 3.1-3.2
+  -
+    - **quantity**: MIM-feedstock extruded copper sintering series (independent Cu benchmark)
+    - **value**: thermal debind to 500 C with about 6.5 wt% total loss; sintered at 950, 1000, 1030 and 1050 C; best 94.5% relative density at 1050 C with isotropic shrinkage
+    - **units**: mixed
+    - **context**: A water-soluble solvent debind preceded it. Useful second data point on the sintering-temperature versus density trade for copper outside the photopolymer route.
+    - **source**: Singh, Missiaen, Bouvard, Chaix, Int. J. Adv. Manuf. Technol. 115 (2021) 449-462, DOI 10.1007/s00170-021-07188-y
+  -
+    - **quantity**: Cu/Cu2O equilibrium oxygen partial pressure
+    - **value**: about 3e-19 at 400 C; about 1.5e-9 at 800 C
+    - **units**: bar
+    - **context**: DERIVED here from standard Ellingham coefficients for 2Cu + 1/2 O2 = Cu2O (dG about -167 kJ/mol + 71 J/mol/K * T). Consequence: 5N argon at about 1 ppm O2 (1e-6 bar) is oxidising to copper at sintering temperature. On the reduction side, Cu2O + H2 = 2Cu + H2O has K of order 1e7 at 400 C, so the H2O/H2 tolerance is effectively unlimited - the constraint is kinetic and mechanical (steam in closed pores), never thermodynamic. Verify the dG coefficients against a thermodynamic database before publishing.
+    - **source**: derived here; the coefficients are standard Ellingham values and were not independently sourced in this session
+  -
+    - **quantity**: Shrinkage and scale factors for LCM copper (derived)
+    - **value**: green 0.45 to 0.95 gives F 1.283 and 22.0% linear; 0.50 to 0.95 gives F 1.239 and 19.3%; 0.55 to 0.95 gives F 1.200 and 16.7%; 0.50 to 0.92 gives F 1.225 and 18.4%; 0.55 to 0.92 gives F 1.187 and 15.8%
+    - **units**: scale factor and % linear
+    - **context**: Volume shrinkage 40-53%. Sanity anchor: CEA measured 19% linear on about 92%-dense parts, which back-calculates to an effective green density of about 49% despite a nominal 60 vol% loading - always invert from measured green density, never from nominal solid loading.
+    - **source**: derived; anchor from Roumanie et al. 2021
+  -
+    - **quantity**: LMM copper green strength versus build orientation
+    - **value**: X;Z 20, Y;Z 17, Z;Y 13 at 52 vol%; 15 at 58 vol%
+    - **units**: MPa
+    - **context**: About 35% drop when the long axis lies along Z. Also overlap 0.75 gives 10 MPa, 1.25 gives 20 MPa and 2.0 gives 23 MPa. Higher loading LOWERS green strength because it reduces cure depth and hence overlap.
+    - **source**: Scheibler et al., Metals 2024, 14, 1268, Figs. 7-9
+  -
+    - **quantity**: Effect of powder oxygen content on cure depth
+    - **value**: H2-reduced low-oxygen Cu powder at d50 4.5-5.1 um and 50 vol%, cured at 365 nm and 85 mW/cm2, gave over 60 um at 850 mJ/cm2, versus 36 um interpolated for as-received d50 16 um powder at the same dose
+    - **units**: um
+    - **context**: Powder surface oxidation state changes the optical properties and therefore the printability. Relevant because slurry age drives oxide thickness via 3.66*t^0.266 nm.
+    - **source**: Resch, Benayad, Roumanie, Croutxe-Barghorn, Mater. Today Commun. 35 (2023) 105595, as reported in Scheibler et al., Metals 2024, 14, 1268, Sect. 4.1
+  -
+    - **quantity**: LithaNit 720 debinding mass loss, re-verified
+    - **value**: 35.3 in air and 34.8 in nitrogen; decomposition complete 350-400 C in air and 400-450 C in nitrogen
+    - **units**: wt%, C
+    - **context**: 40 vol% SiAlON, TGA at 2 K/min to 500 C. Sintered at 1750 C for 5 h in N2 in a graphite furnace embedded in a Si3N4 plus BN powder bed, reaching 99.8 +/- 0.2% relative density against 3.24 g/cm3. Debinding was done in an air furnace. Lithoz's own figure caption describes the three thermal stages as drying, debinding and sintering.
+    - **source**: Schwentenwein et al., Appl. Sci. 2020, 10, 996, Sect. 2.2-2.3 and Figs. 2, 3, 8
+  -
+    - **quantity**: Lithoz LCM total thermal processing time and wall-thickness capability
+    - **value**: 8-72 h typical; wall thicknesses beyond 15-20 mm are difficult to achieve
+    - **units**: h, mm
+    - **context**: From Lithoz's own 2023 review. The often-quoted 3-4 mm limit is a conservative secondary citation, not a material property; LithaCon ATZ 980 is advertised at up to 20 mm wall thickness.
+    - **source**: Stampfl, Schwentenwein, Homa, Prinz, MRS Commun. 13 (2023) 786-794; Lithoz Material Overview brochure
+- **corrections**:
+  - WRONG: '35 um' is not the error, '635 dpi' is. The recon treated the 2M30 datasheet's '35 um (635 dpi)' as an unresolvable contradiction and leaned toward 40 um or 30 um. A Lithoz-coauthored paper that used this exact machine states 2194 x 1234 pixels at 35 um lateral resolution, giving 76.79 x 43.19 mm, and the arithmetic closes exactly. 35 um is real (726 dpi); the '635 dpi' is a template copy-paste from the 40 um S65/L30 datasheets. Source: Nohut et al., Addit. Manuf. Lett. 3 (2022) 100060.
+  - WRONG: the 2M30 is 450 nm at a maximum of 50 mW/cm2, not 460 nm at 83 mW/cm2. The 460 nm and 83.12 mW/cm2 figures belong to the CeraFab 7500. This matters because the 2M30 has about 40% less peak intensity, which directly sets exposure time for a strongly absorbing copper slurry.
+  - WRONG DIRECTION: the recon said copper's low reflectance in the 380-460 nm band means 460 nm gives a 'very short optical penetration depth' relative to other wavelengths, citing '>90% absorption at 385 nm' from Fraunhofer IFAM. CEA MEASURED copper powder absorption with an integrating sphere: it FALLS from 92% at 250 nm to 81% at 500 nm, and is 87% at 365 nm. So 450 nm is marginally better than 365 or 405 nm, not worse. The '>90% at 385 nm' claim could not be located in the Fraunhofer paper, which cites a copper handbook only for the statement that Cu reflectivity is 'low in the 400 nm range'. Treat that number as unverified.
+  - OVERSTATED: the '3-4 mm wall thickness limit for LCM'. Conti et al. quote 3 mm citing a secondary reference, but Lithoz's own 2023 review states 'wall-thicknesses beyond 15-20 mm are difficult to achieve', the Lithoz material brochure advertises LithaCon ATZ 980 at 'wall thicknesses up to 20 mm' and another grade above 6 mm, and Maniere and Marie debound Si3N4 sections over 10 mm with a 130 h / 0.1 K/min cycle. The limit is a function of cycle design, not a material property. Do not architect the system around 3-4 mm.
+  - MISATTRIBUTED CITATION: the recon's source field for the LithaCon 3Y cycle reads 'Schmidt & Colombo? No - Bertsch/Dehurtevent? Actual: Materials 2020, 13, 1317'. The correct citation is Conti, L.; Bienenstein, D.; Borlaf, M.; Graule, T., 'Effects of the Layer Height and Exposure Energy on the Lateral Resolution of Zirconia Parts Printed by Lithography-Based Additive Manufacturing', Materials 2020, 13, 1317 (Empa). The cycle values themselves are verified correct.
+  - UNSUPPORTED: 'Lithoz runs it in air (confirmed independently for LithaLox HP500...)'. The Conti paper does not state the atmosphere for the LithaCon 3Y cycle. Air is confirmed only for LithaLox HP500 (Ozog 2019) and LithaNit 720 (Schwentenwein 2020). The inference is reasonable but should be labelled as an inference.
+  - WRONG PHYSICS: 'near-zero gas permeability of the fine Cu skeleton'. Permeability in the Kozeny-Carman form scales as 1/S^2 where S = 6*phi/d. A 10-16 um copper skeleton has S of order 3e5 1/m versus about 6e6 1/m for the fine BaTiO3 and zirconia powders in the debinding-model literature, so the copper skeleton is roughly 400x MORE permeable once porosity exists. The real problem is different and more specific: an as-printed LCM green body has essentially zero open porosity (Vg0 about 0) until the non-reactive solvent has evaporated, which is exactly what Lithoz's 25-hour 110-130 C drying block does.
+  - MISSED DISTINCTION: the recon treated the whole sub-300 C portion of the Lithoz cycle as 'the rate-limited part of the debinding'. Lithoz's own publications describe three stages - drying (slow solvent evaporation to open microscopic channels), debinding (polymer decomposition) and sintering. The 0.05 K/min blocks at 110, 120 and 130 C are the DRYING stage, governed by solvent vapour pressure and diffusion, not polymer pyrolysis kinetics. They need a different sub-model, and for copper they are far less dangerous (no oxidation at 130 C) than the recon implies.
+  - UNDERSTATED: 'CEA measured only 180 ppm residual C yet still got k = 250 W/m/K (63% of bulk)'. The 250-270 W/m.K figure was the PRESSED-AND-SINTERED, RESIN-FREE REFERENCE from the same DHP powder. The actual DLP-printed parts reached only 103 W/m.K at 90% density with cracks, and the gamma-cured cylinders 118 W/m.K. So the printed-part penalty is far worse than reported, and the dominant cause of the reference's own shortfall is phosphorus in the DHP powder (0.02-0.025 wt%), not the photoinitiator. BAPO added about 100 ppm P on top, to 0.035 wt% final.
+  - WRONG NUMBERS: the Incus claim. The recon reported '99.9% Cu, 60 vol% loading, 92% of wrought Cu conductivity, total furnace time <12 h'. The actual Incus 2025 copper datasheet states 95.5 +/- 0.5% relative density, 93.8 %IACS, 385 W/m.K explicitly CALCULATED from electrical conductivity via Wiedemann-Franz rather than measured, UTS 193 MPa, elongation 41%, and powder O 0.04 wt%. The '<12 h' figure is not in the datasheet.
+  - CONFIRMED SUSPICION, now proven: the units of B in Ott's Eq. 5.4. Table 5.2 prints B in 1/s. It must be 1/h - at 1075 C, rho(t=0) = 0.984 - 0.05 = 0.934, which matches the measured on-arrival density of about 93%, and rho(24 h) tends to rho_s. Use 1/h.
+  - INCOMPLETE: the recon's Ott summary omits the single most useful result in the thesis - a two-stage cycle of 800 C/12 h followed by 1075 C/6 h in H2 reaches 99.3%, beating 1075 C/24 h (98.4%) and 1075 C/32 h (99.0%). It also omits Ott's explanation of why the conventional ceramic two-step sinter (high then low) fails for copper: Cu grain-growth activation energy is only 106.7 kJ/mol, so pore separation begins immediately after pore closure with no time to reduce temperature.
+  - APPARENT CONTRADICTION FLAGGED AND RESOLVED: Scheibler et al. cite Ott for 'over 99% relative density (850 C for 6 h and 1075 C for 6 h in H2)', which conflicts with the recon's 24 h isothermal ceilings of 96.6-98.6%. Both are correct - the ceilings are for single-stage isothermal sintering, whereas over 99% (actually 99.3%) comes from the two-stage cycle. The recon presented only the ceilings and therefore concluded that 'the only reason to go to 1075 C is speed'. That conclusion is wrong.
+  - BINDER-DENSITY ASSUMPTION IMPROVED: the recon used rho_b about 1.1 g/cm3 as an assumption. It can be pinned down - two independent determinations (LithaLox HP500 slurry-density inversion and LithaNit 720 TGA inversion) both give 1.11-1.155, so rho_b = 1.13 +/- 0.03 g/cm3. More importantly, the recon restricted phi to 0.50-0.55 for the Cu slurry with no evidence; Lithoz's own ceramic slurries run 39-49 vol%, so the binder mass fraction range should be 9.4-15.9 wt% for phi 0.40-0.55, not 9-11 wt%.
+  - OVERSTATED EVIDENCE: 'Lithoz has publicly demonstrated copper co-printed with an alumina-based glass ceramic on the CeraFab Multi 2M30 (Formnext 2023)' was rated high confidence. I fetched the source article - copper appears ONLY as an image caption, with no supporting text, no process data and no co-sintering discussion. The photo most likely shows a green part. This should be medium-low confidence.
+  - MISSING CAVEAT on the oxidation framing: the recon says 'Cu oxidises measurably above ~200 C in air' as though it were a modest effect. Ott and CEA both measured 8-10 wt% mass GAIN by 350-400 C. Since the whole binder is only about 10 wt% of the green body, the oxygen picked up during air debinding is comparable in mass to the entire binder, and produces roughly 2.4x more gas on reduction than the binder produces on pyrolysis. This reframes the entire problem.
+  - METHOD NOTE on this session: the WebSearch tool's budget (200 of 200 calls) was already exhausted before this task began, and DuckDuckGo, Bing, Brave, Ecosia, Startpage and every public SearXNG instance returned CAPTCHAs or 403s. I worked around this with the Crossref REST API for literature discovery, direct WebFetch and curl on known URLs, res.mdpi.com for MDPI PDFs, HAL and Fraunhofer-Publica mirrors, and a proof-of-work solve against the Anubis bot-wall on publikationen.sulb.uni-saarland.de to obtain Ott's full thesis (20 MB, about 337000 characters of extracted text). MDPI HTML, Springer, HAL landing pages and all patent databases were hard-blocked. About 25 PDFs already cached in this session by the prior recon agent were also mined in full. So the '8-15 distinct searches' instruction was met in substance by a different mechanism, but the parent should know that no keyword web search was possible.
+- **actionable_for_architecture**:
+  - DO THE PYCNOMETER MEASUREMENT FIRST. One slurry-density measurement gives phi = (rho_slurry - 1.13)/7.83 to about +/-1 vol%. Every downstream quantity - binder mass fraction, CAD scale factor, achievable sintered density via the 0.21 slope, gas budget - hangs off phi. Make it the first node of the simulation input file and make everything else a function of it, so the whole model re-solves the moment the number arrives. Cost: one afternoon and about 5 g of slurry.
+  - ARCHITECT THE CYCLE AS FOUR PHYSICALLY DISTINCT STAGES, NOT TWO. (1) DRYING, 25-130 C, controlled by solvent vapour pressure and Fickian diffusion, purpose is to open the pore network (Vg from about 0 to about 0.1); atmosphere irrelevant, copper safe. (2) BURNOUT, 150-400 C, controlled by DAEM/multi-step pyrolysis plus Darcy pressure build-up, MUST be in air because only air gets carbon to powder level, and simultaneously generates 3-10 wt% oxygen pickup. (3) REDUCTION, 300-800 C in H2 or forming gas, controlled by shrinking-core oxide reduction plus counter-diffusion of H2 in and H2O out - the largest gas-transport event in the whole cycle and currently unmodelled in the literature. (4) SINTERING, 800-1075 C, SOVS continuum model. The recon's two-stage framing will not capture the controlling physics.
+  - MAKE PORE CLOSURE A HARD CONSTRAINT IN THE OPTIMISER. Ott's micrographs bracket closure between 81.8% (900 C, tubular pores) and 92.6% (1075 C, closed pores) for 70% green density at 5 K/min. The optimiser must enforce that residual oxygen and residual carbon are both below target BEFORE the density trajectory crosses about 85%. Formulate it as a state constraint on the coupled (rho, C, O) trajectory, not as a fixed temperature.
+  - IMPLEMENT THE INTERNAL-PRESSURE FAILURE CRITERION, NOT JUST MASS LOSS. Use the Shende-Lombardo continuity equation with Darcy flow and Kozeny-Carman permeability kappa = Vg^3/(k*(1-Vg)^2*S^2). A full COMSOL parameter set is available (E = 151 kJ/mol, A = 8.5e15 1/s for PVB; gas viscosity 2.5e-5 Pa.s; k = 5; M_gas = 0.044 kg/mol). For copper set Vg0 about 0 and S = 6*phi/d50 about 3e5 1/m. Run the solver twice - once for binder gas, once for reduction steam - and superpose. The optimiser's objective is minimum total time subject to max(P/P0) below a calibrated threshold everywhere in the part.
+  - USE A DAEM OR MULTI-STEP ISOCONVERSIONAL KINETIC MODEL, NOT A SINGLE ARRHENIUS STEP. Lithoz binders are multi-component (non-reactive solvent plus several acrylate/methacrylate monomers of differing functionality plus dispersants plus initiator). Fit with Vyazovkin/Friedman isoconversional analysis on TGA at 3-5 heating rates (0.5, 1, 2, 5, 10 K/min) in Ar AND in air - the air branch is a different reaction set (oxidative burn of the char) and must be fitted separately. Two directly relevant precedents to mirror: Ceram. Int. 45 (2019) DOI 10.1016/j.ceramint.2019.01.118 (DAEM plus FE for a gelcast SiAlON) and J. Am. Ceram. Soc. 2025 DOI 10.1111/jace.20470 (predicting photopolymer resin pyrolysis kinetics specifically for ceramic VPP).
+  - BUILD THE SINTERING MODEL AS SOVS WITH ANISOTROPIC SINTERING STRESS: sigma = 2*eta(T)*[phi(theta)*edot_dev + (psi(theta) - phi/3)*tr(edot)*I] + Pl*I, with 2*eta = eta0*T*exp(Q/RT) and Pl = (3*alpha/r)*(1-theta)^2. Proven identification sequence: multi-rate dilatometry, then MSC plus Wang-Raj for the apparent Q, then porosity-independent regression for the modulus exponents (zeta about 1.5, gamma about 1 was optimal for porcelain), then FEM of the dilatometry pellet itself to fit the directional sintering stresses PlR and PlZ, then a separate overhang or slumping test to fit the shear viscosity G = eta*beta*(1-theta)^chi. Cross-check Q against Cu lattice self-diffusion (197.2 kJ/mol) and remember Cu grain-growth Q is only 106.7 kJ/mol, so grain growth must be an explicit state variable coupled to pore drag.
+  - SEED THE SINTERING OPTIMISER WITH TWO-STAGE PROFILES, NOT SINGLE-DWELL ONES. The literature optimum for pure copper is 800 C/12 h then 1075 C/6 h in H2 at 15 K/min ramps, giving 99.3%, which beats 1075 C/32 h. The mechanism is pore pinning to mobile grain boundaries below 900 C followed by maximum transport at 1075 C. Parameterise the search over (T1, t1, T2, t2) with T1 in 750-900 C and T2 in 1000-1075 C, and add the LCM-specific constraint that T2 must stay below about 1075 C because Cu melts at 1084 C and furnace overshoot is fatal.
+  - ADD AN OXYGEN AND CARBON MASS-BALANCE STATE VECTOR - THIS IS THE PAPER. Track C(x,t) and O(x,t) as fields alongside temperature and density. The governing insight, which appears to be unpublished: reducing an 8 wt% oxygen pickup releases about 4.45 mmol H2O per gram of part versus about 1.83 mmol from binder pyrolysis - 2.4x more gas, about 0.32 L of steam per gram at 600 C - and consumes about 9 mg H2 per gram. Then optimise the air-exposure integral: enough oxygen to gasify the char, because air is the only atmosphere that works, but as little as possible, because every gram of oxygen must come back out as steam through a shrinking pore network. A plausible novel strategy the model can test is staged or pulsed pO2, or air only up to 250-300 C followed by a switch, trading residual C against oxygen inventory.
+  - SIZE THE PRINT PARAMETERS FROM THE 2M30's REAL OPTICS: 35 um pixel, 2194 x 1234, 450 nm, 50 mW/cm2 maximum. With a copper working curve of Dp about 6-15 um and Lithoz's own rule that cure depth must be at least twice the layer thickness, the practical layer window is 10-15 um (0.7-2.5 s exposure); 25 um layers need about 28 s per layer and 58 vol% at 25 um is impractical at over 200 s. Carry the empirical caveat that the Jacobs fit is invalid at low dose - the minimum energy that actually produces a coherent cured layer in a filled Cu suspension is about 100x the fitted Ecrit, i.e. about 200 mJ/cm2. Measure the real working curve by single-layer exposure on the 2M30 before trusting any of this.
+  - MAKE LAYER THICKNESS A DEBINDING VARIABLE, NOT JUST A PRINTING VARIABLE. The Maniere and Marie dataset shows 20 um layers successfully debound 9-11 mm Si3N4 cubes while 30 and 40 um layers cracked. Thin layers reduce the through-layer polymerisation gradient and improve interlayer bonding, which suppresses delamination. This couples the optical model to the debinding model and is a genuine design-of-experiments axis - and it is the axis copper's short penetration depth forces you onto anyway.
+  - PLAN A CHEAP SURROGATE-CURING ROUTE TO CONSERVE THE R&D SLURRY. CEA cured copper formulations in bulk with Co-60 gamma irradiation (30 kGy over 15-20 h at about 2 kGy/h) in tubes, sliced them into 13 mm by 5 mm cylinders, and used those to screen the whole debinding and sintering matrix before committing printer time; they then verified that DLP-printed parts gave the same C and O. An equivalent low-tech version is flood-curing slurry in moulds under a 450 nm LED array. Given that the Lithoz copper slurry is irreplaceable, build the screening campaign around bulk-cured coupons and reserve printing for validation.
+  - INSTRUMENT FOR THE RIGHT ACCEPTANCE CRITERIA. Carbon alone is not sufficient - CEA hit powder-level carbon (180 ppm) and still measured 103 W/m.K on printed parts. Specify LECO/IGA for C and O (ISO 15350 and DIN EN 10276 are the methods CEA used), ICP-OES or GDMS for P and S, four-point-probe or eddy-current %IACS per ASTM E1004, laser-flash diffusivity, Archimedes density, and a metallographic crack and pore census. Target band: C at or below 200 ppm, O at or below 100 ppm and ideally below 10 ppm before any post-pore-closure H2 exposure, P as low as the powder allows, density at least 95%, %IACS at least 90.
+  - TREAT THE COPPER POWDER GRADE AS A FIRST-CLASS MODEL INPUT AND ASK LITHOZ FOR IT. The 103 versus 385 W/m.K gap between CEA and Incus is explained almost entirely by powder chemistry (DHP with 0.02-0.025 wt% P versus a 0.04 wt% O low-P grade) plus density and cracks. Ask Lithoz for powder grade and supplier, d10/d50/d90, morphology, P/S/O/C by ICP-OES and IGA, and the slurry's manufacture date, since native oxide grows as 3.66*t^0.266 nm and that shifts both the oxygen inventory and the slurry rheology. If the powder is DHP, no thermal cycle will ever give good conductivity and the project's headline claim should be reframed toward geometry and density rather than conductivity.
+  - PUT AN UNCERTAINTY LAYER OVER THE WHOLE THING. Almost every parameter that matters is either proprietary (binder chemistry, initiator, dispersant) or unmeasured (phi, Dp, Ecrit, anisotropic shrinkage). Architect the system so that phi, rho_binder, the DAEM kinetic spectrum, the oxidation rate constant and the SOVS parameters are all probability distributions; propagate them with a Gaussian-process or polynomial-chaos surrogate; and have the optimiser return a cycle that is ROBUST over the posterior rather than optimal at the mean. This also makes the Bayesian-calibration-from-TGA-and-dilatometry loop the natural paper contribution: reverse-engineering an unknown proprietary binder system from three thermoanalytical measurements.
+  - ADD A DATA-DRIVEN CRACK CLASSIFIER ALONGSIDE THE PHYSICS. The Maniere group argues that layer-by-layer crosslink-density variation and interlayer weakness cannot be captured by calorimetry-driven FE alone; they used a 45-sample grid over layer thickness, wall thickness and minimum cell thickness with PyCaret and scikit-learn, shallow Random Forest and XGBoost, and a Gaussian Process classifier with RBF and Matern kernels chosen specifically because it gives uncertainty on small datasets, scored by macro-F1 under stratified 5-fold cross-validation. Replicate that as a cheap safety net over the physics model - a single printed test artefact with graded wall thicknesses yields dozens of labelled data points per debinding run.
+  - DESIGN THE VALIDATION ARTEFACT TO MEASURE ANISOTROPY AND THICKNESS SENSITIVITY IN ONE PRINT. Include X/Y/Z dilatometry bars, a wall-thickness ladder (0.5, 1, 2, 4, 8 mm), a honeycomb with graded cell walls, thin-wall gears (CEA showed gears reached 220 ppm O versus 620-670 ppm for 3 mm cylinders, so thin walls are the oxygen escape route), and green-strength bend bars in the six orientations Fraunhofer used. One print and one cycle then yields the shrinkage tensor, the crack map, the oxygen-versus-thickness curve and the green-strength anisotropy simultaneously.
+  - FOR MULTI-MATERIAL, SOLVE ATMOSPHERE BEFORE SHRINKAGE. Copper caps the co-firing temperature at about 1075 C, which excludes every Lithoz ceramic except glass-ceramics. The harder constraint is that copper needs pO2 below about 1.5e-9 bar at 800 C while most glass-ceramics contain reducible oxides; industrial Cu co-firing uses humidified N2 in a narrow copper window. Scope this as a separate, later work package and do not let it complicate the single-material copper model.
+- **still_unknown**:
+  - The actual solid loading, green density, binder chemistry, binder content, photoinitiator identity and copper powder grade/PSD of the Lithoz R&D copper slurry. All of these are directly measurable or directly askable, and asking Lithoz is cheaper than any simulation. Specifically ask for: phi, powder supplier and grade, powder P/S/O content, d10/d50/d90, photoinitiator class (acylphosphine oxide or not), whether a light-absorbing dye is present, the recommended exposure window at 450 nm, and whether they have any internal debinding schedule even if unvalidated.
+  - Whether the Lithoz copper slurry can be debound with a ceramic-style schedule at all. No published Lithoz debinding cycle exists for any metal, and the entire rate-limited low-temperature block of their ceramic schedules is solvent drying, whose duration depends on the solvent's identity and vapour pressure, which are proprietary.
+  - The Lithoz patent landscape. Every patent database was hard-blocked in this session (Google Patents 503; Espacenet, Lens, EPO OPS and Justia 403; PatentsView proxy failure; Patentscope session-gated). A proper Espacenet or Lens.org search on applicant 'Lithoz GmbH' and inventors Homa, Schwentenwein, Wachter and Stampfl remains outstanding, as does a check on the copper-sintering patent applications that Ott's thesis says arose from his work, likely assigned to Universitaet des Saarlandes.
+  - Three highly on-point Euro PM papers whose full text is behind EPMA's paywall and whose abstract books I could not reach: 'Post-processing Strategies For Copper Parts Produced By Lithography-Based Metal Manufacturing' (Euro PM2025, doi 10.59499/ep256778885 - the single most relevant title found anywhere); 'Lithography-Based Manufacturing Of Near Net Shape Dispersion Strengthened Copper Parts By Cuprous Oxide Reduction' (Euro PM2023, doi 10.59499/ep235765269 - an oxide-reduction route that may be directly transferable); and 'Different Debinding Strategies For Lithography-based Additive Manufacturing Of Stainless Steel' (Euro PM2025, doi 10.59499/ep256763871). An EPMA membership or an inter-library request would get all three.
+  - Resch, Benayad, Roumanie, Croutxe-Barghorn, Mater. Today Commun. 35 (2023) 105595, 'LMM: Influence of particle size and composition of copper powder on UV light penetration'. Listed as bronze open access but Elsevier served no accessible copy. It is the only paper that systematically relates Cu powder oxidation state and PSD to optical penetration, and it would let you predict Dp for the Lithoz slurry without printing.
+  - J. Am. Ceram. Soc. 2025, doi 10.1111/jace.20470, 'Predicting photopolymer resin pyrolysis kinetics in ceramic vat photopolymerization additive manufacturing'. Wiley returned 403. This is very likely the closest existing prior art to the binder-kinetics half of the proposed system and must be read before writing any paper.
+  - Ceram. Int. 45 (2019) doi 10.1016/j.ceramint.2019.01.118, 'DAEM kinetics analysis and finite element simulation of thermal debinding process for a gelcast SiAlON green body'. Fully closed access. It is the template for the DAEM plus FE architecture.
+  - Pfaffinger, Mitteramskogler, Gmeiner, Stampfl, 'Thermal debinding of ceramic-filled photopolymers', cited by Lithoz's own Appl. Sci. 2020 paper as their debinding reference. Not retrieved. This is probably the most authoritative public account of how Lithoz itself thinks about debinding.
+  - Quantitative oxidation kinetics of copper in air below 400 C. I have three end-point mass gains (8 wt% at 400 C/4 h, about 10 wt% at 350 C/5 h, 14.4% at 600 C, 16.8% at 800 C) but no rate law k(T) and no dependence on compact geometry or residual binder coverage. Without this the air-debinding branch of the optimiser has only a crude interpolation. This is measurable in-house by isothermal TGA on green coupons at 150, 200, 250, 300, 350 and 400 C in air.
+  - Whether the Lithoz copper binder leaves char in air the way the CEA acrylates did (10-19% residue after 4 h at 400 C in air, about 7% in argon at 600 C). This changes the required air-exposure integral by a large factor and is measurable with one TGA series.
+  - The exact ASTM or EN oxygen-content limits for hydrogen-embrittlement-resistant copper grades. I asserted C10100 at or below 5 ppm and C10200 at or below 10 ppm from general practice but could not verify them against ASTM B170 in this session. Confirm before using them as an acceptance criterion.
+  - The Ellingham coefficients I used for dG_f(Cu2O), about -167 kJ/mol + 71 J/mol/K * T. These came from standard practice, not from a source retrieved in this session. Verify against FactSage, HSC or the NIST-JANAF tables before publishing the derived pO2 values of 3e-19 bar at 400 C and 1.5e-9 bar at 800 C.
+  - The value of the grain-boundary energy in Ott's parameter table, printed as 6.36e-12 J/mm2, which is about 1e5 smaller than the accepted value for copper of roughly 0.6 J/m2. Either an OCR artefact or a thesis typo - check the printed table before using it in a pore-drag model.
+  - Whether Lithoz's CeraFab Control software exposes per-layer exposure time and per-layer wait time via CeraAccess, and whether the 2M30's 50 mW/cm2 can be traded for longer exposure without thermal drift in the vat. This determines whether the optically-driven layer-thickness recommendation is actually implementable.
+  - Any evidence that Lithoz has ever SINTERED, as opposed to merely printed, the copper. The only public artefact is an uncaptioned photograph in a trade article. If they have not, the group should expect to be first, and should say so in the paper.

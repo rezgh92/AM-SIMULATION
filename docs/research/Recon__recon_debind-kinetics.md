@@ -1,0 +1,542 @@
+- **summary**: Binder-decomposition kinetics for an unknown-chemistry, copper-filled acrylate photopolymer must be treated as a multi-step, filler-perturbed, possibly competitive process, and built to ICTAC standard in five stages: (1) data collection under conditions proven free of heat/mass-transfer artefacts; (2) isoconversional screening to detect multi-step character; (3) resolution into steps (kinetic deconvolution and/or SCTA-based experimental separation); (4) model identification and kinetic-triplet fitting simultaneously over several thermal histories; (5) forward prediction of arbitrary T(t), including the constant-rate programme that is the optimum debinding cycle.
+
+The governing law is dα/dt = A exp(−Ea/RT) f(α) (ICTAC 2022 Eq. 1.2), with α from TG via α = (m_t − m_0)/(m_f − m_0). ICTAC's diagnostic is the Friedman plot ln(dα/dt) = ln[A f(α)] − Ea/RT evaluated at fixed α across heating rates; Ea may be called constant only if max−min over α = 0.1–0.9 is <10–20% of the mean. Rigid integral methods (OFW with the Doyle constants 5.331/1.052; KAS ln(β/T²) = ln(AR/Eg(α)) − E/RT) carry systematic error precisely when Ea varies with α — the case here — so the flexible/advanced integral method of Vyazovkin (minimise Φ(Eα)=ΣᵢΣ_{j≠i} J[Eα,Tᵢ(t_α)]/J[Eα,T_j(t_α)] with J = ∫_{t_{α−Δα}}^{t_α} exp(−Eα/RT(t))dt) or Friedman itself should be used. Kissinger is a single-point method and is unreliable under overlap.
+
+Acrylate networks do not unzip like PMMA. Crosslinked poly(alkyl acrylate)s degrade by random main-chain scission plus non-radical side-chain ester pyrolysis through six-membered transition states (β-H elimination giving olefin + acid/anhydride), with anhydride formation at acid sites, later CO₂ loss and ketone crosslinking — i.e., a char-forming pathway. The correct f(α) is therefore not nth-order: the Simha–Wall random-scission model, reformulated by Sánchez-Jiménez et al., gives f(α)=L(L−1)x(1−x)^{L−1} with α = 1−(1−x)^{L−1}[1+x(L−1)], symbolic only for L=2 (f=2(α^{1/2}−α)) and otherwise representable by truncated Šesták–Berggren f(α)=c α^m(1−α)^n. Using F1 instead of random scission reconstructs ramp data with r>0.99 yet produces order-of-magnitude errors in isothermal-hold predictions — fatal for designing debinding dwells.
+
+Copper is an active participant, not an inert filler. Cu/CuO catalyses oxidative decomposition of carboxylic/acrylic matrices, shifting complete decomposition 100–150 °C lower in air; in inert gas, decomposition radicals and H₂ reduce Cu(II) to Cu(0) while *doubling* char yield relative to the resin alone. That is the central thermodynamic trap: Cu forms no carbide, so residual carbon can only leave as CO/CO₂/hydrocarbons, and inert debinding maximises the char that cannot later be removed below Cu's melting point. Hence kinetics must be measured in *each* candidate atmosphere (Ar, Ar/H₂, air, humidified Ar, vacuum) — atmosphere changes the mechanism, not just the rate, so a single kinetic triplet cannot be transferred between atmospheres, and MDA/deconvolution is explicitly invalid for competitive oxidative routes whose branching ratio is heating-rate dependent.
+
+Experimental artefact control is decisive: sample mass 1–10 mg with mass×β ≲ 100 mg·K·min⁻¹, ≥4–5 programmes with β_max/β_min ≈ 10 by doubling, mass halved when β doubles for the two fastest runs, ~100 cm³/min purge (2–3× for horizontal TGA), and an explicit E-vs-mass test. For a 50 vol% Cu slurry the binder is only ~11 wt% of the green body (computed), so signal-to-noise, buoyancy and blank correction dominate; conversely Cu's high conductivity suppresses internal ΔT relative to a ceramic.
+
+Prediction is where the kinetics pays off. Model-free prediction uses t_α = J[Eα,T_exp(t)]/exp(−Eα/RT_0) for isothermal holds, or reconstruction from the Friedman intercept, dα/dt = exp(intercept_α)·exp(−Eα/RT(t)), valid for arbitrary T(t). The optimum debinding programme is the CRTA/SCTA trajectory: impose dα/dt = C and invert, T(α) = Eα / (R ln[A_α f(α)/C]) for one step, or solve Σ c_i A_i exp(−E_i/RT) f_i(α_i) = C numerically for multi-step. By construction this minimises the maximum decomposition rate for a given cycle duration, hence the peak pyrolysis-gas generation rate and peak internal pressure — the quantity that cracks parts. CRTA curves also fingerprint f(α) in a single run and separate overlapping steps, and the resulting data should be fed into a Combined Kinetic Analysis that fits ramp + isothermal + CRTA curves simultaneously to one triplet.
+- **key_facts**:
+  -
+    - **fact**: The ICTAC framework is spread over four papers that should be used together: 2011 (computations), 2014 (data collection), 2020 (multi-step kinetics), 2022 (thermal decomposition kinetics by material class, incl. a dedicated polymer section).
+    - **source**: Vyazovkin et al., Thermochim. Acta 520 (2011) 1-19, doi:10.1016/j.tca.2011.03.034; Vyazovkin et al., Thermochim. Acta 590 (2014) 1-23, doi:10.1016/j.tca.2014.05.036; Vyazovkin et al., Thermochim. Acta 689 (2020) 178597, doi:10.1016/j.tca.2020.178597; Koga et al., Thermochim. Acta 719 (2023) 179384, doi:10.1016/j.tca.2022.179384 (preprint LLNL-JRNL-845963, https://www.osti.gov/pages/servlets/purl/1964012)
+    - **confidence**: high
+  -
+    - **fact**: ICTAC criterion for single-step behaviour: Ea can be treated as constant only if, over alpha = 0.1-0.9, (Ea,max - Ea,min) < 10-20% of mean Ea. Otherwise a multi-step strategy is mandatory.
+    - **source**: Koga et al., ICTAC 2022, Sec. 1.2, https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: high
+  -
+    - **fact**: Rigid integral isoconversional methods (OFW, KAS) are 'prone to significant systematic errors in Ea when this value varies with alpha'; the error vanishes for flexible integral methods relying on piecewise integration, which then agree with the differential Friedman result.
+    - **source**: Koga et al., ICTAC 2022, Sec. 1.2, https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: high
+  -
+    - **fact**: For overlapping multistep reactions, FWO with the Doyle approximation can deviate by up to ~35% from differential methods when Ea varies strongly; mathematical deconvolution gives excellent fits that mask severe kinetic-parameter error because peak separation is non-unique.
+    - **source**: Muravyev, Pons Miro & Vyazovkin-adjacent appraisal: 'Critical Appraisal of Kinetic Calculation Methods Applied to Overlapping Multistep Reactions', Processes/MDPI, PMC6631284, https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6631284/
+    - **confidence**: medium
+  -
+    - **fact**: A single non-isothermal TG curve covers no area of the 3D kinetic surface (T^-1, alpha, ln(da/dt)); kinetic triplets from one ramp are systematically wrong and vary with beta. Multiple programmes (different beta, different isothermal T, and/or CRTA rates C) are required.
+    - **source**: Koga et al., ICTAC 2022, Sec. 1.2 and Fig. 1, https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: high
+  -
+    - **fact**: Crosslinked acrylate networks degrade by random main-chain scission plus non-radical side-chain ester pyrolysis via six-membered transition states (beta-H elimination), yielding monomer, dimer, trimer, saturated diester, olefin, aldehyde and alcohol - not clean unzipping to monomer as in PMMA.
+    - **source**: Investigation on the thermal degradation of poly-n-alkyl acrylates and methacrylates (C1-C12), Polym. Degrad. Stab., doi:10.1016/j.polymdegradstab.2005.01.038; 'Analysis of Acrylic and Methacrylic Networks through Pyrolysis-GC/MS', Polymers 13 (2021) 4349, doi:10.3390/polym13244349
+    - **confidence**: medium
+  -
+    - **fact**: Anhydride formation at carboxylic-acid sites (with loss of water) is an early step in acrylic thermal degradation; the anhydrides subsequently release CO2 and form ketone crosslinks - a char-forming pathway relevant to residual carbon in copper.
+    - **source**: Analysis of Acrylic and Methacrylic Networks through Pyrolysis-GC/MS, Polymers 13 (2021) 4349, doi:10.3390/polym13244349 (mechanism statement surfaced via search snippet; full text not fetched)
+    - **confidence**: medium
+  -
+    - **fact**: n-order models cannot describe polymer degradation generally; polymer DTG curves frequently show an induction/accelerating period requiring autocatalytic (extended Prout-Tompkins) or random-scission models. Assuming F1 when the true model is random scission still fits ramp data (r>0.99) but produces dramatic errors in isothermal lifetime prediction, worst at low temperature.
+    - **source**: Koga et al., ICTAC 2022, Sec. 4.2 and Fig. 11, https://www.osti.gov/pages/servlets/purl/1964012; Sanchez-Jimenez et al., J. Therm. Anal. Calorim. (2022), doi:10.1007/s10973-021-10649-x
+    - **confidence**: high
+  -
+    - **fact**: Copper deposits in a carboxylic/polyacrylic matrix shift complete decomposition 100-150 degC lower in air, and in nitrogen convert a two-stage decomposition into a four-stage one; decomposition radicals and hydrogen quantitatively reduce Cu(II) to Cu(0) while producing ~100% more carbon char than pyrolysis of the pure resin.
+    - **source**: Copper Rich Composite Materials Based on Carboxylic Cation Exchangers and Their Thermal Transformation, Materials/MDPI, PMC8469408, https://pmc.ncbi.nlm.nih.gov/articles/PMC8469408/
+    - **confidence**: high
+  -
+    - **fact**: Metal oxides including CuO catalyse oxidative pyrolysis of resins, enhancing decomposition of both functional groups and the polymer matrix; fillers in general act as nucleation centres for degradation, turning a single-step polymer decomposition into a multi-step one and producing non-constant Ea.
+    - **source**: PMC8469408 (CuO catalysis statement); Koga et al., ICTAC 2022 Sec. 4.1/4.4 (filler-induced multi-step kinetics), https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: medium
+  -
+    - **fact**: Kinetic deconvolution / MDA must NOT be used for competitive reactions or for oxidative processes driven by oxygen traces, because the relative contributions c_i or the final yield then depend on heating rate. This directly forbids naive deconvolution of Cu-catalysed oxidative debinding data.
+    - **source**: Koga et al., ICTAC 2022, Sec. 4.4, https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: high
+  -
+    - **fact**: Changing the purge gas from inert to one containing moisture and/or oxygen can dramatically change the chemical reaction mechanism of thermal decomposition of organic and polymeric materials - so a kinetic triplet is atmosphere-specific and cannot be transferred.
+    - **source**: Koga et al., ICTAC 2022, Sec. 1.2, https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: high
+  -
+    - **fact**: Char formation is promoted by large samples, slow heating and low gas purge rates; heating-rate-dependent char yield compromises isoconversional analysis at high alpha and gives anomalously high or low Ea at the tail depending on baseline definition.
+    - **source**: Koga et al., ICTAC 2022, Sec. 5.3, https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: high
+  -
+    - **fact**: CRTA (constant rate thermal analysis, a form of SCTA) holds da/dt at a user-selected constant C, minimising heat and mass transfer gradients; the shape of the T-vs-alpha curve under CRTA is strongly model-dependent (unlike sigmoidal alpha-T under linear heating), so a single CRTA run can discriminate diffusion-like, n-order and accelerating models and can separate overlapping steps.
+    - **source**: Sanchez-Jimenez et al., Polym. Degrad. Stab. 96 (2011) 974-981, doi:10.1016/j.polymdegradstab.2011.01.027; Koga et al., ICTAC 2022 Sec. 4.3, https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: high
+  -
+    - **fact**: Combined Kinetic Analysis fits linear-ramp, isothermal and CRTA curves simultaneously with one kinetic triplet by maximising the Pearson correlation of ln[(da/dt)/(alpha^n(1-alpha)^m)] vs 1/T over (n,m); this is the most robust route when the model is unknown a priori.
+    - **source**: Sanchez-Jimenez, Perez-Maqueda, Perejon, Criado, 'Combined kinetic analysis of thermal degradation of polymeric materials under any thermal pathway', Polym. Degrad. Stab. (2009), idUS repository copy https://idus.us.es/server/api/core/bitstreams/f5079b06-c5b6-4492-899e-680140501e93/content
+    - **confidence**: high
+  -
+    - **fact**: For ceramic vat photopolymerization, a multi-distribution DAEM (3 pseudo-components) fitted to TGA reproduced mass loss with global R^2 > 0.9999, and coupling it to a 1-D Darcy/Kozeny-Carman transport model predicted peak internal gas pressures that correctly discriminated which resin cracked and which did not.
+    - **source**: Pyrolysis Kinetics-Driven Resin Optimization for Enhanced Reliability in Ceramic Vat Photopolymerization Manufacturing, Materials 18 (2025) 4004, doi:10.3390/ma18174004, https://pmc.ncbi.nlm.nih.gov/articles/PMC12429858/
+    - **confidence**: high
+  -
+    - **fact**: Lithoz LCM green bodies: binder decomposition completes at ~350-400 degC in air but is shifted to ~400-450 degC in nitrogen; total mass loss essentially identical (35.3% air vs 34.8% N2) for a 40 vol% solids SiAlON slurry.
+    - **source**: Altun, Prochaska, Konegger, Schwentenwein (Lithoz GmbH), Appl. Sci. 10 (2020) 996, doi:10.3390/app10030996
+    - **confidence**: high
+  -
+    - **fact**: Stampfl group (TU Wien, LCM/DLP): organics are burned out up to 400 degC; TGA+TMA are used jointly to fix heating rates and isothermal plateaus, enabling crack-free debinding of parts with wall thickness up to 20 mm.
+    - **source**: Pfaffinger, Mitteramskogler, Gmeiner, Stampfl, 'Thermal Debinding of Ceramic-Filled Photopolymers', Mater. Sci. Forum 825-826 (2015) 75-81, doi:10.4028/www.scientific.net/MSF.825-826.75
+    - **confidence**: high
+  -
+    - **fact**: For copper DLP printing at 60 vol% Cu, debinding in air at 400 degC followed by sintering in hydrogen gave C = 0.018 wt% (same as the raw powder) with slightly elevated oxygen; thermal conductivity was limited to 250 W/m/K by phosphorus from the powder and from BAPO photoinitiator residue.
+    - **source**: Roumanie, Flassayer, Resch, Cortella, Laucournet, SN Appl. Sci. / Discover Appl. Sci. (2021), doi:10.1007/s42452-020-04049-3 (values taken from indexed abstract; full text not retrieved)
+    - **confidence**: medium
+  -
+    - **fact**: Inert atmospheres (Ar, N2) are often insufficient to remove acrylate/organic binder completely and leave excess carbon that hinders sintering and dissolves into the metal; oxygen aids binder removal but oxidises the powder. H2 permits debinding at lower temperature than vacuum, which in turn is lower than inert gas.
+    - **source**: Zissel, Bernardo, Foret, Hryha, Powder Metallurgy (2025), doi:10.1177/00325899241307824 (abstract-level statements via search); corroborating patent/industry statements US5380476
+    - **confidence**: medium
+  -
+    - **fact**: Copper oxidation in air begins at ~150 degC with crystalline Cu2O above ~200 degC and CuO appearing above ~320 degC - i.e. any air-debinding window for copper overlaps the main binder-decomposition window, so air debinding necessarily oxidises the powder and requires a subsequent reduction step.
+    - **source**: Thermal oxidation of copper literature summarised via search (e.g. AIP Advances 8 (2018) 055114, doi:10.1063/1.5028407); specific onset values not read in full text
+    - **confidence**: low
+  -
+    - **fact**: The Fraser-Suzuki function, y = a0 exp{-ln2 [ln(1+2 a3 (x-a1)/a2)/a3]^2}, is the recommended asymmetric peak function for DTG deconvolution; its asymmetry parameter a3 correlates with the JMA exponent m, and it describes well only moderate negative asymmetry a3 in approximately (-0.6, -0.2).
+    - **source**: Thermal Hazard and Kinetic Study of Sodium Percarbonate Based on Fraser-Suzuki Deconvolution, ACS Omega 10 (2025) 53438, https://pmc.ncbi.nlm.nih.gov/articles/PMC12612892/; Svoboda & Malek, J. Therm. Anal. Calorim. (2013), doi:10.1007/s10973-012-2445-9
+    - **confidence**: high
+  -
+    - **fact**: For TG, including BOTH dalpha/dt and alpha in the objective function generally gives good fits to both differential and integral curves; optimising on only one gives markedly worse agreement for the other and less robust parameters.
+    - **source**: Koga et al., ICTAC 2022, Sec. 5.5, https://www.osti.gov/pages/servlets/purl/1964012
+    - **confidence**: high
+  -
+    - **fact**: For a 50 vol% Cu / 50 vol% acrylate green body the binder is only ~11 wt% of the sample (computed from rho_Cu = 8.96, rho_binder ~ 1.15 g/cm3), versus ~35 wt% for a 40 vol% Si3N4 LCM slurry - the TGA signal-to-noise, buoyancy correction and blank subtraction problem is ~3x harder for copper.
+    - **source**: own calculation from standard densities; Si3N4 comparison from Appl. Sci. 10 (2020) 996
+    - **confidence**: high
+- **numbers**:
+  -
+    - **quantity**: Optimal TGA sample mass for kinetic analysis
+    - **value**: 1-10
+    - **units**: mg
+    - **context**: General ICTAC recommendation, mass kept 'reasonably similar' at all heating rates; first run should give a mass loss of about 1 mg
+    - **source**: Vyazovkin et al., Thermochim. Acta 590 (2014) 1-23, ICTAC 2014 (local copy of published PDF read in full)
+  -
+    - **quantity**: Sample mass x heating rate product (rule of thumb, polymers)
+    - **value**: <= 100
+    - **units**: mg K min^-1
+    - **context**: Initial guess for admissible sample mass in TG of polymers/organics to avoid thermal gradients
+    - **source**: ICTAC 2014, Thermochim. Acta 590 (2014) 1-23
+  -
+    - **quantity**: Number of temperature programmes and heating-rate span
+    - **value**: >= 4-5 runs, beta_max/beta_min ~ 10, doubling beta between runs
+    - **units**: -
+    - **context**: Minimum data set for isoconversional analysis; e.g. 0.5, 1, 2, 4, 8 K/min
+    - **source**: ICTAC 2014, Thermochim. Acta 590 (2014) 1-23
+  -
+    - **quantity**: Mass reduction rule for the two fastest heating rates
+    - **value**: beta x m = const (e.g. 8 mg at 4 K/min and 4 mg at 8 K/min)
+    - **units**: -
+    - **context**: Self-heating/self-cooling control; a change in E with sample mass larger than the average error in E signals temperature gradients
+    - **source**: ICTAC 2014, Thermochim. Acta 590 (2014) 1-23
+  -
+    - **quantity**: Purge gas flow rate
+    - **value**: ~100 (vertical TG); 200-300 (horizontal TG)
+    - **units**: cm3 min^-1
+    - **context**: Typical inert-gas flow for efficient removal of evolved gases; horizontal instruments need 2-3x the vertical value
+    - **source**: ICTAC 2014, Thermochim. Acta 590 (2014) 1-23
+  -
+    - **quantity**: Criterion for constant Ea (single-step)
+    - **value**: < 10-20
+    - **units**: % of mean Ea
+    - **context**: Spread of Ea over alpha = 0.1-0.9
+    - **source**: ICTAC 2022, Koga et al., Thermochim. Acta 719 (2023) 179384
+  -
+    - **quantity**: DSC self-heating limit
+    - **value**: 8 mW ~ 0.5 degC sample-reference temperature difference
+    - **units**: mW / degC
+    - **context**: Corresponds to knowing the sample temperature to within ~1 degC, the requirement for a good kinetic determination; maximum sample size a few mg at 10 degC/min for typical polymers
+    - **source**: ICTAC 2022, Sec. 5.4, citing Lyon et al.
+  -
+    - **quantity**: Doyle approximation constants in the OFW/FWO equation
+    - **value**: 5.331 and 1.052
+    - **units**: -
+    - **context**: ln(beta) = ln(A E / (R g(alpha))) - 5.331 - 1.052 E/RT; source of the systematic error of OFW when E varies with alpha
+    - **source**: Analysis of Pyrolysis Kinetic Model for Processing of TGA Data, IntechOpen ch. 62455
+  -
+    - **quantity**: Miura-Maki DAEM constant
+    - **value**: 0.6075
+    - **units**: -
+    - **context**: ln(beta/T^2) = ln(k0 R / E) + 0.6075 - E/RT, applied at fixed conversion to extract E(alpha) and k0 without assuming the shape of f(E)
+    - **source**: IntechOpen ch. 62455; ACS Omega barley-straw DAEM study, https://pmc.ncbi.nlm.nih.gov/articles/PMC13425291/
+  -
+    - **quantity**: Random-scission (Simha-Wall) empirical Sestak-Berggren parameters, f(alpha)=c alpha^p (1-alpha)^q
+    - **value**: L=2: c=1.204, p=0.400, q=1.119 | L=3: 2.080, 0.396, 1.057 | L=4: 2.929, 0.394, 1.039 | L=5: 3.767, 0.391, 1.030 | L=6: 4.597, 0.389, 1.024 | L=7: 5.422, 0.388, 1.020 | L=8: 6.242, 0.386, 1.017
+    - **units**: -
+    - **context**: L = minimum non-volatile chain length. Assignment of p to alpha and q to (1-alpha) verified numerically by me against the exact numerical f(alpha) (max deviation ~10% at alpha=0.9, <2% for 0.05<alpha<0.7); the published table column order is ambiguous in the extracted text
+    - **source**: ICTAC 2022 Table 3, after Sanchez-Jimenez et al., Polym. Degrad. Stab. 95 (2010) 733, doi:10.1016/j.polymdegradstab.2010.02.017; exponent assignment verified by own numerical check
+  -
+    - **quantity**: PBT thermal degradation kinetic triplet from Combined Kinetic Analysis (ramp + CRTA + isothermal)
+    - **value**: E = 180 +/- 1 kJ/mol, A = (2.0 +/- 0.3) x 10^13 min^-1, f(alpha) = alpha^1.138(1-alpha)^0.294 ... (random-scission-like); Friedman gave E = 176 kJ/mol
+    - **units**: kJ/mol, min^-1
+    - **context**: 9 mg sample, 70 cm3/min N2, ramps 1/2/5 K/min, CRTA at C = 8.3e-4 min^-1, isotherm at 583 K. Fitting the same data with (1-alpha)^n gave n=0.923, E=176 kJ/mol, A=6.6e12 min^-1 but failed to reconstruct the curves at low alpha
+    - **source**: Sanchez-Jimenez, Perez-Maqueda, Perejon, Criado, 'Kinetic analysis of random scission driven polymer thermal degradation', idUS full text read
+  -
+    - **quantity**: PTFE and PE degradation activation energies by Combined Kinetic Analysis
+    - **value**: PTFE: 283 +/- 2 kJ/mol (first order); PE: 246 +/- 1 kJ/mol, A = (3.2 +/- 0.4) x 10^16 min^-1 (diffusion-controlled model)
+    - **units**: kJ/mol
+    - **context**: 9 mg, 70 cm3/min N2, CRTA rates 5e-4 and 8.3e-4 min^-1 combined with linear ramps
+    - **source**: Sanchez-Jimenez et al., 'Combined kinetic analysis of thermal degradation of polymeric materials under any thermal pathway', idUS full text read
+  -
+    - **quantity**: M-DAEM kinetic parameters for ceramic VPP acrylate resins (3 pseudo-components)
+    - **value**: S1 (60% HEA/40% HDDA): E0 = 62.11 / 215.32 / 233.12 kJ/mol, sigma = 0.73 / 2.66 / 29.03, log10 A = 8 / 17 / 19. S2 (60% PPTTA/40% HDDA): 102.45 / 128.12 / 238.28 kJ/mol, sigma = 8.26 / 150.14 / 6.63. S3 (30/30/40): 101.08 / 216.26 / 199.43 kJ/mol
+    - **units**: kJ/mol; log10(s^-1)
+    - **context**: 40 vol% Si3N4 green bodies, 1 wt% Omnirad 819, 3 wt% Solsperse 41000; TGA 8 mg, 5 degC/min, 50 mL/min N2, 35-650 degC, particles < 1 mm. Global R^2 > 0.9999
+    - **source**: Materials 18 (2025) 4004, doi:10.3390/ma18174004, https://pmc.ncbi.nlm.nih.gov/articles/PMC12429858/
+  -
+    - **quantity**: Predicted peak pyrolysis-gas pressure inside ceramic VPP green bodies
+    - **value**: S1: 0.20 MPa at 158 degC; S2: 0.34 MPa at 352 degC (destructive cracking); S3: 0.22 MPa at 355 degC (no defects)
+    - **units**: MPa
+    - **context**: 1-D Darcy + Kozeny-Carman transport model driven by the M-DAEM source term; optimised debinding profile was heating rate < 0.5 degC/min to 650 degC
+    - **source**: Materials 18 (2025) 4004, https://pmc.ncbi.nlm.nih.gov/articles/PMC12429858/
+  -
+    - **quantity**: Lithoz LithaNit 720 (40 vol% SiAlON) green-body organic content and burnout window
+    - **value**: total mass loss 35.3% (air) / 34.8% (N2); decomposition complete 350-400 degC in air, 400-450 degC in N2
+    - **units**: wt%, degC
+    - **context**: TGA at 2 K/min on a 6 mm dia x 6 mm cylinder (note: a monolith, not powder - heat/mass transfer limited, so these are apparatus-specific, not intrinsic kinetics)
+    - **source**: Altun et al. (Lithoz GmbH), Appl. Sci. 10 (2020) 996, doi:10.3390/app10030996
+  -
+    - **quantity**: Maximum crack-free wall thickness demonstrated for TGA/TMA-designed LCM debinding
+    - **value**: 20
+    - **units**: mm
+    - **context**: DLP-processed highly filled photopolymers, organics burned out up to 400 degC
+    - **source**: Pfaffinger et al., Mater. Sci. Forum 825-826 (2015) 75-81
+  -
+    - **quantity**: Residual carbon in DLP-printed copper after air debinding + H2 sintering
+    - **value**: 0.018
+    - **units**: wt% C
+    - **context**: 60 vol% Cu photocurable formulation, debinding in air at 400 degC, sintering in hydrogen; equal to the raw copper powder carbon level, with slightly higher oxygen
+    - **source**: Roumanie et al., doi:10.1007/s42452-020-04049-3 (abstract-level)
+  -
+    - **quantity**: Thermal conductivity of sintered DLP copper
+    - **value**: 250
+    - **units**: W m^-1 K^-1
+    - **context**: Limited by phosphorus from the copper powder and from BAPO photoinitiator residue, not by residual carbon; cf. ~400 W/m/K for pure Cu
+    - **source**: Roumanie et al., doi:10.1007/s42452-020-04049-3 (abstract-level)
+  -
+    - **quantity**: Temperature shift of complete polymer decomposition caused by copper loading
+    - **value**: 100-150 degC lower (air): pure resin 503.8 degC -> 420.0 / 427.7 degC with Cu#CuO
+    - **units**: degC
+    - **context**: Carboxylic cation exchanger / polyacrylic matrix with 32.7-35.4 wt% Cu; in N2 the two-stage decomposition became four-stage and char yield roughly doubled
+    - **source**: Materials/MDPI, https://pmc.ncbi.nlm.nih.gov/articles/PMC8469408/
+  -
+    - **quantity**: Copper loading in the catalysis study
+    - **value**: up to 35.4 wt% Cu (354.4 mg/g)
+    - **units**: wt%
+    - **context**: Residue after air combustion 24.5-49.3 wt% (mostly CuO); after N2 pyrolysis the inorganic residue was 60-80 wt% metallic Cu
+    - **source**: https://pmc.ncbi.nlm.nih.gov/articles/PMC8469408/
+  -
+    - **quantity**: Binder mass fraction of a copper-filled green body (own calculation, rho_Cu = 8.96, rho_binder = 1.15 g/cm3)
+    - **value**: 40 vol% Cu: 16.1 wt% | 45: 13.6 | 50: 11.4 | 55: 9.5 | 60: 7.9 | 65: 6.5
+    - **units**: wt% binder
+    - **context**: Determines the TGA mass-loss signal available; green density 4.27-6.23 g/cm3. With rho_binder = 1.05 the values fall to 15.0 / 12.5 / 10.5 / 8.8 / 7.3 / 5.9 wt%
+    - **source**: own calculation
+  -
+    - **quantity**: Minimum sample mass to obtain the ICTAC-recommended ~1 mg mass loss for a 50 vol% Cu feedstock
+    - **value**: ~9
+    - **units**: mg
+    - **context**: From 11.4 wt% binder; still within the 1-10 mg window and satisfies m x beta <= 100 mg K/min up to ~11 K/min
+    - **source**: own calculation combined with ICTAC 2014 rules
+  -
+    - **quantity**: PMMA depolymerisation activation energy below 723 K
+    - **value**: ~144
+    - **units**: kJ/mol
+    - **context**: Intrinsic-kinetics-controlled regime; quoted as a benchmark for methacrylate unzipping, NOT applicable to crosslinked acrylate networks
+    - **source**: search-surfaced value, primary source not verified - treat as indicative
+  -
+    - **quantity**: Typical char/residue considerations for isoconversional tails
+    - **value**: unreactive fraction fitted vs fixed (13.8% in the ICTAC worked example) changed the extrapolation quality; a 3% difference in assumed residue
+    - **units**: wt%
+    - **context**: Illustrates baseline sensitivity of Ea at high alpha; relevant because Cu promotes char
+    - **source**: ICTAC 2022, Sec. 5.5, Table 4
+  -
+    - **quantity**: CRTA constant rates used in polymer studies
+    - **value**: 5 x 10^-4 to 8.3 x 10^-4
+    - **units**: min^-1
+    - **context**: i.e. full conversion in roughly 1200-2000 min; these are the rates at which mass/heat transfer artefacts were demonstrably suppressed for 9 mg polymer samples
+    - **source**: Sanchez-Jimenez et al., idUS papers read in full
+- **models_or_methods**:
+  -
+    - **name**: General single-step rate law and conversion definition
+    - **formulation**: alpha = (m_t - m_0)/(m_f - m_0) = dm_t/dm_total ;  dalpha/dt = k(T) f(alpha) = A exp(-Ea/(R T)) f(alpha)   [ICTAC 2022 Eq. 1.1, 1.2]
+Under linear heating: beta dalpha/dT = A exp(-Ea/RT) f(alpha)
+Under isothermal hold: dalpha/dt = k f(alpha), k = A exp(-Ea/RT)
+Under CRTA: C = A exp(-Ea/RT) f(alpha)  (C = imposed constant rate)
+    - **when_to_use**: Backbone of everything. The four forms are four slices of the same 3D surface (1/T, alpha, ln(dalpha/dt)); a defensible kinetic triplet must reproduce all of them.
+    - **inputs_needed**: TG(t,T) at several programmes; numerically differentiated (Savitzky-Golay or spline) DTG
+    - **limitations**: Assumes a single rate-limiting step and no dependence on product partial pressure; for reversible/atmosphere-coupled steps use dalpha/dt = A exp(-Ea/RT) f(alpha) h(p(C), Peq(T)) (Eq. 1.8)
+    - **source**: Koga et al., ICTAC 2022, https://www.osti.gov/pages/servlets/purl/1964012
+  -
+    - **name**: Friedman differential isoconversional method
+    - **formulation**: ln(dalpha/dt)_{alpha,i} = ln[A_alpha f(alpha)] - Ea_alpha/(R T_{alpha,i})
+Slope of ln(dalpha/dt) vs 1/T at fixed alpha over all programmes i gives Ea(alpha); the INTERCEPT gives ln[A f(alpha)] = ln(dalpha/dtheta), which is the model-free master plot.
+    - **when_to_use**: First method to run, always. Works for any temperature programme (ramps, isotherms, CRTA) mixed together. Exact even when Ea varies with alpha.
+    - **inputs_needed**: >=4-5 programmes, accurate DTG, well-defined baseline
+    - **limitations**: Sensitive to noise in dalpha/dt; needs good smoothing; ill-defined if the final product slate changes between programmes (char)
+    - **source**: Friedman (1964); ICTAC 2022 Fig. 1b; Sanchez-Jimenez et al. (idUS)
+  -
+    - **name**: KAS and OFW/FWO rigid integral isoconversional methods
+    - **formulation**: KAS:  ln(beta_i / T_{alpha,i}^2) = ln(A R / (Ea_alpha g(alpha))) - Ea_alpha/(R T_{alpha,i})
+OFW (Doyle): ln(beta_i) = ln(A Ea_alpha/(R g(alpha))) - 5.331 - 1.052 Ea_alpha/(R T_{alpha,i})
+Starink: ln(beta/T^1.92) = C - 1.0008 Ea/(R T)
+    - **when_to_use**: Only as a cross-check, and only if Friedman shows Ea essentially constant.
+    - **inputs_needed**: T at fixed alpha for each constant beta
+    - **limitations**: Assume Ea constant over the whole 0->alpha integration; systematic error when Ea varies with alpha (up to ~35% deviation from differential methods reported for overlapping steps); restricted to constant-beta data - cannot use CRTA or isothermal runs
+    - **source**: ICTAC 2022 Sec. 1.2; PMC6631284; IntechOpen ch. 62455
+  -
+    - **name**: Vyazovkin non-linear / advanced (flexible integral) isoconversional method
+    - **formulation**: Minimise  Phi(Ea_alpha) = sum_{i=1..n} sum_{j != i} J[Ea_alpha, T_i(t_alpha)] / J[Ea_alpha, T_j(t_alpha)]
+with  J[Ea_alpha, T(t_alpha)] = int_{t_{alpha-Dalpha}}^{t_alpha} exp(-Ea_alpha/(R T(t))) dt
+The piecewise (alpha-Dalpha -> alpha) integration is what removes the systematic error of KAS/OFW; the advanced variant accepts arbitrary T(t), so CRTA and isothermal runs can be mixed in.
+    - **when_to_use**: The reference isoconversional method when Ea(alpha) varies, when data come from mixed temperature programmes, or when self-heating distorts the programme.
+    - **inputs_needed**: t, T, alpha arrays; a 1-D minimiser without derivatives (golden section / Brent) per alpha; Dalpha typically 0.01-0.02
+    - **limitations**: Computationally heavier; can over/undershoot at the start and end of strongly overlapping multi-step processes (incremental variants especially)
+    - **source**: Vyazovkin, J. Therm. Anal. 49 (1997) 1493 (advanced isoconversional method); Vyazovkin, J. Comput. Chem. 22 (2001) 178 doi:10.1002/1096-987X(20010130)22:2<178::AID-JCC5>3.0.CO;2-#; formulation reproduced at https://pmc.ncbi.nlm.nih.gov/articles/PMC6540198/
+  -
+    - **name**: Kissinger and extended Kissinger
+    - **formulation**: ln(beta/T_p^2) = ln(A R/Ea) - Ea/(R T_p)   (T_p = DTG peak temperature)
+Extended form additionally returns a profile-width-based autocatalysis exponent m (e.g. m = 0.66 for a profile 65% as wide as first order)
+    - **when_to_use**: Quick sanity check and initial guess only.
+    - **inputs_needed**: Peak temperatures at >=3 heating rates
+    - **limitations**: Single-point method; correct only if the conversion at the peak does not shift with beta; badly wrong under overlap
+    - **source**: ICTAC 2022 Sec. 5.5; PMC6631284
+  -
+    - **name**: Sestak-Berggren empirical models
+    - **formulation**: Full:  f(alpha) = alpha^m (1-alpha)^n [-ln(1-alpha)]^p        (Eq. 1.3)
+Truncated: f(alpha) = c alpha^m (1-alpha)^n                  (Eq. 1.4)
+Extended Prout-Tompkins: f(alpha) = (alpha^m + z)(1-alpha)^n ~ [1 - q(1-alpha)]^m (1-alpha)^n, with small z > 0 or q -> 1   (Eq. 1.5)
+    - **when_to_use**: Umbrella model covering all physico-geometrical models and their deviations; the practical choice when the true mechanism is unknown, as here.
+    - **inputs_needed**: Non-linear optimisation over (c, m, n, p) or (m, n, q)
+    - **limitations**: Exponents often lack physical meaning; z/q and m compensate strongly for each other unless the data set constrains autocatalytic strength
+    - **source**: ICTAC 2022 Sec. 1.2, Eq. 1.3-1.5
+  -
+    - **name**: Random scission (Simha-Wall, reformulated in alpha)
+    - **formulation**: dx/dt = A exp(-Ea/RT)(1-x)                          (x = fraction of bonds broken)
+alpha = 1 - (1-x)^{L-1}[1 + x(L-1)]                  (L = minimum non-volatile length)
+f(alpha) = L(L-1) x (1-x)^{L-1}
+Symbolic only for L = 2:  f(alpha) = 2(alpha^{1/2} - alpha)
+Otherwise use the truncated SB fits tabulated above (c, p, q per L).
+    - **when_to_use**: The physically correct family for acrylate/polyester main-chain scission; reproduces the induction + accelerating period that n-order models cannot.
+    - **inputs_needed**: None beyond alpha, T; L is effectively a shape parameter
+    - **limitations**: Derived for linear chains; a crosslinked acrylate network with ester side-chain pyrolysis and charring will deviate; ideal-chain assumptions ignore branching, weak links, MW distribution
+    - **source**: Sanchez-Jimenez, Perez-Maqueda, Perejon, Criado, Polym. Degrad. Stab. 95 (2010) 733, doi:10.1016/j.polymdegradstab.2010.02.017; reproduced as ICTAC 2022 Eq. 4.1-4.3 and Table 3
+  -
+    - **name**: Kinetic deconvolution analysis (KDA) / independent parallel multi-step model
+    - **formulation**: dalpha/dt = sum_{i=1..N} c_i A_i exp(-Ea_i/(R T)) f_i(alpha_i),  sum c_i = 1,  sum c_i alpha_i = alpha   (Eq. 1.14)
+Objective: RSS = sum_j [(dalpha/dt)_exp,j - (dalpha/dt)_cal,j]^2 (Eq. 1.15), summed over all L curves (Eq. 1.16)
+For heating-rate-dependent contributions: (dalpha/dt)_j = c_{1,j} A_1 exp(-E_1/RT) f_1(alpha_1) + c_{2,j} A_2 exp(-E_2/RT) f_2(alpha_2)  (Eq. 4.5)
+    - **when_to_use**: When Friedman shows varying Ea and the steps are genuinely independent (e.g. residual monomer evaporation, then network scission, then char oxidation).
+    - **inputs_needed**: All curves simultaneously; fit both alpha and dalpha/dt; guided sequential optimisation of parameter subsets
+    - **limitations**: Explicitly invalid for competitive reactions and for oxygen-driven processes whose branching depends on beta; too many parameters always fit
+    - **source**: ICTAC 2022 Eq. 1.14-1.16, 4.5
+  -
+    - **name**: Multi-step model fitting (MMF) for consecutive and competitive schemes
+    - **formulation**: Consecutive: dalpha/dt = c_1 A_1 exp(-E_1/RT) f_1(alpha_1) + c_2 A_2 exp(-E_2/RT) f_2(alpha_1, alpha_2)   (Eq. 1.9)
+Competitive: dalpha/dt = A_1 exp(-E_1/RT) f_1(alpha) + A_2 exp(-E_2/RT) f_2(alpha)                         (Eq. 1.11)
+Diagnostic for competition - the isoconversional Ea is the rate-weighted mean:
+Ea_alpha = [E_1 r_1 + E_2 r_2]/(r_1 + r_2),  r_k = A_k exp(-E_k/RT) f_k(alpha)                             (Eq. 1.12)
+    - **when_to_use**: Competitive scheme is the right template for Cu-catalysed oxidative degradation competing with pyrolysis, and for volatilisation competing with charring.
+    - **inputs_needed**: Evolved-gas analysis to identify which products belong to which branch
+    - **limitations**: Competitive kinetics 'still not well established'; contributions vary with T and beta, so KDA cannot substitute
+    - **source**: ICTAC 2022 Eq. 1.9-1.13
+  -
+    - **name**: Distributed Activation Energy Model (DAEM), continuous and discrete
+    - **formulation**: First order:   dalpha/dt = int_0^inf k(Ea,T) exp[- int_0^t k(Ea,T) dt'] D(Ea) dEa      (Eq. 5.6)
+Pseudo n-th order: dalpha/dt = int_0^inf k(Ea,T) [1 - (1-n) int_0^t k(Ea,T) dt']^{n/(1-n)} D(Ea) dEa   (Eq. 5.7)
+Gaussian: D(Ea) = (1/(sigma sqrt(2pi))) exp[-(Ea-E0)^2/(2 sigma^2)]
+General hybrid (Eq. 5.1): dalpha/dt = sum_i c_i A_i e^{-E_i/RT} f_i(alpha_i) + sum_j c_j sum_k c_{j,k} A_j e^{-E_{j,k}/RT} f_j(alpha_{j,k})
+Miura-Maki distribution-free estimate: ln(beta/T^2) = ln(k0 R/Ea) + 0.6075 - Ea/(R T) at fixed alpha; f(Ea) = -d(1-alpha)/dEa
+    - **when_to_use**: A crosslinked, plasticised, dispersant- and photoinitiator-containing proprietary acrylate is a classic 'manifold of similar reactions'; M-DAEM with 2-4 pseudo-components is the demonstrated best practice for ceramic/metal VPP resins.
+    - **inputs_needed**: Multiple heating rates; pattern search + Levenberg-Marquardt or similar global-then-local optimiser; Gauss-Hermite or trapezoid quadrature over Ea; a temperature-integral approximation such as Cai-Liu or Abramowitz-Stegun p(x) ~ e^{-x}/x - e^{-x} ln(1+1/x)
+    - **limitations**: Miura-Maki is not quantitative because of its extra approximations; Gaussian DAEM and Miura-Maki do not give equivalent parameters; discrete distributions do not handle a sharp sigmoidal component; none of them represent the sequential nature of char formation
+    - **source**: ICTAC 2022 Eq. 5.1, 5.6, 5.7; Materials 18 (2025) 4004; ACS Omega DAEM study PMC13425291; IntechOpen ch. 62455
+  -
+    - **name**: Fraser-Suzuki deconvolution of overlapping DTG peaks
+    - **formulation**: y(x) = a0 exp{ -ln2 [ ln(1 + 2 a3 (x - a1)/a2) / a3 ]^2 }
+a0 = amplitude, a1 = peak position, a2 = half-width, a3 = asymmetry (a3 -> 0 recovers a Gaussian). Fit sum of N FS peaks by non-linear least squares (Levenberg-Marquardt); require the fractional area L_i of each peak to be invariant with heating rate as a validity test, then run Friedman + master plot on each separated peak.
+    - **when_to_use**: To obtain starting values for KDA/MMF and to test how many pseudo-components the data can support.
+    - **inputs_needed**: DTG at several beta; area-invariance check across beta
+    - **limitations**: Peak separation is non-unique - excellent fits can hide severe kinetic errors; a3 correlates with the JMA exponent only for moderate negative asymmetry (~ -0.6 to -0.2); alternatives: Weibull, asymmetric logistic, Bi-Gaussian
+    - **source**: ACS Omega, https://pmc.ncbi.nlm.nih.gov/articles/PMC12612892/; Svoboda & Malek doi:10.1007/s10973-012-2445-9; ICTAC 2022 Sec. 4.4; limitations paper doi:10.1016/j.tca.2023.179485
+  -
+    - **name**: Ozawa generalized time and the experimental master plot (model-free f(alpha) recovery)
+    - **formulation**: theta = int_0^t exp(-Ea/(R T)) dt ;  dalpha/dtheta = (dalpha/dt) exp(Ea/(R T)) = A f(alpha)   (Eq. 1.7)
+dalpha/dtheta at a given alpha equals exp(Friedman intercept). Plot dalpha/dtheta vs alpha, normalise at alpha=0.5, and compare with candidate f(alpha) to select the model and extract A.
+    - **when_to_use**: The cleanest bridge from isoconversional results to a usable kinetic triplet, and the basis for model-free simulation of arbitrary T(t).
+    - **inputs_needed**: Ea(alpha) from Friedman/advanced isoconversional
+    - **limitations**: Assumes A constant for a single step; for multi-step systems the 'master plot' is an effective, not mechanistic, curve
+    - **source**: ICTAC 2022 Eq. 1.7 and Fig. 1d
+  -
+    - **name**: Prediction of arbitrary temperature programmes, including isothermal holds
+    - **formulation**: Model-based: t_alpha = g(alpha) / (A exp(-Ea/(R T)))  with g(alpha) = int_0^alpha dalpha/f(alpha)   (Eq. 4.4)
+Model-free (Vyazovkin): t_alpha(T0) = J[Ea_alpha, T_exp(t)] / exp(-Ea_alpha/(R T0)),  J = int_0^{t_alpha} exp(-Ea_alpha/(R T_exp(t))) dt
+Model-free (Friedman-based, any T(t)): (dalpha/dt)_pred = exp(intercept_alpha) * exp(-Ea_alpha/(R T_pred(t))), integrated forward in time; equivalently (dalpha/dt)_pred = (dalpha/dt)_exp,alpha * exp[-(Ea_alpha/R)(1/T_pred - 1/T_exp,alpha)]
+    - **when_to_use**: To convert the fitted kinetics into the actual furnace recipe, and to size dwell times.
+    - **inputs_needed**: Ea(alpha) plus Friedman intercepts, or the full triplet; stiff ODE integrator (LSODA/CVODE)
+    - **limitations**: Model-free prediction degrades for long extrapolations and for parallel processes where Ea correlates with heating rate; always validate against a held-out programme not used in the fit
+    - **source**: ICTAC 2022 Eq. 4.4; Vyazovkin model-free prediction literature (Thermochim. Acta 2021, doi:10.1016/j.tca.2020.178770 and doi:10.1016/j.tca.2024.179714)
+  -
+    - **name**: CRTA / SCTA: the temperature programme that minimises the maximum decomposition rate
+    - **formulation**: Impose dalpha/dt = C = const. For one step, invert Eq. (1.2):
+T(alpha) = Ea(alpha) / ( R * ln[ A_alpha f(alpha) / C ] )
+Equivalently, using the model-free master plot: T(alpha) = Ea(alpha) / ( R * [ln(dalpha/dtheta)_alpha - ln C] ).
+For multi-step, solve for T at each alpha:  sum_i c_i A_i exp(-Ea_i/(R T)) f_i(alpha_i) = C, advancing each alpha_i with its own ODE.
+Because the maximum rate under CRTA equals C by construction, and any linear ramp of the same total duration has a peak rate several times its mean, CRTA is the minimum-peak-rate programme at fixed cycle time; since the pyrolysis-gas source term and hence the peak internal pressure scale with dalpha/dt, it is also the minimum-peak-pressure programme when permeability is roughly constant.
+    - **when_to_use**: This IS the optimum debinding cycle, and it is directly implementable: most modern TGAs have a controlled-rate package, and furnace controllers can follow the tabulated T(alpha(t)) trajectory.
+    - **inputs_needed**: Validated E(alpha) and A_alpha f(alpha) (or the full multi-step set); a target C chosen from the transport model or from the allowable cycle time
+    - **limitations**: Ignores the spatial problem - a real part has a size-dependent permeability and pressure field, so the true optimum is the constrained optimal-control solution (maximise heating subject to p_max < p_crit, Lombardo & Retzloff). CRTA is the correct zero-dimensional limit and the correct laboratory measurement mode. Also, the true constraint may be stress or sagging, not pressure.
+    - **source**: CRTA formulation: Sanchez-Jimenez et al., idUS (Eq. 4); ICTAC 2022 Sec. 4.3; Sanchez-Jimenez et al., Polym. Degrad. Stab. 96 (2011) 974, doi:10.1016/j.polymdegradstab.2011.01.027; optimal control: Lombardo & Retzloff, Adv. Appl. Ceram. (2020) doi:10.1080/17436753.2019.1707393 and JACerS 98 (2015) doi:10.1111/jace.13284
+  -
+    - **name**: Combined Kinetic Analysis (single triplet across all thermal pathways)
+    - **formulation**: ln[ (dalpha/dt) / f(alpha) ] = ln A - Ea/(R T)
+with f(alpha) = c alpha^n (1-alpha)^m, i.e.
+ln[ (dalpha/dt) / (alpha^n (1-alpha)^m) ] = ln(cA) - Ea/(R T)
+Optimise (n, m) to maximise the Pearson correlation of the LHS vs 1/T pooled over ramp, isothermal AND CRTA data; Ea from the slope, A from the intercept.
+    - **when_to_use**: Final parameter estimation once the number of steps is settled. It is the strongest available test that a triplet is thermal-pathway-independent.
+    - **inputs_needed**: At least one CRTA and one isothermal curve in addition to the ramps - this is what breaks the E/A/f(alpha) degeneracy
+    - **limitations**: As written it assumes one global step; for multi-step apply it to deconvolved or experimentally separated steps
+    - **source**: Sanchez-Jimenez, Perez-Maqueda, Perejon, Criado, idUS full texts read (Eq. 7-9)
+  -
+    - **name**: Kinetic compensation effect (and its correct use)
+    - **formulation**: ln A_i = a Ea_i + b  (a linear relation observed across model assumptions, heating rates or conversions)
+Arises from the stationarity condition exp(-Ea/(R T_m)) = Ea beta / (A R T_m^2) at the DTG peak T_m.
+    - **when_to_use**: Legitimately, to estimate A from an isoconversional Ea when the model is unknown (Vyazovkin's A-from-compensation route), and as a diagnostic that a good fit does not imply a correct model.
+    - **inputs_needed**: A family of (E_i, ln A_i) pairs from fitting different f(alpha) to the same curve
+    - **limitations**: A strong compensation line is a warning sign, not a result: it means the data cannot discriminate E and A separately. Adding CRTA/isothermal data is the cure.
+    - **source**: Kinetic compensation effect of isoconversional methods, React. Kinet. Mech. Catal. (2020) doi:10.1007/s11144-020-01898-2; ICTAC 2011 discussion
+- **open_questions**:
+  - What is the actual binder mass fraction of the Lithoz copper slurry? This must be measured first (TGA to 600 degC in air on a cured, cleaned green sample, plus pycnometry and ash/ICP on the residue) because everything downstream - sample sizing, gas-generation source term, shrinkage - scales with it. Ask Lithoz for the solid loading in vol% even if the chemistry stays proprietary.
+  - Is the binder a pure (meth)acrylate network or does it contain a non-reactive plasticiser/oligomer, a dispersant, and possibly a thermoplastic phase? A monofunctional-rich or plasticised system has a markedly lower primary Ea and a broader, lower-temperature DTG, which is favourable. Py-GC-MS plus TGA-FTIR/MS on the cured green body would answer this without Lithoz disclosing anything.
+  - Does copper catalyse or inhibit the decomposition of THIS binder, and by how much? The mandatory control experiment is TGA of (a) the as-received slurry cured and (b) the same slurry with the copper replaced by an inert filler of matched particle size and volume fraction (e.g. alumina or silica), in each candidate atmosphere. Without this, the measured kinetics cannot be attributed.
+  - Is the process competitive (oxidative vs pyrolytic) at the oxygen levels actually present in the furnace? If yes, deconvolution/KDA is invalid and a competitive MMF scheme (Eq. 1.11-1.13) is required. Measure Ea(alpha) at several controlled pO2 (e.g. <1 ppm, 10 ppm, 100 ppm, 1000 ppm, air) and test whether the contributions c_i drift with heating rate.
+  - How much carbon is actually left as a function of atmosphere and final debinding temperature, and in what form (amorphous char vs graphitic vs adsorbed hydrocarbons)? Copper forms no carbide, so LECO C/O analysis plus Raman on debound compacts is needed to close the mass balance that TGA alone cannot.
+  - Can hydrogen (or Ar/H2) be introduced during debinding without hydrogen embrittlement? This requires knowing whether Cu2O is present at the temperature at which H2 is admitted. The kinetic question is the safe crossover temperature: H2 must be introduced only after oxide reduction is complete or before oxide forms, and the answer depends on the oxide-reduction kinetics, not just thermodynamics.
+  - Does water vapour (humidified Ar) accelerate carbon removal from copper via C + H2O -> CO + H2 at temperatures below Cu melting, and what is the kinetic window? This is the classic route for carbide-free metals, but I found no quantitative data for copper.
+  - What is the correct number of pseudo-components? The data will support 2-4, but statistical justification (F-test / AIC / BIC on the RSS, plus invariance of c_i with heating rate) must be applied, otherwise over-parameterisation destroys predictive capability outside the measured range.
+  - Do the kinetics measured on <1 mm ground green-body particles transfer to a 5-20 mm printed part? The ICTAC-recommended particle sizing removes exactly the transport resistance that dominates the real part. The kinetics must be intrinsic and the transport must be added separately in the part-scale model - but this needs experimental validation (e.g. dilatometry/TMA or interrupted-run mass balance on real geometries).
+  - What is the failure criterion for this material - internal gas pressure, tensile stress, or delamination at layer interfaces? The optimum cycle differs depending on which. For a metal-filled system with high green strength the pressure limit may be far higher than for a ceramic, which would allow a much faster cycle than the conservative <0.5 degC/min used for ceramics.
+  - Does the CeraFab 2M30 multi-material capability imply a second phase or an interlayer with different binder content, and would that require a spatially varying kinetic source term?
+  - What CRTA rate C is achievable in the available debinding furnace? The laboratory CRTA rates that suppress artefacts (~5e-4 to 8.3e-4 min^-1) imply ~20-35 h of debinding; the part-scale optimum may permit a substantially larger C, and this needs to be derived from the coupled transport model rather than copied from TGA.
+- **references**:
+  -
+    - **citation**: Koga, N.; Vyazovkin, S.; Burnham, A.K.; Favergeon, L.; Muravyev, N.V.; Perez-Maqueda, L.A.; Saggese, C.; Sanchez-Jimenez, P.E. ICTAC Kinetics Committee recommendations for analysis of thermal decomposition kinetics. Thermochim. Acta 719 (2023) 179384. doi:10.1016/j.tca.2022.179384
+    - **url**: https://www.osti.gov/pages/servlets/purl/1964012
+    - **why**: The single most important source. Full preprint read in detail: general equations (1.1-1.16), random-scission model and its SB parameters (Table 3, Eq. 4.1-4.3), CRTA for polymers (Sec. 4.3), multi-step strategy (Sec. 4.4), DAEM (Eq. 5.1, 5.6, 5.7), heat/mass transport limits (Sec. 5.4).
+  -
+    - **citation**: Vyazovkin, S.; Chrissafis, K.; Di Lorenzo, M.L.; Koga, N.; Pijolat, M.; Roduit, B.; Sbirrazzuoli, N.; Sunol, J.J. ICTAC Kinetics Committee recommendations for collecting experimental thermal analysis data for kinetic computations. Thermochim. Acta 590 (2014) 1-23. doi:10.1016/j.tca.2014.05.036
+    - **url**: http://hsta.gr/wp-content/uploads/2018/09/ICTAC_I.pdf
+    - **why**: Full text read. The source of every experimental-design number: sample mass 1-10 mg, m x beta <= 100 mg K/min, >=4-5 programmes with beta span ~10x, the halve-mass-when-doubling-beta rule, purge flow guidance, oxygen-saturation protocol for thermo-oxidative degradation, film/particle thickness effects (>30 degC shift between 40 and 2300 um).
+  -
+    - **citation**: Vyazovkin, S.; Burnham, A.K.; Criado, J.M.; Perez-Maqueda, L.A.; Popescu, C.; Sbirrazzuoli, N. ICTAC Kinetics Committee recommendations for performing kinetic computations on thermal analysis data. Thermochim. Acta 520 (2011) 1-19. doi:10.1016/j.tca.2011.03.034
+    - **url**: https://www.sciencedirect.com/science/article/abs/pii/S0040603111002152
+    - **why**: The canonical computation recommendations (isoconversional vs model-fitting, compensation effect, prediction). Could not be fetched in full - cited from bibliographic record and from its use in ICTAC 2022/2014.
+  -
+    - **citation**: Vyazovkin, S.; Burnham, A.K.; Favergeon, L.; Koga, N.; Moukhina, E.; Perez-Maqueda, L.A.; Sbirrazzuoli, N. ICTAC Kinetics Committee recommendations for analysis of multi-step kinetics. Thermochim. Acta 689 (2020) 178597. doi:10.1016/j.tca.2020.178597
+    - **url**: https://www.sciencedirect.com/science/article/abs/pii/S004060312030246X
+    - **why**: The dedicated multi-step reference (multi-step model fitting, distributed reactivity, isoconversional and deconvolution analyses). Repository copies at digital.csic.es and HAL were bot-blocked; content cited indirectly via ICTAC 2022, which summarises it as ref [3].
+  -
+    - **citation**: Sanchez-Jimenez, P.E.; Perez-Maqueda, L.A.; Perejon, A.; Criado, J.M. A new model for the kinetic analysis of thermal degradation of polymers driven by random scission. Polym. Degrad. Stab. 95 (2010) 733-739. doi:10.1016/j.polymdegradstab.2010.02.017
+    - **url**: https://idus.us.es/server/api/core/bitstreams/897e9e8c-291f-4e1f-ac98-6ebe1df74a64/content
+    - **why**: Full text read. Derivation of the random-scission f(alpha), the CRTA rate equation C = A exp(-E/RT) f(alpha), the Friedman and Combined Kinetic Analysis equations, and the PBT worked example (E = 180 kJ/mol, A = 2e13 min^-1, n = 1.138, m = 0.294) fitted simultaneously to ramp, CRTA and isothermal data.
+  -
+    - **citation**: Sanchez-Jimenez, P.E.; Perez-Maqueda, L.A.; Perejon, A.; Criado, J.M. Combined kinetic analysis of thermal degradation of polymeric materials under any thermal pathway. Polym. Degrad. Stab. 94 (2009) 2079-2085.
+    - **url**: https://idus.us.es/server/api/core/bitstreams/f5079b06-c5b6-4492-899e-680140501e93/content
+    - **why**: Full text read. The Combined Kinetic Analysis method and its PTFE (283 kJ/mol) and PE (246 kJ/mol, A = 3.2e16 min^-1) results; the template for fitting one triplet across ramp + CRTA + isothermal data.
+  -
+    - **citation**: Sanchez-Jimenez, P.E.; Perez-Maqueda, L.A.; Perejon, A.; Criado, J.M. Constant rate thermal analysis for thermal stability studies of polymers. Polym. Degrad. Stab. 96 (2011) 974-981. doi:10.1016/j.polymdegradstab.2011.01.027
+    - **url**: https://www.sciencedirect.com/science/article/abs/pii/S0141391011000565
+    - **why**: Shows that the shape of the CRTA T-vs-alpha curve discriminates the kinetic model in a single experiment, validated on PTFE, PBT, PE and PVC. This is the experimental basis for using CRTA to identify f(alpha) for an unknown binder.
+  -
+    - **citation**: Sanchez-Jimenez, P.E. et al. Predictions of polymer thermal degradation: relevance of selecting the proper kinetic model. J. Therm. Anal. Calorim. (2022). doi:10.1007/s10973-021-10649-x
+    - **url**: https://link.springer.com/article/10.1007/s10973-021-10649-x
+    - **why**: Quantifies the error from assuming F1 when the true mechanism is random scission: excellent ramp fits, catastrophic isothermal predictions. Directly relevant to designing debinding dwells.
+  -
+    - **citation**: Pyrolysis Kinetics-Driven Resin Optimization for Enhanced Reliability in Ceramic Vat Photopolymerization Manufacturing. Materials 18 (2025) 4004. doi:10.3390/ma18174004
+    - **url**: https://pmc.ncbi.nlm.nih.gov/articles/PMC12429858/
+    - **why**: The closest published analogue of the proposed work: M-DAEM kinetics from TGA of printed green bodies, coupled to a Darcy/Kozeny-Carman pressure model, used to predict cracking and to design the debinding profile. Full kinetic parameter table extracted.
+  -
+    - **citation**: McAleer, E. et al. Predicting photopolymer resin pyrolysis kinetics in ceramic vat photopolymerization additive manufacturing. J. Am. Ceram. Soc. (2025). doi:10.1111/jace.20470
+    - **url**: https://ceramics.onlinelibrary.wiley.com/doi/abs/10.1111/jace.20470
+    - **why**: Uses Fraser-Suzuki deconvolution plus non-linear regression on TGA in flowing Ar for an (EtO)3-TMPTA + TPO resin. The direct methodological precedent for a photopolymer binder; paywalled, only abstract-level detail obtained.
+  -
+    - **citation**: McAleer, E.; Alazzawi, M.; Hwang, C.; LaManna, J.; Jacobson, D.; Haber, R.; Akdogan, E. Binder removal from ceramic stereolithography green bodies: a neutron imaging and thermal analysis study. J. Am. Ceram. Soc. 106 (2023). doi:10.1111/jace.19095
+    - **url**: https://ceramics.onlinelibrary.wiley.com/doi/10.1111/jace.19095
+    - **why**: Neutron tomography of binder concentration gradients during debinding under argon and vacuum - the experimental technique that would validate a part-scale transport+kinetics model. Paywalled.
+  -
+    - **citation**: Altun, A.A.; Prochaska, T.; Konegger, T.; Schwentenwein, M. (Lithoz GmbH). Dense, Strong, and Precise Silicon Nitride-Based Ceramic Parts by Lithography-Based Ceramic Manufacturing. Appl. Sci. 10 (2020) 996. doi:10.3390/app10030996
+    - **url**: https://www.mdpi.com/2076-3417/10/3/996
+    - **why**: Lithoz's own published TGA of an LCM slurry: 40 vol% solids, 35.3% (air) / 34.8% (N2) mass loss, decomposition complete 350-400 degC in air vs 400-450 degC in N2, at 2 K/min on a 6 mm cylinder. The benchmark for what a Lithoz binder does.
+  -
+    - **citation**: Pfaffinger, M.; Mitteramskogler, G.; Gmeiner, R.; Stampfl, J. Thermal Debinding of Ceramic-Filled Photopolymers. Mater. Sci. Forum 825-826 (2015) 75-81. doi:10.4028/www.scientific.net/MSF.825-826.75
+    - **url**: https://www.scientific.net/MSF.825-826.75
+    - **why**: The TU Wien / Lithoz methodology paper: TGA + TMA jointly used to set heating rates and isothermal plateaus, organics removed up to 400 degC, crack-free up to 20 mm wall thickness.
+  -
+    - **citation**: Roumanie, M.; Flassayer, C.; Resch, A.; Cortella, L.; Laucournet, R. Influence of debinding and sintering conditions on the composition and thermal conductivity of copper parts printed from highly loaded photocurable formulations. SN Appl. Sci. 3 (2021). doi:10.1007/s42452-020-04049-3
+    - **url**: https://link.springer.com/article/10.1007/s42452-020-04049-3
+    - **why**: The most directly relevant prior art: 60 vol% Cu DLP formulation, air debinding at 400 degC + H2 sintering giving 0.018 wt% C, and the finding that P from the powder and from BAPO limits conductivity to 250 W/m/K. Full text not retrievable (Springer/HAL both blocked); values from indexed abstract.
+  -
+    - **citation**: Wang, W.; Feng, M.; Wang, Z.; Jiang, Y.; Xing, B.; Zhao, Z. Precision Control in Vat Photopolymerization Based on Pure Copper Paste: Process Parameters and Optimization Strategies. Materials 16 (2023) 5565. doi:10.3390/ma16165565
+    - **url**: https://www.mdpi.com/1996-1944/16/16/5565
+    - **why**: Copper VPP with debinding/sintering atmospheres and their effect on C and O content; sintering at 1050 degC with 2/4/6 h dwells, resistivity 43.89 uOhm cm at 6 h.
+  -
+    - **citation**: Copper Rich Composite Materials Based on Carboxylic Cation Exchangers and Their Thermal Transformation. Materials 14 (2021). PMC8469408
+    - **url**: https://pmc.ncbi.nlm.nih.gov/articles/PMC8469408/
+    - **why**: The quantitative evidence that copper catalyses polyacrylic matrix decomposition (end temperature 100-150 degC lower in air, 503.8 -> 420 degC) and that under N2 the decomposition radicals reduce Cu(II) to Cu(0) while doubling char yield. The key copper-specific kinetic hazard.
+  -
+    - **citation**: Zissel, K.; Bernardo, E.; Foret, P.; Hryha, E. Impact of oxygen content on debinding of binder jetted 17-4 PH stainless steel: Part I - Debinding. Powder Metallurgy (2025). doi:10.1177/00325899241307824
+    - **url**: https://journals.sagepub.com/doi/10.1177/00325899241307824
+    - **why**: Systematic study of process-atmosphere oxygen content on binder decomposition products and completeness in metal AM. Paywalled; abstract-level statements used.
+  -
+    - **citation**: Thermal Hazard and Kinetic Study of Sodium Percarbonate Based on Fraser-Suzuki Deconvolution. ACS Omega 10 (2025) 53438. PMC12612892
+    - **url**: https://pmc.ncbi.nlm.nih.gov/articles/PMC12612892/
+    - **why**: Gives the Fraser-Suzuki equation explicitly with all four parameters defined, plus the full deconvolution -> Friedman -> master plot workflow and the contribution-invariance validity test.
+  -
+    - **citation**: Svoboda, R.; Malek, J. Applicability of Fraser-Suzuki function in kinetic analysis of complex crystallization processes. J. Therm. Anal. Calorim. 111 (2013) 1045. doi:10.1007/s10973-012-2445-9; and Some limitations of the Fraser-Suzuki function for fitting thermokinetic curves. Thermochim. Acta 723 (2023) 179485. doi:10.1016/j.tca.2023.179485
+    - **url**: https://link.springer.com/article/10.1007/s10973-012-2445-9
+    - **why**: Defines the valid asymmetry range (a3 ~ -0.6 to -0.2) and the correlation of a3 with the JMA exponent; the companion paper documents where FS fitting fails.
+  -
+    - **citation**: Vyazovkin, S. Modification of the integral isoconversional method to account for variation in the activation energy. J. Comput. Chem. 22 (2001) 178-183. doi:10.1002/1096-987X(20010130)22:2<178::AID-JCC5>3.0.CO;2-#; and Vyazovkin, S. Advanced isoconversional method. J. Therm. Anal. 49 (1997) 1493-1499. doi:10.1007/BF01983708
+    - **url**: https://onlinelibrary.wiley.com/doi/abs/10.1002/1096-987X(20010130)22:2%3C178::AID-JCC5%3E3.0.CO;2-%23
+    - **why**: Primary sources for the advanced/flexible integral isoconversional method and its piecewise J integral. Both paywalled; the explicit Phi(E) and J[E,T] formulation was recovered from PMC6540198.
+  -
+    - **citation**: Advanced Isoconversional Kinetic Analysis for the Elucidation of Complex Reaction Mechanisms: A New Method for the Identification of Rate-Limiting Steps. PMC6540198
+    - **url**: https://pmc.ncbi.nlm.nih.gov/articles/PMC6540198/
+    - **why**: Open-access source that writes out Phi(Ea) = sum_i sum_{j!=i} J[Ea,Ti]/J[Ea,Tj] and J = int_{t-Dt}^{t} exp(-Ea/RT)dt, plus the interpretation of E(alpha) shape changes as rate-limiting-step changes.
+  -
+    - **citation**: Critical Appraisal of Kinetic Calculation Methods Applied to Overlapping Multistep Reactions. PMC6631284
+    - **url**: https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6631284/
+    - **why**: Simulated two-step benchmarks quantifying where Friedman, OFW, KAS, Kissinger, the incremental Vyazovkin method and mathematical deconvolution each fail; recommends isoconversional screening -> deconvolution for estimates -> simultaneous DTG+DSC model fitting.
+  -
+    - **citation**: Miura, K.; Maki, T. A simple method for estimating f(E) and k0(E) in the distributed activation energy model. Energy Fuels 12 (1998) 864-869; critical assessment: Cai, J. et al. A critical study of the Miura-Maki integral method. Bioresour. Technol. 102 (2011). doi:10.1016/j.biortech.2010.11.072
+    - **url**: https://www.sciencedirect.com/science/article/abs/pii/S0960852410019139
+    - **why**: Origin and critique of the distribution-free DAEM route; the 0.6075 constant and the requirement of at least three (typically 3-5) heating ramps.
+  -
+    - **citation**: Kinetic Characterization of Barley Straw Carbonization Using the Distributed Activation Energy Model (DAEM). ACS Omega (2026). PMC13425291
+    - **url**: https://pmc.ncbi.nlm.nih.gov/articles/PMC13425291/
+    - **why**: Open-access worked DAEM implementation with the Miura-Maki equation and the Abramowitz-Stegun p(x) approximation written out explicitly.
+  -
+    - **citation**: Goswami, D.; Srivastava, A.; Umarji, A.M.; Madras, G. Thermal degradation kinetics of poly(trimethylol propane triacrylate)/poly(hexane diol diacrylate) interpenetrating polymer network. Thermochim. Acta 547 (2012) 53-61. doi:10.1016/j.tca.2012.08.011
+    - **url**: https://www.sciencedirect.com/science/article/abs/pii/S0040603112003942
+    - **why**: The closest published kinetics on the exact monomer chemistry family used in ceramic/metal DLP binders (TMPTA/HDDA networks), analysed by Friedman and KAS in both N2 and air, explicitly motivated by debinding optimisation. Paywalled - the numerical Ea(alpha) values could not be verified and should be obtained.
+  -
+    - **citation**: Analysis of Acrylic and Methacrylic Networks through Pyrolysis-GC/MS. Polymers 13 (2021) 4349. doi:10.3390/polym13244349
+    - **url**: https://doi.org/10.3390/polym13244349
+    - **why**: Mechanistic basis for the degradation pathway of crosslinked acrylate networks (beta-scission, dimers/trimers, ester pyrolysis, anhydride and ketone-crosslink formation) - the chemistry behind the choice of f(alpha) and behind char formation.
+  -
+    - **citation**: Investigation on the thermal degradation of poly-n-alkyl acrylates and poly-n-alkyl methacrylates (C1-C12). Polym. Degrad. Stab. 90 (2005). doi:10.1016/j.polymdegradstab.2005.01.038
+    - **url**: https://www.sciencedirect.com/science/article/abs/pii/S0141391005000509
+    - **why**: Establishes that acrylates degrade by random main-chain scission plus non-radical six-membered-ring side-chain reactions, in contrast to methacrylate unzipping - the reason PMMA kinetics must not be reused here.
+  -
+    - **citation**: Lombardo, S.J.; Retzloff, D.G. Reaction-permeability optimum time heating policy via process control for debinding green ceramic components. Adv. Appl. Ceram. (2020). doi:10.1080/17436753.2019.1707393; Lombardo, S.J. Minimum Time Heating Cycles for Diffusion-Controlled Binder Removal from Ceramic Green Bodies. J. Am. Ceram. Soc. 98 (2015). doi:10.1111/jace.13284; Shende, R.V.; Lombardo, S.J. Determination of Binder Decomposition Kinetics for Specifying Heating Parameters in Binder Burnout Cycles. J. Am. Ceram. Soc. 85 (2002). doi:10.1111/j.1151-2916.2002.tb00172.x
+    - **url**: https://ceramics.onlinelibrary.wiley.com/doi/10.1111/jace.13284
+    - **why**: The variational-calculus / optimal-control formulation of the minimum-time debinding cycle subject to a failure constraint - the rigorous generalisation of CRTA to a real part. Shende & Lombardo also show that very different kinetic parameter sets can each describe the data to +/-15%, which is the compensation-effect warning in a debinding context.
+  -
+    - **citation**: Incledon, M.L. Modeling Binder Removal in Ceramic Compacts. MSc thesis, Rutgers University, 2013
+    - **url**: https://rucore.libraries.rutgers.edu/rutgers-lib/40596/PDF/1/play/
+    - **why**: Open full text combining decomposition kinetics with transport to predict composition, temperature and pore pressure fields and thence optimum heating sequences; useful template for the part-scale coupling.
+  -
+    - **citation**: Vyazovkin, S. et al. Model-free isothermal and nonisothermal predictions using advanced isoconversional methods. Thermochim. Acta 695 (2021) 178770. doi:10.1016/j.tca.2020.178770; and Applicability of model free isothermal prediction procedures based on the Friedman method and three incremental isoconversional methods for complex processes. Thermochim. Acta (2024) doi:10.1016/j.tca.2024.179714
+    - **url**: https://www.sciencedirect.com/science/article/abs/pii/S004060312030770X
+    - **why**: The equations and accuracy limits for converting E(alpha) into predictions of isothermal holds and arbitrary programmes - the step that turns the TGA campaign into a furnace recipe. Both paywalled; used at abstract level.

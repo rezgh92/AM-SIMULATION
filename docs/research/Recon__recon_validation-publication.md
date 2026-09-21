@@ -1,0 +1,469 @@
+- **summary**: VALIDATION STACK. A credible debinding+sintering simulation of a Lithoz copper LCM part must be validated at three levels, because the two physics blocks fail differently. (1) Binder-burnout kinetics: validated against TGA/DTG at 3-5 heating rates (ICTAC Kinetics Committee, Vyazovkin 2011/Koga 2023) plus evolved-gas analysis (TG-MS or TG-FTIR) to resolve the multi-step acrylate/dispersant/wax decomposition. The decisive referee test is PREDICTIVE: fit on constant-heating-rate runs, then predict an independent temperature programme not used in the fit -- ideally a CRTA/sample-controlled or stepwise-isothermal run, whose measured T(t) trajectory is itself an experimental realisation of the optimal cycle. Shende and Lombardo (JACerS 2002) showed that mutually inconsistent kinetic parameter sets (Redhead, integral, variable-heating-rate) all reproduce the same TGA data to +/-15%, so parameter values alone prove nothing; only the out-of-sample prediction does. (2) Densification: dilatometry. For a soft, debinding copper body the push-rod contact load is a first-order artefact -- the JETA 2026 case study (Gruner et al.) reports a spurious extra peak in shrinkage rate in the early compaction stage plus a shifted and heightened densification-rate maximum attributable purely to push-rod contact pressure, while optical (load-free) dilatometry also resolves warpage and in-plane anisotropy. Practical protocol: run both, correct push-rod for the system baseline (ASTM E228) and for creep under contact load by repeating at 2-3 different push-rod forces and extrapolating to zero load; use optical (e.g. Misura/TOMMI-class) for the debinding window where green strength for LCM binders can be as low as ~3 MPa (LithaCon 3Y230, Hofer 2021). Cabo Rios et al. (Ceram Int 2024) specifically used push-rod dilatometry to characterise gravity-induced distortion in binder-jetted steel. Complement with TMA (ASTM E831) for softening/creep onset, in-situ micro-CT or synchrotron nano-CT for 4D pore/grain evolution (Venkatesh, Bouvard and Lhuissier, JECS 2023), and high-temperature DIC/video-extensometry for full-field shrinkage (blue-LED illumination with narrow bandpass filter to reject blackbody, plus heat-haze mitigation; strain measurement demonstrated to ~1200 C). (3) Final state: Archimedes density (ASTM B962), He pycnometry for closed porosity (ASTM B923), quantitative porosity image analysis and EBSD grain size, LECO O and C (ASTM E1019/E1941), and 4-point-probe or eddy-current conductivity in %IACS as a sensitive purity+density proxy -- LMM-derived dispersion-strengthened Cu has reached 78 %IACS (Euro PM2023). Geometry: structured-light/CMM or CT-to-CAD registration with best-fit alignment and signed deviation maps. CRITICAL: report agreement statistically, not as an overlay -- RMSE/MAE on the dilatometric curve, Bland-Altman bias with 1.96*SD limits of agreement for method-vs-method, and an ASME V&V 20-style validation comparison error E = S - D with combined validation uncertainty u_val = sqrt(u_num^2 + u_input^2 + u_D^2). COMPENSATION. The dominant published method is displacement-reversal (spring-back) iteration: x_green^(k+1) = x_green^(k) - lambda*(x_sintered^(k) - x_CAD), lambda in (0,1], morphed back into the green CAD; demonstrated for metal binder jetting (Rapid Prototyping Journal 2022, Oksman/Ploshikhin group), for mf3 sintered COPPER using 3D-scan-driven inverse deformation (J Manuf Process 2024), and for material extrusion. Physics-based data-driven variants with size-effect terms (Paudel, Deng and To, Addit Manuf 2023) and pure ANN compensation (Prog Addit Manuf 2024; Addit Manuf 2021 for SLM trusses) reduce the number of FE solves. PUBLICATION GAP. Binder-burnout cycle optimisation is a SOLVED literature: Tsai (AIChE J 1991) for pressure build-up, Feng/He/Lombardo (J Appl Mech 2002) for stresses, Liau and Chiu (I&ECR 2005) for dynamic optimisation, and Lombardo's minimum-time-heating-cycle (MTHC) series (JACerS 2014, 2016, 2018) which solves the constrained minimum-time problem by variational calculus and by FE+process-control. Sintering FE with SOVS and validation is mature. Copper LMM exists but only as process/feedstock papers, with NO simulation. The genuine gap is the intersection: (a) inverse identification of an UNKNOWN proprietary binder's kinetics and permeability from TGA + dilatometry + weight/geometry data (no paper found doing this for a commercial feedstock); (b) extending MTHC to a constraint set that includes a CHEMICAL purity constraint (residual C, oxygen potential window between Cu2O reduction and steam embrittlement) alongside the mechanical pressure constraint; (c) any FE distortion prediction and compensation for LCM/LMM geometry.
+- **key_facts**:
+  -
+    - **fact**: Push-rod dilatometry of low-stiffness green/debinding samples produces a real artefact: an additional peak in the shrinkage-rate curve during early compaction plus a slight shift and increased maximum in the densification rate, attributed to push-rod contact pressure. Optical dilatometry is load-free and additionally resolves warpage and deformation, which can be separated analytically from true shrinkage. No in-plane shrinkage anisotropy was found for either steel or zirconia tapes.
+    - **source**: Gruner et al., 'Optical Dilatometry and Push-Rod Dilatometry - A Case Study for Sintering Steel and Zirconia Tapes', J. Experimental and Theoretical Analyses 4(1):10, 2026, DOI 10.3390/jeta4010010 (preprint 10.20944/preprints202511.2247.v1)
+    - **confidence**: high
+  -
+    - **fact**: Kinetic parameter sets from different TGA analysis methods (two integral equations, Redhead, variable-heating-rate) differ greatly in E and A yet ALL reproduce the observed binder decomposition rate within +/-15%. Therefore agreement of a fitted model with its own training TGA data is not evidence of correctness; an out-of-sample predictive test is required.
+    - **source**: Shende and Lombardo, J. Am. Ceram. Soc. 85(4):780-786, 2002, DOI 10.1111/j.1151-2916.2002.tb00172.x
+    - **confidence**: high
+  -
+    - **fact**: The minimum-time heating cycle (MTHC) problem for binder removal has already been formulated and solved by variational calculus under either a diffusant-concentration or an equilibrium-pressure constraint, for both stationary-binder and shrinking-core models, and separately for diffusion-controlled vs gas-permeability-controlled transport. The algorithm outputs both the START temperature and the full T(t) shape, which can be increasing, decreasing or nearly constant depending on parameters.
+    - **source**: Lombardo, J. Am. Ceram. Soc. 98(1):57-65, 2015 (online 2014), DOI 10.1111/jace.13284; and J. Am. Ceram. Soc. 100(2):529-538, 2017, DOI 10.1111/jace.14585
+    - **confidence**: high
+  -
+    - **fact**: An FE + process-control formulation of the MTHC reproduces the earlier pseudo-steady-state + variational-calculus solution, validating the PSS approximation and providing a general route for cases where no analytic solution exists. This is the natural numerical backbone for a modern optimal-cycle paper.
+    - **source**: Lombardo and Retzloff, J. Am. Ceram. Soc. 102(3):1030-1040, 2019 (online 2018), DOI 10.1111/jace.15964
+    - **confidence**: high
+  -
+    - **fact**: In three-dimensional porous green bodies the normal stresses from binder-burnout gas pressure peak at the body CENTRE and are an order of magnitude larger than the shear stresses; both scale with body size, geometry and permeability. This gives the defect criterion for the debinding constraint.
+    - **source**: Feng, He and Lombardo, J. Applied Mechanics 69(4):497-501, 2002, DOI 10.1115/1.1460908; pressure field from Lombardo and Feng, J. Mater. Res. 17(6):1434-1440, 2002, DOI 10.1557/jmr.2002.0213
+    - **confidence**: high
+  -
+    - **fact**: For LCM (Lithoz) zirconia, green-state stiffness differs by an order of magnitude purely through binder chemistry (approx 3 MPa for LithaCon 3Y230 vs approx 32 MPa for LithaCon 3Y210, same ZrO2 powder), while sintered CTE (11.18 vs 11.17 ppm/K) and Young's modulus (207 vs 205 GPa) are unchanged and both reach >99% relative density. Green mechanical properties are therefore binder-specific and must be measured, not assumed.
+    - **source**: Hofer et al., Int. J. Appl. Ceram. Technol., 2021, DOI 10.1111/ijac.13806
+    - **confidence**: high
+  -
+    - **fact**: Lithography-based metal manufacturing feedstocks run at approximately 55 vol% metal powder (i.e. approximately 45 vol% binder) -- much lower solids loading than MIM. Verified for an Incus CP63 binder system with Cu and GRCop-42 powders; the Lithoz copper slurry loading is NOT published and must be measured independently.
+    - **source**: Mastny, 'High-strength copper alloys for indirect additive manufacturing using photolithography', MSc/Diploma thesis, TU Wien, 2026, https://repositum.tuwien.at/handle/20.500.12708/230469
+    - **confidence**: medium
+  -
+    - **fact**: A working thermal-debinding cycle for a 55 vol%-loaded copper LMM feedstock: synthetic air at 2 L/min, 0.4 C/min ramp to 380 C, 240 min hold, natural cooling. Sintering: 5 C/min to Tmax (990 C for Ag-containing, 1065 C for bronze-containing), 120 min hold, 2 L/min H2; furnace flushed with Ar at the end and switched H2-to-Ar below 900 C for cooling. This is a defensible prior for a Lithoz copper first-trial cycle.
+    - **source**: Mastny, TU Wien thesis 2026, sections 3.3.3 and 3.5, https://repositum.tuwien.at/handle/20.500.12708/230469
+    - **confidence**: high
+  -
+    - **fact**: Copper LMM post-processing strategy published by the Lithoz/LMM community: most binder-derived carbon is removed during AIR debinding, and HUMIDIFIED reducing atmosphere during sintering promotes further decarburisation at higher temperature. Even small residual carbon degrades densification and thermal/electrical conductivity of copper.
+    - **source**: 'Post-processing Strategies For Copper Parts Produced By Lithography-Based Metal Manufacturing', Euro PM2025 Proceedings, DOI 10.59499/ep256778885
+    - **confidence**: high
+  -
+    - **fact**: For lithography-based stainless steel the controlling debinding variable is SAMPLE THICKNESS -- temperature and dwell must be scaled to allow diffusion; synthetic air gives better carbon removal; the process window is narrowed on the upper side by loss of pre-sintering handling strength. Failure modes named: deformation, fragility, excess carbon.
+    - **source**: 'Different Debinding Strategies For Lithography-based Additive Manufacturing Of Stainless Steel', Euro PM2025 Proceedings, DOI 10.59499/ep256763871
+    - **confidence**: high
+  -
+    - **fact**: Pure copper does NOT oxidise in grade-5 hydrogen during TGA, whereas Cr- and Nb-bearing Cu alloys do, because the trace O2 in H2 forms H2O whose oxidation potential is sufficient for the reactive solutes. Ti and Zr getters were insufficient to clean the H2 (Zr only getters H2 above approximately 900 C). This bounds the atmosphere problem: for PURE Cu the risk is residual-oxide + H2 steam embrittlement rather than solute oxidation.
+    - **source**: Mastny, TU Wien thesis 2026, section 4.3 (DTA/TGA of GRCop-42 vs Copper A31 under H2), https://repositum.tuwien.at/handle/20.500.12708/230469
+    - **confidence**: medium
+  -
+    - **fact**: No published work was found that inverse-identifies the composition or decomposition kinetics of an UNKNOWN, proprietary commercial MIM/AM binder system. All modelling papers use binders of declared chemistry (PVB, paraffin/PP, DMAA/MBAM gel, TEGDMA). This is the clearest single novelty claim available to the group.
+    - **source**: unverified (negative result from Google Scholar and Crossref searches; absence of evidence, not proof of absence)
+    - **confidence**: medium
+  -
+    - **fact**: No FE sintering-distortion prediction or geometric compensation has been published for LCM/LMM parts. The entire compensation literature is metal binder jetting, material extrusion, MIM and SLM.
+    - **source**: unverified (negative result from Crossref and Google Scholar sweeps)
+    - **confidence**: medium
+  -
+    - **fact**: ASTM B577 is the standard test method set for detecting cuprous oxide, i.e. hydrogen-embrittlement susceptibility, in copper -- the direct qualification test for a copper part sintered in hydrogen.
+    - **source**: ASTM B577, 'Test Methods for Detection of Cuprous Oxide (Hydrogen Embrittlement Susceptibility) in Copper', DOI 10.1520/b0577
+    - **confidence**: high
+  -
+    - **fact**: The master sintering curve transfers to sinter-based AM with quantified error: applied to binder-jetted Ti it predicted sintered density to within 0.9-4.3%, with apparent activation energies 200-260 kJ/mol (vertical and 45 deg) and 140-260 kJ/mol (horizontal), i.e. build-orientation anisotropy is real but Q is roughly orientation-invariant.
+    - **source**: Wheat et al., 'The Master Sinter Curve and Its Application to Binder Jetting Additive Manufacturing', J. Manuf. Sci. Eng. 142(8), 2020, DOI 10.1115/1.4047140
+    - **confidence**: high
+  -
+    - **fact**: A DAEM (distributed activation energy model) fitted to TGA plus an FE solid-fluid-thermal-mechanical model of thermal debinding yields an explicit defect-avoiding recipe: the strongest von Mises stress peak is eliminated by holding at 310 C for at least 2 h at 1 C/min. This is the closest published template for the group's debinding deliverable.
+    - **source**: Wang et al., 'DAEM kinetics analysis and finite element simulation of thermal debinding process for a gelcast SiAlON green body', Ceramics International 45(7):8166-8177, 2019, DOI 10.1016/j.ceramint.2019.01.118
+    - **confidence**: high
+  -
+    - **fact**: Optimal MLCC yield during binder burnout occurred at a height:length aspect ratio of 1:3 -- geometry, not just cycle, controls burnout survival. Relevant to designing the group's validation specimen set.
+    - **source**: Liau, Peters, Krueger et al., J. Am. Ceram. Soc. 83(11):2645-2653, 2000, DOI 10.1111/j.1151-2916.2000.tb01609.x
+    - **confidence**: high
+  -
+    - **fact**: Determining sinter strain and viscosity directly as PROCESS-RELATED, time-dependent parameters from loaded dilatometry (several push-rod loads) gave MORE accurate distortion prediction than parameters fitted to a complex constitutive model, while vastly reducing experimental effort. This is the pragmatic calibration route for a group with limited furnace time.
+    - **source**: 'Determination Of Process-Related Time-Dependent Sinter Strain And Viscosity For Simulating Distortion In Sinter-Based Additive Manufacturing', Euro PM2024 Proceedings, DOI 10.59499/ep246278578
+    - **confidence**: high
+  -
+    - **fact**: Green density accuracy is the dominant input uncertainty for compensation: compensation accuracy for metal binder jetting was shown to depend strongly on the assumed green density, and incorporating measured green DIMENSIONS (not just nominal CAD) is required for tight tolerances. Compensation works best in the directions for which the material model was calibrated.
+    - **source**: Oksman/Ploshikhin group, 'Compensation of sintering deformation for components manufactured by metal binder jetting using numerical simulations', Rapid Prototyping Journal, 2022, DOI 10.1108/rpj-06-2022-0181
+    - **confidence**: high
+- **numbers**:
+  -
+    - **quantity**: LMM feedstock solids loading
+    - **value**: 55
+    - **units**: vol% metal powder (binder approx 45 vol%)
+    - **context**: Incus CP63 binder with Cu D11 and GRCop-42 powders; mass ratio 1:9.15 (binder:GRCop-42) and 1:9.22 (binder:Cu D11). The Lithoz copper slurry loading is unpublished -- treat this as a prior, measure by loss-on-ignition + He pycnometry.
+    - **source**: Mastny, TU Wien thesis 2026, section 3.1.1
+  -
+    - **quantity**: Thermal debinding ramp rate (copper LMM)
+    - **value**: 0.4
+    - **units**: C/min to 380 C
+    - **context**: Synthetic air 2 L/min, followed by 240 min isothermal hold at 380 C, natural cooling under the same flow. Pressed+debound copper-alloy pellets.
+    - **source**: Mastny, TU Wien thesis 2026, section 3.3.3, Figure 12
+  -
+    - **quantity**: Sintering ramp and hold (copper LMM)
+    - **value**: 5 C/min to 990-1065 C, 120 min hold (one run 240 min)
+    - **units**: C/min, C, min
+    - **context**: 2 L/min grade-5 H2; 990 C for Ag-modified GRCop-42, 1065 C for bronze-modified; H2 switched to Ar below 900 C on cooling; Ar flush 5 L/min at end.
+    - **source**: Mastny, TU Wien thesis 2026, section 3.5, Figure 14
+  -
+    - **quantity**: Dilatometry programme (copper alloys, push-rod)
+    - **value**: 10 C/min to 990 or 1065 C, 60 min hold, 10 C/min cooling
+    - **units**: C/min, C, min
+    - **context**: NETZSCH DIL 402 C under grade-5 H2, with and without Ti getter chips placed so as not to touch the push-rod.
+    - **source**: Mastny, TU Wien thesis 2026, section 3.4, Figure 13
+  -
+    - **quantity**: LCM green-body stiffness (binder-dependent)
+    - **value**: approx 3 vs approx 32
+    - **units**: MPa
+    - **context**: LithaCon 3Y230 vs LithaCon 3Y210, identical 3Y-ZrO2 powder. Order-of-magnitude spread caused by binder network topology alone -- sets the mechanical failure threshold for the debinding constraint.
+    - **source**: Hofer et al., IJACT 2021, DOI 10.1111/ijac.13806
+  -
+    - **quantity**: Sintered LCM zirconia relative density / CTE / E
+    - **value**: >99 / 11.18 and 11.17 / 207 and 205
+    - **units**: % Th.D. / ppm per K / GPa
+    - **context**: Both binder systems converge to the same sintered properties despite the 10x green-stiffness difference.
+    - **source**: Hofer et al., IJACT 2021, DOI 10.1111/ijac.13806
+  -
+    - **quantity**: Electrical conductivity of LMM dispersion-strengthened Cu (from Cu2O + Al2O3, H2-reduced)
+    - **value**: up to 78
+    - **units**: %IACS
+    - **context**: Near-net-shape LMM parts, Cu2O reduced to Cu in hydrogen sintering atmosphere; authors attribute the shortfall vs literature to insufficient densification and poor dispersoid distribution. Use as the realistic lower bound for a first LCM copper campaign.
+    - **source**: Euro PM2023 Proceedings, DOI 10.59499/ep235765269
+  -
+    - **quantity**: Oxygen content, GRCop-42 powder (LECO)
+    - **value**: 0.122, 0.131, 0.139 (mean approx 0.13)
+    - **units**: wt% O (approx 1300 ppm)
+    - **context**: Three determinations on as-received powder. Bronze 90/10 powder approx 0.2 wt%, Ag powder 0.005 wt%. Sintered Cu-alloy samples ranged 0.099-1.84 wt% O depending on alloy and atmosphere -- shows how badly H2 sintering can go for oxygen-active solutes.
+    - **source**: Mastny, TU Wien thesis 2026, Table 13
+  -
+    - **quantity**: Green density range and sintered density, pressed Cu-alloy pellets
+    - **value**: green approx 72.5-80.4; sintered up to 90.2
+    - **units**: % relative density
+    - **context**: GRCop-42 + Ag/bronze pellets; maximum density gain observed 15.3% from green. LMM literature value cited therein for LMM Cu is >90% relative density after sintering at 55 vol% loading.
+    - **source**: Mastny, TU Wien thesis 2026, sections 4.6-4.7
+  -
+    - **quantity**: Master sintering curve prediction error, binder-jetted Ti
+    - **value**: 0.9 - 4.3
+    - **units**: % error in sintered density
+    - **context**: Validation runs, green densities 47.2-52.3%, heating rates 1, 3, 5 C/min to 1400 C. Vertical samples 7.6 +/- 2.98% denser than horizontal and 4.7 +/- 1.20% denser than 45 deg.
+    - **source**: Wheat et al., J. Manuf. Sci. Eng. 142(8), 2020, DOI 10.1115/1.4047140
+  -
+    - **quantity**: Apparent sintering activation energy, binder-jetted Ti (MSC)
+    - **value**: 200-260 (vertical, 45 deg); 140-260 (horizontal)
+    - **units**: kJ/mol
+    - **context**: Derived from MSC minimisation of mean residual squares across three heating rates; shows Q is roughly orientation-invariant while density is not.
+    - **source**: Wheat et al., 2020, DOI 10.1115/1.4047140
+  -
+    - **quantity**: DAEM binder-pyrolysis parameters, DMAA/MBAM gel in SiAlON
+    - **value**: E0 = 116.0-158.0; k0 = 9.31e8; sigma = 2.19-20.52
+    - **units**: kJ/mol; 1/s; kJ/mol
+    - **context**: Three-parallel-reaction DAEM fitted to non-isothermal TGA; used as input to a coupled solid-fluid-thermal-mechanical FE model. Gives the expected order of magnitude for an organic binder and the spread of a DAEM sigma.
+    - **source**: Wang et al., Ceramics International 45(7), 2019, DOI 10.1016/j.ceramint.2019.01.118
+  -
+    - **quantity**: Defect-eliminating debinding hold derived by FE, SiAlON gelcast
+    - **value**: 310 C for at least 120 min at 1 C/min
+    - **units**: C, min, C/min
+    - **context**: Eliminates the strongest internal von Mises stress peak. Direct template for how the group should express its optimal-cycle result.
+    - **source**: Wang et al., Ceramics International 45(7), 2019, DOI 10.1016/j.ceramint.2019.01.118
+  -
+    - **quantity**: Accuracy of TGA-derived kinetic models in describing their own data
+    - **value**: +/-15
+    - **units**: %
+    - **context**: Four different analysis methods gave very different E and A yet all reproduced the observed decomposition rate to this accuracy -- the argument for demanding an out-of-sample predictive test.
+    - **source**: Shende and Lombardo, JACerS 85(4), 2002, DOI 10.1111/j.1151-2916.2002.tb00172.x
+  -
+    - **quantity**: SOVS model Olevsky parameter set
+    - **value**: a1=1, b1=2, a2=2/3, b2=3, c2=1, a3=1, b3=2
+    - **units**: dimensionless
+    - **context**: Standard continuum-mechanics-derived coefficients for phi(rho)=a1*rho^b1 and psi(rho)=a2*rho^b2/(1-rho)^c2 and sigma_s(rho)=a3*sigma_s0*rho^b3. Use as the starting point before calibrating eta0(T) from dilatometry.
+    - **source**: Balaguer et al., J. Eur. Ceram. Soc. 44(13), 2024, Table 2, DOI 10.1016/j.jeurceramsoc.2024.05.035
+  -
+    - **quantity**: SOVS-with-grain-growth prediction accuracy vs dilatometry
+    - **value**: >95 overall; shrinkage error <3
+    - **units**: % accuracy; % error on contraction
+    - **context**: 18 dilatometry tests, porcelain stoneware, 3 green-density groups x 3 peak temperatures x 2 dwell times; model failed only where 'overfiring' (pore expansion/bloating) occurred, which the model cannot represent. Total shrinkage approx 9-10%. Mesh 30x5x5 = 750 hex elements, 1 mm nodes, run time minutes on a 32-thread workstation.
+    - **source**: Balaguer et al., JECS 2024, DOI 10.1016/j.jeurceramsoc.2024.05.035
+  -
+    - **quantity**: Characteristic pore size and flow regime in green ceramic tapes during burnout
+    - **value**: 1-2
+    - **units**: micrometres
+    - **context**: BaTiO3/PVB tapes: pores of this size make Poiseuille flow dominant over Knudsen/slip, so Darcy permeability (not Knudsen diffusion) governs gas escape. For a 30 um-pixel LCM copper body with sub-micron to few-micron interparticle pores, the regime must be checked explicitly, not assumed.
+    - **source**: Yun and Lombardo, J. Am. Ceram. Soc. 90(2):456-461, 2007, DOI 10.1111/j.1551-2916.2006.01444.x
+  -
+    - **quantity**: Thermal conductivity of sintered copper from a 40 vol% Cu polymer composite
+    - **value**: approx 30 (at 980 C sinter); more than 2x higher at 1080 C
+    - **units**: W/(m K)
+    - **context**: Illustrates how far below bulk Cu (approx 400 W/(m K)) a porous sintered Cu body sits, and that over-sintering near the melting point buys conductivity at the cost of uncontrolled shrinkage. Useful as a sanity bound for the group's conductivity-as-density proxy.
+    - **source**: Dehdari Ebrahimi and Ju, Additive Manufacturing 24, 2018, DOI 10.1016/j.addma.2018.10.025
+  -
+    - **quantity**: CerAM VPP AlN benchmark (best-case vat-photopolymerised ceramic)
+    - **value**: 3.33 g/cm3 (>99% Th.D.); >180 W/(m K)
+    - **units**: g/cm3; W/(m K)
+    - **context**: Shows what a fully optimised LCM-family debinding+sintering chain can achieve; the target bar for the copper work.
+    - **source**: Schwarzer-Fischer et al., Ceramics 6(1):24, 2023, DOI 10.3390/ceramics6010024
+  -
+    - **quantity**: Optimal MLCC geometry for burnout yield
+    - **value**: 1:3
+    - **units**: height:length aspect ratio
+    - **context**: Capacitors 1.3-3.8 cm long, 0.3-1.3 cm high; yield maximised at this aspect ratio under cycles derived from a coupled heat/mass transport model.
+    - **source**: Liau et al., JACerS 83(11):2645-2653, 2000, DOI 10.1111/j.1151-2916.2000.tb01609.x
+  -
+    - **quantity**: Number of heating rates required for defensible kinetic analysis
+    - **value**: at least 3, preferably 5
+    - **units**: distinct constant heating rates
+    - **context**: ICTAC Kinetics Committee recommendation; Friedman differential isoconversional method preferred over rigid integral methods (OFW, KAS) which are biased when E varies with alpha.
+    - **source**: Vyazovkin et al., Thermochim. Acta 520, 2011, DOI 10.1016/j.tca.2011.03.034; Koga et al., Thermochim. Acta 719:179384, 2023, DOI 10.1016/j.tca.2022.179384
+  -
+    - **quantity**: Compensation iterations typically required (displacement-reversal)
+    - **value**: 1-3
+    - **units**: iterations
+    - **context**: Commonly reported convergence for spring-back/displacement-reversal schemes in sinter-based AM. COULD NOT BE VERIFIED from the accessible sources in this sweep -- treat as an expectation to be confirmed from the full texts of DOI 10.1108/rpj-06-2022-0181 and 10.1016/j.jmapro.2024.04.069.
+    - **source**: unverified
+  -
+    - **quantity**: Maximum temperature demonstrated for high-temperature DIC
+    - **value**: up to approx 1200-1350
+    - **units**: C
+    - **context**: Requires narrow-band (typically blue) illumination with matched bandpass filter to reject blackbody emission, high-temperature speckle paints, and heat-haze/window-distortion correction. Exact noise floor not verified in this sweep.
+    - **source**: Overview paper: Experimental Mechanics 61, 2021, DOI 10.1007/s11340-021-00723-8; temperature figures from secondary search snippets -- treat the upper bound as low confidence
+- **models_or_methods**:
+  -
+    - **name**: Isoconversional (model-free) kinetics from multi-rate TGA -- the entry point for an UNKNOWN binder
+    - **formulation**: Friedman (differential): ln(d(alpha)/dt)_alpha = ln[A_alpha * f(alpha)] - E_alpha/(R*T_alpha), evaluated at fixed alpha across >=3 heating rates beta. KAS (integral): ln(beta_i / T_alpha,i^2) = Const - E_alpha/(R*T_alpha). Reaction rate: d(alpha)/dt = A * exp(-E/(R*T)) * f(alpha). For multi-step: d(alpha)/dt = SUM_j w_j * A_j * exp(-E_j/(R*T)) * f_j(alpha_j), SUM w_j = 1.
+    - **when_to_use**: FIRST step, before any mechanism is assumed. E_alpha vs alpha immediately tells you how many distinct decomposition events the proprietary Lithoz binder has (constant E => single step; stepped/sloping E => multi-step, which an acrylate + dispersant + plasticiser system certainly is).
+    - **inputs_needed**: TGA/DTG of the green slurry (cured and uncured) at 1, 2, 5, 10, 20 K/min, in BOTH air and the actual process atmosphere; simultaneous TG-MS or TG-FTIR to assign species; sample masses small enough (<10 mg) to avoid self-heating and diffusion limitation; buoyancy/blank correction per ASTM E2402.
+    - **limitations**: Gives E_alpha and A*f(alpha) only in combination; does not by itself give the transport properties. Atmosphere-dependent: CO/CO2 evolution over copper is catalysed (as PVB decomposition was accelerated by BaTiO3+Pt), so kinetics measured in N2 will not transfer to air. Kinetic compensation effect means E and A trade off -- never report E alone.
+    - **source**: ICTAC recommendations, Vyazovkin et al. Thermochim. Acta 520:1-19, 2011 (DOI 10.1016/j.tca.2011.03.034); multi-step: Vyazovkin et al. Thermochim. Acta 689:178597, 2020 (DOI 10.1016/j.tca.2020.178597); decomposition: Koga et al. Thermochim. Acta 719:179384, 2023 (DOI 10.1016/j.tca.2022.179384)
+  -
+    - **name**: Distributed Activation Energy Model (DAEM) -- the right model for a proprietary multi-component binder
+    - **formulation**: 1 - alpha(T) = SUM_i w_i * INTEGRAL_0^inf { exp[ -INTEGRAL_0^t k0_i * exp(-E/(R*T(t'))) dt' ] * (1/(sigma_i*sqrt(2*pi))) * exp( -(E - E0_i)^2 / (2*sigma_i^2) ) } dE. Three parallel distributions (i = 1..3) were sufficient for a gelcast binder.
+    - **when_to_use**: When E_alpha from the isoconversional step is not constant and you cannot resolve discrete species. DAEM absorbs an unknown mixture into a small number of (w_i, E0_i, k0_i, sigma_i) quadruples -- exactly the situation with a proprietary binder.
+    - **inputs_needed**: Same multi-rate TGA set; nonlinear least-squares or global optimisation (differential evolution / CMA-ES) over 4 parameters per distribution with w_i summing to 1.
+    - **limitations**: Over-parameterised: many (E0, sigma, k0) sets fit equally well. MUST be regularised and MUST be validated on a held-out heating programme. Report a parameter covariance or bootstrap interval, not point values.
+    - **source**: Wang et al., Ceramics International 45(7):8166-8177, 2019, DOI 10.1016/j.ceramint.2019.01.118
+  -
+    - **name**: Coupled reaction-transport-stress debinding model (the defect criterion)
+    - **formulation**: Kinetics: dC/dt = -R(T,C). Mass transport, permeability-controlled: d(eps*rho_g)/dt = DIV[ rho_g * (k/mu) * GRAD(P) ] + Mw*R, with rho_g = P*Mw/(R*T) giving d(P)/dt = DIV[ (k*P/(mu*eps)) * GRAD(P) ] + (R_gas*T/(eps)) * R. Diffusion-controlled alternative: d(eps*C)/dt = DIV[ D(T,phi_binder) * GRAD(C) ] + R, with D from free-volume theory. Energy: rho*cp*dT/dt = DIV[ k_eff * GRAD(T) ] + dH_rxn * R. Failure: treat GRAD(P) as an equivalent body force, solve the elastic problem, and require sigma_max(x,t) <= sigma_green(T, binder fraction), or equivalently P_max - P_ambient <= P_crit.
+    - **when_to_use**: The core debinding simulation. For copper the energy equation is nearly redundant inside the solid (k_eff is high even in the green state relative to a ceramic), which is GOOD NEWS -- it kills the thermal-gradient failure mode and leaves pressure as the single dominant constraint. Verify this by computing the Biot number and the ratio of reaction timescale to thermal diffusion timescale.
+    - **inputs_needed**: Kinetics from DAEM/isoconversional; green-body permeability k as a function of remaining binder fraction (measure by gas-flow permeametry on partially debound coupons -- this is the key missing property and is publishable on its own); open porosity eps; green strength sigma_green as a function of temperature and binder fraction (measure by hot 3-point bend or TMA); gas viscosity mu.
+    - **limitations**: Permeability varies by orders of magnitude as binder is removed and is anisotropic in a layer-wise printed body (an LCM-specific effect nobody has quantified). Green strength also collapses non-monotonically. Both need their own measurement campaign.
+    - **source**: Tsai, AIChE J 37(4):547-554, 1991, DOI 10.1002/aic.690370408; Lombardo and Feng, J. Mater. Res. 17(6):1434-1440, 2002, DOI 10.1557/jmr.2002.0213; Feng, He and Lombardo, J. Appl. Mech. 69(4):497-501, 2002, DOI 10.1115/1.1460908
+  -
+    - **name**: Minimum-Time Heating Cycle (MTHC) -- the optimal debinding cycle
+    - **formulation**: Minimise t_f = INTEGRAL_0^t_f dt subject to (i) alpha(t_f) >= alpha_target, (ii) the reaction-transport PDE above, (iii) the pointwise constraint g(x,t) = P(x,t) - P_crit <= 0 (or C(x,t) - C_crit <= 0). Solution rides the constraint boundary: the optimal T(t) is the trajectory for which max_x P(x,t) = P_crit for all t during the active phase. Two solution routes: (a) pseudo-steady-state analytic solution + variational calculus; (b) FE + a process-control algorithm that servo-controls T to hold max_x P at P_crit.
+    - **when_to_use**: This IS the deliverable 'optimum debinding cycle'. Route (b) is the practical one and generalises to arbitrary 3D LCM geometry. It also maps one-to-one onto a physically realisable experiment: a CRTA / sample-controlled TGA run, where the instrument servo-controls T to hold a constant decomposition rate -- the measured T(t) is an experimental MTHC and is the ideal out-of-sample validation of the model.
+    - **inputs_needed**: The full debinding model plus a defensible P_crit (from green strength and the Feng/He/Lombardo stress solution).
+    - **limitations**: Already published in general form (Lombardo 2014/2016/2018), so it is METHOD, not novelty. The novelty must be the constraint set: add a residual-carbon constraint C_res(t_f) <= C_spec and an oxygen-potential constraint, which no MTHC paper has done.
+    - **source**: Lombardo, JACerS 98(1):57-65, 2015, DOI 10.1111/jace.13284; JACerS 100(2):529-538, 2017, DOI 10.1111/jace.14585; Lombardo and Retzloff, JACerS 102(3):1030-1040, 2019, DOI 10.1111/jace.15964; earlier dynamic-optimisation variant: Liau and Chiu, Ind. Eng. Chem. Res. 44(12):4586-4593, 2005, DOI 10.1021/ie049143a
+  -
+    - **name**: Skorohod-Olevsky Viscous Sintering (SOVS) continuum model -- densification and distortion
+    - **formulation**: Inelastic strain rate: eps_dot_in_ij = sigma_dev_ij / (2*eta0(T)*phi(rho)) + (sigma_kk - 3*sigma_s(rho)) / (18*eta0(T)*psi(rho)) * delta_ij. Shape functions: phi(rho) = a1*rho^b1; psi(rho) = a2 * rho^b2 / (1-rho)^c2; sigma_s(rho) = a3*sigma_s0*rho^b3 with sigma_s0 = 3*alpha_surf / r_particle. Mass conservation: rho_dot = -rho * tr(eps_dot_in), or with thermal expansion and mass loss: rho_dot = rho * tr(eps_dot_mass - eps_dot_in - 3*eps_dot_th). Grain-growth extension divides the bulk term by lambda = (a5/(rho_c - rho))^b5 where rho_c is the attainable ceiling density. Viscosity: eta0(T) = A0*exp(Q/(R*T)) (Arrhenius) or A*T^2 + B*T + C (polynomial).
+    - **when_to_use**: The workhorse for predicting shrinkage AND gravity-driven distortion in a full 3D LCM part. Implementable in Code_Aster + MFront (open source, as Balaguer et al. did), Abaqus UMAT, or Netfabb/Simufact sintering modules.
+    - **inputs_needed**: eta0(T) calibrated semi-empirically from the dilatometric expansion-contraction curve (Balaguer's Algorithm 1 finds a5, b5, rho_c by forcing heating-branch and cooling-branch viscosities to coincide); rho_0 distribution from green density measurement; surface tension and particle radius for sigma_s0; friction coefficient at the setter interface; density-dependent gravity load.
+    - **limitations**: Cannot represent bloating/overfiring (pore re-expansion) -- Balaguer's model always OVER-predicts contraction once overfiring starts. For copper, sintering within approximately 100 K of Tm = 1085 C makes over-sintering and pore coarsening a live risk. Also assumes linear viscous behaviour; near-Tm copper may show power-law creep.
+    - **source**: Balaguer et al., J. Eur. Ceram. Soc. 44(13):7657-7670, 2024, DOI 10.1016/j.jeurceramsoc.2024.05.035; Arrhenius viscosity form: Reiterer, Ewsuk and Arguello, J. Am. Ceram. Soc. 89(6), 2006, DOI 10.1111/j.1551-2916.2006.01041.x
+  -
+    - **name**: Process-related time-dependent sinter strain and viscosity (the cheap calibration alternative)
+    - **formulation**: Instead of fitting a constitutive model, extract eps_sinter(t) and eta(t) DIRECTLY as time-dependent tabulated functions from a set of dilatometer runs performed at several push-rod loads F_i, using the uniaxial SOVS reduction: eps_dot_axial = (sigma_axial - sigma_s)/(eta_bulk) with sigma_axial = F/A(t). Free (zero-load) shrinkage gives eps_sinter(t); the load derivative gives eta(t).
+    - **when_to_use**: When you have limited furnace time and a single well-defined thermal cycle. Reported to give MORE accurate distortion prediction than complex constitutive fitting, with far fewer experiments.
+    - **inputs_needed**: A loaded dilatometer (NETZSCH DIL 402 class with variable push-rod force), 3-4 load levels, one thermal cycle. Note the direct conflict with the low-load requirement for soft debinding samples -- run loaded dilatometry only AFTER debinding.
+    - **limitations**: Parameters are valid only for the cycle they were measured on -- it is a calibration, not a material model. Cannot be extrapolated to a different heating rate or peak temperature, which undercuts using it for cycle OPTIMISATION.
+    - **source**: Euro PM2024 Proceedings, DOI 10.59499/ep246278578 (binder-jetted Ti-6Al-4V)
+  -
+    - **name**: Master Sintering Curve (MSC)
+    - **formulation**: Work of sintering Theta(t,T(t)) = INTEGRAL_0^t (1/T) * exp(-Q/(R*T)) dt. Densification parameter Phi = (rho - rho_0)/(1 - rho_0). Fit Phi = 1/(1 + exp(-(ln(Theta) - a)/b)). Q is selected as the value minimising the mean residual sum of squares of the sigmoid fit across all heating rates.
+    - **when_to_use**: Fast, cheap cycle screening and a sanity check on the SOVS calibration. Gives a single apparent Q for copper densification and lets you trade temperature against time analytically.
+    - **inputs_needed**: Dilatometry at >=3 heating rates (1, 3, 5 K/min) on samples of matched green density.
+    - **limitations**: Predicts DENSITY only, not shape; assumes a single dominant mechanism and constant microstructure path. For BJAM its density prediction error was 0.9-4.3%. Anisotropic AM shrinkage must be handled by fitting per-axis MSCs.
+    - **source**: Wheat et al., J. Manuf. Sci. Eng. 142(8):081001, 2020, DOI 10.1115/1.4047140; anisotropy discussion: World PM2022 Proceedings DOI 10.59499/wp225369505
+  -
+    - **name**: Displacement-reversal (spring-back) geometric compensation
+    - **formulation**: Iterate: x_green^(k+1) = x_green^(k) - lambda * ( M(x_green^(k)) - x_CAD ), where M is the sintering simulation (or a 3D scan of the actual sintered part), lambda in (0,1] is a relaxation/spring-back factor, and the displacement field is applied by mesh morphing back onto the green CAD. Convergence when max |M(x_green) - x_CAD| < tolerance. Scale-and-morph variant: first apply an anisotropic uniform scale S_x, S_y, S_z from measured axis-wise shrinkage, then morph the residual.
+    - **when_to_use**: Producing the pre-compensated green CAD that the 2M30 actually prints. Works with either an FE forward model or a purely experimental 3D-scan loop.
+    - **inputs_needed**: Validated forward model OR a structured-light/CT scan of a sintered trial part registered to nominal CAD; accurate GREEN density AND green dimensions (nominal CAD is not good enough).
+    - **limitations**: Accurate only in directions for which the material model was calibrated. Green density assumption is the dominant error source. Purely experimental loops need a full print-debind-sinter cycle per iteration.
+    - **source**: Rapid Prototyping Journal, 2022, DOI 10.1108/rpj-06-2022-0181; Borujeni et al., Materials and Design 216:110490, 2022, DOI 10.1016/j.matdes.2022.110490; copper-specific 3D-scan inverse deformation: Montes-Ramirez et al., J. Manuf. Processes, 2024, DOI 10.1016/j.jmapro.2024.04.069
+  -
+    - **name**: Surrogate/ML-accelerated compensation
+    - **formulation**: Train a regressor f_theta: (geometry descriptor, local curvature, wall thickness, distance-to-setter, green density) -> distortion vector, on FE or experimental data; apply the inverse of f_theta as the compensation field. Physics-based data-driven variants add explicit size-effect terms so the model extrapolates across part scale.
+    - **when_to_use**: Once you have >10 validated FE cases; removes the per-part FE solve and captures size effects the continuum model misses.
+    - **inputs_needed**: A corpus of matched CAD / green-scan / sintered-scan triples, or FE results; point-cloud registration pipeline.
+    - **limitations**: No extrapolation guarantee outside the training envelope; for a paper it must be benchmarked against the plain FE compensation, not against no compensation.
+    - **source**: Paudel, Deng and To, Additive Manufacturing 68:103517, 2023, DOI 10.1016/j.addma.2023.103517; ANN for BJAM: Progress in Additive Manufacturing, 2024, DOI 10.1007/s40964-024-00918-0; hybrid ML+FE for MEX: Acta Materialia, 2025, DOI 10.1016/j.actamat.2025.121225
+  -
+    - **name**: Dual-dilatometry validation protocol with load-artefact correction
+    - **formulation**: (1) Optical (load-free) dilatometry for the debinding window and for warpage; (2) push-rod (ASTM E228) for the densification window at higher precision; (3) run push-rod at >=3 contact forces F_i and linearly extrapolate the measured shrinkage strain to F -> 0 to remove the contact-creep artefact; (4) separate warpage from shrinkage analytically in the optical images. Report both curves with the correction magnitude stated.
+    - **when_to_use**: Mandatory for a soft, highly binder-loaded LCM green body. A referee who knows dilatometry will ask whether the push-rod crushed the sample.
+    - **inputs_needed**: Access to both instrument types (optical dilatometers: Expert System Solutions Misura, Netzsch TOMMI-class; push-rod: Netzsch DIL 402 class). Copper-compatible atmosphere control (H2-capable furnace with safety interlocks).
+    - **limitations**: Optical dilatometry has lower dimensional precision than push-rod; push-rod perturbs soft samples. Neither alone is sufficient.
+    - **source**: Gruner et al., J. Experimental and Theoretical Analyses 4(1):10, 2026, DOI 10.3390/jeta4010010; ASTM E228 DOI 10.1520/e0228; TMA: ASTM E831 DOI 10.1520/e0831
+  -
+    - **name**: Quantitative agreement reporting (what referees now demand instead of an overlay plot)
+    - **formulation**: Per-curve: RMSE = sqrt( (1/N) * SUM (S_i - D_i)^2 ); MAE; normalised RMSE as a percentage of total shrinkage. Method-vs-method: Bland-Altman bias d_bar with limits of agreement d_bar +/- 1.96*SD. Simulation-vs-experiment: ASME V&V 20 validation comparison error E = S - D with validation uncertainty u_val = sqrt(u_num^2 + u_input^2 + u_D^2); the model is validated at the |E| +/- k*u_val level, and you report that level rather than claiming 'good agreement'. Geometry: signed deviation maps with mean, SD, 95th percentile and max deviation after best-fit registration, reported per feature class.
+    - **when_to_use**: Every figure comparing simulation to experiment, and every comparison of optical vs push-rod dilatometry.
+    - **inputs_needed**: Replicates (n >= 3) so u_D is estimable; mesh-convergence study so u_num is estimable; input-parameter uncertainty from the kinetic/viscosity fits (bootstrap or Bayesian posterior).
+    - **limitations**: Requires you to have actually quantified numerical and input uncertainty, which most AM sintering papers skip -- which is precisely why doing it is a differentiator.
+    - **source**: Bland and Altman, The Lancet 327(8476):307-310, 1986, DOI 10.1016/s0140-6736(86)90837-8; ASME V&V 20 framework (standard document, DOI not verified -- cite the standard number directly)
+- **open_questions**:
+  - What is the actual solids loading of the Lithoz copper slurry? Published LMM feedstocks sit near 55 vol% metal (Incus CP63 system, verified), but Lithoz LCM ceramic slurries are typically higher (45-60 vol%) and the copper R&D slurry is unpublished. Must be determined by loss-on-ignition ash residue plus He pycnometry on the cured green body, cross-checked against Archimedes green density.
+  - Is the Lithoz copper binder a single acrylate network or a network plus a non-reactive fugitive component (wax/plasticiser/dispersant)? This decides whether a solvent or supercritical-CO2 pre-debinding step is even possible, and it changes the transport regime from pure reaction-diffusion to a two-stage wicking-then-pyrolysis problem. Resolve by TG-MS/TG-FTIR plus solvent-extraction gravimetry on cured coupons.
+  - Is gas escape during debinding of a 30 um-pixel LCM copper body permeability-controlled (Darcy/Poiseuille) or diffusion-controlled (free-volume through the un-decomposed polymer)? Lombardo's work shows the optimal cycle SHAPE differs qualitatively between the two. Resolve by measuring green-body gas permeability as a function of residual binder fraction -- this dataset does not exist for any LCM material and is publishable in its own right.
+  - Is the permeability of an LCM green body ANISOTROPIC because of the layer-wise cure? Lombardo's 3D pressure solution explicitly admits anisotropic permeability but nobody has measured it for a vat-photopolymerised part. If it is, the safe heating rate becomes build-orientation dependent -- a genuinely novel LCM-specific result.
+  - What is the oxygen-potential process window for pure copper: the upper bound set by Cu2O formation and the lower bound set by the need to oxidise residual carbon (copper forms no carbide, so carbon removal requires an oxidant)? Express as a pO2/pH2O-pH2 map versus temperature and overlay the ASTM B577 hydrogen-embrittlement risk region. The Euro PM2025 Lithoz work shows humidified reducing gas is the practical answer but gives no quantitative dewpoint window.
+  - What residual carbon level actually blocks copper densification and by how much does it degrade %IACS? Euro PM2025 asserts 'even small amounts' but publishes no threshold. A C-content vs final density vs %IACS curve for LCM copper would be a compact, highly citable result.
+  - Can the MTHC formulation be extended to a MULTI-constraint optimisation with (i) P(x,t) <= P_crit, (ii) residual carbon C_res(t_f) <= C_spec, and (iii) an atmosphere-composition control variable alongside T(t)? No published MTHC work includes a chemical purity constraint or treats atmosphere as a second control. This is the strongest theoretical novelty available.
+  - Does the SOVS linear-viscous assumption hold for copper sintering at 950-1070 C, i.e. within 15-130 K of Tm? Possible power-law creep and incipient liquid/surface premelting may require a non-linear viscosity. Test by loaded dilatometry at several stress levels and checking whether strain rate is linear in applied stress.
+  - How many compensation iterations does an LCM copper part actually need, and what residual deviation is achievable? Could not be verified from the accessible literature. Needs to be established empirically and reported as a deviation-map statistic, not as a single number.
+  - Does the 2M30's multi-material capability create a co-sintering mismatch problem worth a second paper (differential shrinkage, interfacial stress, delamination)? Co-sintered multi-material densification/delamination modelling exists in the powder-metallurgy literature but not for LCM copper.
+  - Does the high thermal conductivity of a copper green body genuinely eliminate the thermal-gradient failure mode during debinding, leaving pressure as the sole constraint? If confirmed numerically (Biot number, timescale ratio), that is a clean, quotable physical result distinguishing copper from ceramic LCM and it simplifies the optimisation to a single-constraint problem.
+  - Can a CRTA / sample-controlled TGA run be used both as the model-validation experiment AND as a directly transferable furnace recipe (scaling the small TGA specimen's T(t) to a real part)? The scaling law from milligram TGA specimen to a centimetre part is not established and would itself be a methods contribution.
+- **references**:
+  -
+    - **citation**: Gruner, W. et al., 'Optical Dilatometry and Push-Rod Dilatometry - A Case Study for Sintering Steel and Zirconia Tapes', Journal of Experimental and Theoretical Analyses 4(1):10, 2026
+    - **url**: https://doi.org/10.3390/jeta4010010
+    - **why**: The single best source on the dilatometry artefact question. Documents the spurious early-compaction shrinkage-rate peak caused by push-rod contact pressure on low-stiffness samples, and the complementary role of load-free optical dilatometry in resolving warpage. Preprint version at 10.20944/preprints202511.2247.v1.
+  -
+    - **citation**: Lombardo, S.J., 'Minimum Time Heating Cycles for Diffusion-Controlled Binder Removal from Ceramic Green Bodies', J. Am. Ceram. Soc. 98(1):57-65, 2015
+    - **url**: https://doi.org/10.1111/jace.13284
+    - **why**: The canonical prior art the group MUST cite and differentiate from. Solves the constrained minimum-time debinding cycle by variational calculus and shows the optimal T(t) can be increasing, decreasing or flat depending on parameters -- which is why guessing a linear ramp is wrong.
+  -
+    - **citation**: Lombardo, S.J., 'Minimum time heating cycles for diffusion- versus permeability-controlled binder removal from ceramic green bodies', J. Am. Ceram. Soc. 100(2):529-538, 2017
+    - **url**: https://doi.org/10.1111/jace.14585
+    - **why**: Shows the optimal cycle shape depends qualitatively on which transport mechanism dominates, which makes measuring the group's green-body permeability a necessity rather than a nicety.
+  -
+    - **citation**: Lombardo, S.J. and Retzloff, D.G., 'A process control algorithm for reaction-diffusion minimum time heating cycles for binder removal from green bodies', J. Am. Ceram. Soc. 102(3):1030-1040, 2019
+    - **url**: https://doi.org/10.1111/jace.15964
+    - **why**: The FE + process-control formulation. This is the implementable numerical recipe for generating an optimal cycle for arbitrary 3D LCM geometry, and it validates the pseudo-steady-state approximation.
+  -
+    - **citation**: Shende, R.V. and Lombardo, S.J., 'Determination of Binder Decomposition Kinetics for Specifying Heating Parameters in Binder Burnout Cycles', J. Am. Ceram. Soc. 85(4):780-786, 2002
+    - **url**: https://doi.org/10.1111/j.1151-2916.2002.tb00172.x
+    - **why**: Establishes the +/-15% non-identifiability result -- four different kinetic analyses give wildly different E and A yet all fit the TGA data. This is the argument for an out-of-sample predictive validation and is the strongest methodological point the group can make about an unknown binder.
+  -
+    - **citation**: Feng, J.H., He, F. and Lombardo, S.J., 'Stress Distribution in Porous Ceramic Bodies During Binder Burnout', J. Applied Mechanics 69(4):497-501, 2002
+    - **url**: https://doi.org/10.1115/1.1460908
+    - **why**: Supplies the defect criterion: normal stresses peak at the body centre and are an order of magnitude above shear stresses, scaling with size, geometry and permeability. Use this to convert a computed pressure field into a pass/fail constraint.
+  -
+    - **citation**: Tsai, D.-S., 'Pressure buildup and internal stresses during binder burnout: Numerical analysis', AIChE Journal 37(4):547-554, 1991
+    - **url**: https://doi.org/10.1002/aic.690370408
+    - **why**: The foundational numerical treatment of burnout pressure and stress; the origin of the whole constrained-cycle line of work.
+  -
+    - **citation**: Liau, L.C.-K. and Chiu, C.-C., 'Optimal Heating Strategies of Polymer Binder Burnout Process Using Dynamic Optimization Scheme', Ind. Eng. Chem. Res. 44(12):4586-4593, 2005
+    - **url**: https://doi.org/10.1021/ie049143a
+    - **why**: Independent prior art on simulation-driven optimal burnout cycles using dynamic optimisation rather than variational calculus. Must be cited to establish that 'optimise the debinding cycle by simulation' is not itself novel.
+  -
+    - **citation**: Wang, S. et al., 'DAEM kinetics analysis and finite element simulation of thermal debinding process for a gelcast SiAlON green body', Ceramics International 45(7):8166-8177, 2019
+    - **url**: https://doi.org/10.1016/j.ceramint.2019.01.118
+    - **why**: The closest structural template for the group's debinding paper: multi-rate TGA plus TG-FTIR, three-parallel DAEM, coupled solid-fluid-thermal-mechanical FE, and a concrete defect-avoiding recipe (310 C, >=2 h, 1 C/min). Gives target parameter magnitudes.
+  -
+    - **citation**: Vyazovkin, S. et al., 'ICTAC Kinetics Committee recommendations for performing kinetic computations on thermal analysis data', Thermochimica Acta 520:1-19, 2011
+    - **url**: https://doi.org/10.1016/j.tca.2011.03.034
+    - **why**: The methodological standard a Thermochimica Acta referee will check the group against: >=3 heating rates, isoconversional first, Friedman preferred over rigid integral methods, no single-E claims.
+  -
+    - **citation**: Koga, N., Vyazovkin, S., Burnham, A.K. et al., 'ICTAC Kinetics Committee recommendations for analysis of thermal decomposition kinetics', Thermochimica Acta 719:179384, 2023
+    - **url**: https://www.osti.gov/servlets/purl/1964012
+    - **why**: Current-generation guidance specific to decomposition, including CRTA/sample-controlled thermal analysis as a diagnostic. Open-access full text at the OSTI link.
+  -
+    - **citation**: Balaguer, J., Tiscar, J.M., Saburit, A., Gomez, P., Moreno, A. and Gilabert, F.A., 'Enhanced Skorohod-Olevsky viscous model incorporating microstructure evolution for finite element analysis of ceramic sintering', J. European Ceramic Society 44(13), 2024
+    - **url**: https://doi.org/10.1016/j.jeurceramsoc.2024.05.035
+    - **why**: Full SOVS formulation with the Olevsky parameter set, a semi-empirical viscosity calibration algorithm driven by dilatometry, a grain-growth extension, and an OPEN-SOURCE implementation route (Code_Aster + MFront). Validated on 18 dilatometry runs with <3% shrinkage error. Author accepted manuscript free at biblio.ugent.be.
+  -
+    - **citation**: Sadeghi Borujeni, S., Shad, A., Abburi Venkata, K., Gunther, N. and Ploshikhin, V., 'Numerical simulation of shrinkage and deformation during sintering in metal binder jetting with experimental validation', Materials and Design 216:110490, 2022
+    - **url**: https://doi.org/10.1016/j.matdes.2022.110490
+    - **why**: The most-cited validated sinter-distortion simulation in sinter-based AM (CC-BY open access on ScienceDirect). The benchmark the group's LCM copper simulation will be judged against.
+  -
+    - **citation**: 'Compensation of sintering deformation for components manufactured by metal binder jetting using numerical simulations', Rapid Prototyping Journal, 2022
+    - **url**: https://doi.org/10.1108/rpj-06-2022-0181
+    - **why**: The compensation reference that explicitly quantifies the sensitivity to green density and green dimensions, and notes that compensation is only accurate in the directions the material model was calibrated in. Directly informs the group's measurement plan.
+  -
+    - **citation**: Paudel, B.J., Deng, H. and To, A.C., 'A physics-based data-driven distortion compensation model for sintered binder jet parts considering size effects', Additive Manufacturing 68:103517, 2023
+    - **url**: https://doi.org/10.1016/j.addma.2023.103517
+    - **why**: State of the art in surrogate-accelerated compensation with explicit size-effect handling. The comparison baseline if the group tries an ML compensation route.
+  -
+    - **citation**: Montes-Ramirez, J.E., Lopez, A., Hassan, M.S. et al., 'Shrinkage and deformation compensation in metal fused filament fabrication (mf3) sintered copper components using 3D scanning and inverse deformation', Journal of Manufacturing Processes, 2024
+    - **url**: https://doi.org/10.1016/j.jmapro.2024.04.069
+    - **why**: The only compensation study found on SINTERED COPPER specifically. Closest competitor work; the group's LCM angle (30 um features, vat photopolymerisation, multi-material) is what differentiates them from it.
+  -
+    - **citation**: Wheat, E. et al., 'The Master Sinter Curve and Its Application to Binder Jetting Additive Manufacturing', J. Manufacturing Science and Engineering 142(8):081001, 2020
+    - **url**: https://doi.org/10.1115/1.4047140
+    - **why**: Quantifies MSC transferability to sinter-based AM: 0.9-4.3% density prediction error, Q = 140-260 kJ/mol, and documents build-orientation anisotropy in density but not in Q. The cheap screening tool and a numerical sanity bound.
+  -
+    - **citation**: Cabo Rios, A., Persson, M., Hryha, E. et al., 'Phenomenological sintering model and experimental validation of gravity-induced distortions in binder-jetted stainless steel components', Ceramics International, 2024
+    - **url**: https://doi.org/10.1016/j.ceramint.2024.04.427
+    - **why**: Shows how to use push-rod dilatometry specifically to characterise and validate GRAVITY-induced distortion, which is the dominant distortion mode for a copper part sintering near its melting point.
+  -
+    - **citation**: Hofer, A.-K., Rabitsch, J. et al., 'Effect of binder system on the thermophysical properties of 3D-printed zirconia ceramics', Int. J. Applied Ceramic Technology, 2021
+    - **url**: https://doi.org/10.1111/ijac.13806
+    - **why**: The only accessible quantitative characterisation of actual Lithoz LCM binder systems (LithaCon 3Y210/3Y230): green stiffness approx 3 vs approx 32 MPa for the same powder, with identical sintered properties. Establishes that green mechanical properties are binder-specific and must be measured -- directly relevant to the group's unknown copper binder.
+  -
+    - **citation**: 'Post-processing Strategies For Copper Parts Produced By Lithography-Based Metal Manufacturing', Euro PM2025 Proceedings
+    - **url**: https://doi.org/10.59499/ep256778885
+    - **why**: The single most relevant piece of prior art: air debinding removes most binder carbon, humidified reducing atmosphere drives further decarburisation at sintering temperature. This is the competitor paper. The group must cite it and go beyond it with quantification and simulation.
+  -
+    - **citation**: 'Different Debinding Strategies For Lithography-based Additive Manufacturing Of Stainless Steel', Euro PM2025 Proceedings
+    - **url**: https://doi.org/10.59499/ep256763871
+    - **why**: Establishes that sample THICKNESS is the controlling variable for lithography-based debinding and that the process window is bounded above by loss of pre-sinter handling strength -- exactly the constraint pair an MTHC optimisation formalises.
+  -
+    - **citation**: 'Recent advances of Lithography-based Metal Manufacturing of copper', Euro PM2024 Proceedings
+    - **url**: https://doi.org/10.59499/ep246281350
+    - **why**: Feedstock and processability survey for copper LMM including sintered thermal/electrical property measurement. Sets the property benchmark.
+  -
+    - **citation**: 'Lithography-Based Manufacturing Of Near Net Shape - Dispersion Strengthened Copper Parts By Cuprous Oxide Reduction', Euro PM2023 Proceedings
+    - **url**: https://doi.org/10.59499/ep235765269
+    - **why**: Verified quantitative outcome for LMM copper: up to 78 %IACS, with the shortfall attributed to insufficient densification. Use as the conductivity benchmark and as evidence that in-situ Cu2O reduction in H2 is an established route.
+  -
+    - **citation**: Scheibler, J., Kosmehl, A.S., Studnitzky, T., Zhong, C. and Weissgaerber, T., 'Lithography-Based Metal Manufacturing of Copper: Influence of Exposure Parameters on Green Part Strength', Metals 14(11):1268, 2024
+    - **url**: https://doi.org/10.3390/met14111268
+    - **why**: Green-part strength and cure-depth (single-layer exposure) characterisation for copper LMM. Supplies the green mechanical data the debinding failure criterion needs, and shows sintered density did not trend clearly with loading factor -- an open question the group can close.
+  -
+    - **citation**: Resch, A., Benayad, A., Roumanie, M. and Croutxe-Barghorn, C., 'Lithography based Metal Manufacturing (LMM): Influence of particle size and composition of copper powder on UV light penetration', Materials Today Communications 35:105595, 2023
+    - **url**: https://doi.org/10.1016/j.mtcomm.2023.105595
+    - **why**: Explains the cure-depth/powder-oxidation coupling that sets achievable green density and therefore the initial condition of every sintering simulation.
+  -
+    - **citation**: Mastny, P., 'High-strength copper alloys for indirect additive manufacturing using photolithography', TU Wien, 2026
+    - **url**: https://repositum.tuwien.at/handle/20.500.12708/230469
+    - **why**: Openly accessible full text with a complete, verified copper LMM process chain: 55 vol% loading, 0.4 C/min to 380 C + 240 min in synthetic air for debinding, 5 C/min to 990-1065 C + 120 min in H2 for sintering, NETZSCH DIL 402 C dilatometry in H2, LECO oxygen data, and a clear demonstration that pure Cu does not oxidise in H2 while Cr/Nb do. The best single starting recipe for the group's first trial.
+  -
+    - **citation**: Melentiev, R., Harakaly, G., Stogerer, J., Mitteramskogler, G., Wagih, A., Lubineau, G. and Grande, C.A., 'High-resolution metal 3D printing via digital light processing', Additive Manufacturing 85:104156, 2024
+    - **url**: https://doi.org/10.1016/j.addma.2024.104156
+    - **why**: Process-capability reference for DLP-based metal printing at LMM resolution; establishes the feature scale at which the group's simulation must resolve transport.
+  -
+    - **citation**: Melentiev, R., Wagih, A., Lubineau, G. and Grande, C.A., '3D printing, debinding and sintering of stainless steel metamaterials via lithography metal manufacturing: processing, microstructure and properties relationships', Materials and Design, 2025
+    - **url**: https://doi.org/10.1016/j.matdes.2025.114352
+    - **why**: The most directly comparable full process-chain study (crackless debinding, defectless sintering) for a lithography-printed metal. Open access. The structural model for the group's own experimental paper -- and evidence that no SIMULATION has yet been published for this class of part.
+  -
+    - **citation**: Yun, J. and Lombardo, S.J., 'Permeability of Green Ceramic Tapes as a Function of Binder Loading', J. Am. Ceram. Soc. 90(2):456-461, 2007
+    - **url**: https://doi.org/10.1111/j.1551-2916.2006.01444.x
+    - **why**: Method for measuring the green-body permeability the transport model requires, plus the pore-size criterion (1-2 um => Poiseuille dominant) that decides the flow regime. The measurement the group is missing.
+  -
+    - **citation**: Liau, L.C.-K., Peters, B., Krueger, D.S. et al., 'Role of Length Scale on Pressure Increase and Yield of Poly(vinyl butyral)-Barium Titanate-Platinum Multilayer Ceramic Capacitors during Binder Burnout', J. Am. Ceram. Soc. 83(11):2645-2653, 2000
+    - **url**: https://doi.org/10.1111/j.1151-2916.2000.tb01609.x
+    - **why**: Demonstrates that decomposition kinetics are CATALYSED by the surrounding ceramic and metal (accelerated weight loss, enhanced CO2), and links cycle plus geometry (optimum 1:3 aspect ratio) to yield. Directly warns that Lithoz binder kinetics measured without copper present will be wrong.
+  -
+    - **citation**: Vyazovkin, S. et al., 'ICTAC Kinetics Committee recommendations for analysis of multi-step kinetics', Thermochimica Acta 689:178597, 2020
+    - **url**: https://doi.org/10.1016/j.tca.2020.178597
+    - **why**: Directly applicable: an unknown proprietary acrylate binder system is a multi-step process, and this defines the accepted deconvolution and validation procedure.
+  -
+    - **citation**: Schwarzer-Fischer, E., Scheithauer, U., Michaelis, A. et al., 'CerAMfacturing of Aluminum Nitride with High Thermal Conductivity via Lithography-Based Ceramic Vat Photopolymerization (CerAM VPP)', Ceramics 6(1):24, 2023
+    - **url**: https://doi.org/10.3390/ceramics6010024
+    - **why**: Best-in-class LCM-family outcome (>99% Th.D., >180 W/(m K)) and a full process-chain characterisation template. Sets the quality bar the copper work should aim at and cite as the ceramic analogue.
+  -
+    - **citation**: Bland, J.M. and Altman, D.G., 'Statistical methods for assessing agreement between two methods of clinical measurement', The Lancet 327(8476):307-310, 1986
+    - **url**: https://doi.org/10.1016/s0140-6736(86)90837-8
+    - **why**: The correct statistic for optical-vs-push-rod dilatometry agreement and for simulation-vs-experiment shrinkage. Using bias with 1.96*SD limits of agreement instead of an R-squared or an overlay plot is a cheap, visible quality differentiator.
+  -
+    - **citation**: ASTM B577, 'Test Methods for Detection of Cuprous Oxide (Hydrogen Embrittlement Susceptibility) in Copper'
+    - **url**: https://doi.org/10.1520/b0577
+    - **why**: The qualification test for the specific failure mode copper faces when residual oxide meets hydrogen. Must appear in the experimental plan for any H2-sintered copper part.
+  -
+    - **citation**: ASTM B962 (Archimedes density of sintered PM products), ASTM B923 (skeletal density by He/N2 pycnometry), ASTM E1019 (C/S/N/O by combustion and fusion), ASTM E1941 (C in refractory and reactive metals), ASTM E228 (push-rod dilatometry), ASTM E831 (TMA linear thermal expansion), ASTM E2402 (TGA mass-loss validation)
+    - **url**: https://doi.org/10.1520/b0962
+    - **why**: The standards spine of the characterisation plan. Verified titles via Crossref: B962 10.1520/b0962, B923 10.1520/b0923, E1019 10.1520/e1019, E1941 10.1520/e1941, E228 10.1520/e0228, E831 10.1520/e0831, E2402 10.1520/e2402-05. Citing these by number makes the experimental section referee-proof.
+  -
+    - **citation**: 'Determination Of Process-Related Time-Dependent Sinter Strain And Viscosity For Simulating Distortion In Sinter-Based Additive Manufacturing', Euro PM2024 Proceedings
+    - **url**: https://doi.org/10.59499/ep246278578
+    - **why**: The low-cost calibration alternative: extract sinter strain and viscosity directly from loaded dilatometry rather than fitting a constitutive model, reportedly with better distortion accuracy and far fewer experiments. Practical for a group with one furnace.
+  -
+    - **citation**: Venkatesh, A.M., Bouvard, D. and Lhuissier, P., '3D analysis of ceramic powder sintering by synchrotron X-ray nano-tomography', J. European Ceramic Society, 2023
+    - **url**: unverified
+    - **why**: In-situ nano-CT tracking of densification and grain-size evolution -- the gold-standard microstructural validation if beamtime is obtainable. DOI not confirmed in this sweep; verify before citing.
+  -
+    - **citation**: 'Overview of High-temperature Deformation Measurement Using Digital Image Correlation', Experimental Mechanics 61, 2021
+    - **url**: https://doi.org/10.1007/s11340-021-00723-8
+    - **why**: The review that defines practice for high-temperature DIC: blackbody rejection by narrow-band illumination plus matched filter, speckle survivability, heat-haze and window-distortion correction. 132 citations; the reference a referee will expect if you claim full-field shrinkage measurement.
+  -
+    - **citation**: Chen, W.-L. et al. / Rijwani, T. and Ramkumar, P., 'Thermal Debinding for Binder Burnout in Metal and Ceramic Processing', Heat Transfer Engineering, 2024
+    - **url**: https://doi.org/10.1080/01457632.2024.2332111
+    - **why**: Recent review of thermal debinding for shaping-debinding-sintering routes with an explicit research-gap section; useful for framing the introduction and for confirming the group is not duplicating an existing review.
+  -
+    - **citation**: Bhandari, S., Maniere, C., Sedona, F., De Bona, E. et al., 'Ultra-rapid debinding and sintering of additively manufactured ceramics by ultrafast high-temperature sintering' and the related doctoral thesis 'Feasibility of rapid debinding and sintering of additively manufactured ceramics'
+    - **url**: https://tesidottorato.depositolegale.it/handle/20.500.14242/197396
+    - **why**: The closest existing work applying calibrated FEM to debinding AND sintering of LCM-family ceramics. The group must read this before claiming novelty on the simulation side. Journal DOI not verified in this sweep -- confirm before citing.

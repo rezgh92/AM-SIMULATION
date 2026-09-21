@@ -1,0 +1,449 @@
+- **summary**: Copper sintering for an LCM/vat-photopolymerisation feedstock sits in a narrow, well-characterised window, and the governing numbers are mostly available from primary sources. DIFFUSION: Frost & Ashby's Table 4.1 (Deformation-Mechanism Maps, 1982; full table read directly from the Dartmouth mirror) gives the canonical Cu set: atomic volume 1.18e-29 m3, b = 2.56e-10 m, Tm = 1356 K, mu0(300K) = 42.1 GPa with (Tm/mu0)(dmu/dT) = -0.54; lattice D0v = 2.0e-5 m2/s, Qv = 197 kJ/mol (Kuper et al.); boundary delta*D0b = 5.0e-15 m3/s, Qb = 104 kJ/mol; core ac*D0c = 1.0e-24 m4/s, Qc = 117 kJ/mol; power-law creep n = 4.8, Dorn A = 7.4e5, PL-breakdown alpha' = 794. Frost & Ashby give NO surface-diffusion entry for Cu; the sintering-specific surface term must come from Swinkels & Ashby (Acta Metall 29:259, 1981, DOI 10.1016/0001-6160(81)90154-1) — citation verified, values NOT retrieved in this session, so treat any Ds0/Qs you use as unverified until that table is obtained. Evaluating the verified set: Dv(1050 C) = 3.3e-13 m2/s, delta*Db(1050 C) = 3.9e-19 m3/s; the GB/lattice crossover length delta*Db/Dv = 1.2 um at 1050 C and 8.5 um at 800 C. Setting delta*Db/Dv = G gives a crossover at ~780 C for G = 10 um: below it GB diffusion controls densification, above it lattice diffusion does. That single result dictates cycle architecture — a long low-temperature leg buys little densification but a lot of surface-diffusion-driven neck growth (which rigidifies the part and kills subsequent shrinkage), so debinding holds must be kept as short and as low as thermodynamically allowed.
+PROCESS REFERENCE CYCLES (all verified, full text retrieved). Binder-jet Cu, Bai & Williams (SFF 2014, ExOne R2): ExOne PM-B-SR-1-04 binder, cure 190 C/2 h, TGA burnout complete 450 C; debind hold 450 C/30 min, 5 K/min ramps, extra 700 C hold in reducing gas "to reduce copper oxides before pore closure". Best results 1080 C/4 h in H2/Ar on D50 = 15.3 um powder: 85.5% TD, 43.4 vol% (17.3% linear) shrinkage. Atmosphere is the single biggest lever: same powder, 1060 C/2 h, air+vacuum gave 52.9% TD / 5.5 vol% shrinkage vs pure H2 78.2% TD / 37.1 vol% shrinkage. Excess H2 beyond the reduction demand gave no further benefit. Parts fired at and above 1084.6 C did not slump, attributed to residual oxide/impurity skin. Fraunhofer IWS (IntechOpen 10.5772/intechopen.103673) adds the IACS picture: bimodal 73% coarse (D50 26 um) + 27% fine (D50 8 um) at 1080 C reached 84.7% IACS after 12 h vs 52.6% monomodal; dilatometric linear shrinkage 12.4% bimodal vs 17.3% monomodal, with shrinkage onset 37 K lower (987.5 C) for bimodal. Virginia Tech summary: 15 um -> 85.5%, 75 um -> 63.2%; bimodal 30+5 um -> 92.3%; HIP -> 99.7%. Bound-metal extrusion Cu (Sandia SAND2023-10043R, Markforged Metal X/Sinter-1, measured with an in-furnace recorder) gives a complete, industrially validated Cu profile: 20->310 C at 2.4 K/min, 60 min hold; ->418 C at 2.2; ->500 C at 0.5 K/min; 100 min hold at 500; ->820 C at 4.0; 100 min hold; ->1040 C at 2.0; 180 min hold; 4% H2/Ar throughout. TGA put secondary debinding completion at 440 C. Eiger compensates 16% XY / 19% Z. Metal-filament Cu at 63 vol% loading reaches 96% density at only 950 C/90 min in H2 with 13% isotropic shrinkage — the clearest evidence that with high green density, Cu does not need 1080 C. LMM (Incus Hammer Lab35, from the UTEP thesis on OSTI): 55 vol% solids, <25 um powder, 25 um layers, 600 mJ/cm2, XY scale 1.21 / Z scale 1.24, debind in open atmosphere to 345 C then H2 sintering. The Incus Cu paper exists (Cano et al., Euro PM2024, DOI 10.59499/EP246281350) but is paywalled.
+KEY INFERENCE FOR THE UNKNOWN LITHOZ BINDER: solids loading is recoverable from geometry alone, phi_solid = rho_rel,final * (1 - eps_lin)^3. The Incus 1.21/1.24 scaling factors imply 55 vol%, matching their stated loading — so a single sintered coupon (linear shrinkage + Archimedes density) pins the one parameter that the proprietary binder hides. Radiation modelling must use emissivity ~0.02-0.08 for clean Cu (Davisson-Weeks, verified form) rising by an order of magnitude on oxidation, which makes the furnace heat-transfer boundary condition itself atmosphere-dependent.
+- **key_facts**:
+  -
+    - **fact**: Frost & Ashby Table 4.1 for copper (read directly from the published table image): atomic volume 1.18e-29 m3, Burgers vector 2.56e-10 m, Tm 1356 K, shear modulus at 300 K 4.21e4 MN/m2, (Tm/mu0)(dmu/dT) = -0.54. Modulus temperature law: mu = mu0[1 + ((T-300)/Tm)(Tm/mu0)(dmu/dT)].
+    - **source**: Frost H.J., Ashby M.F., Deformation-Mechanism Maps, Pergamon 1982, Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm (table image https://defmech.engineering.dartmouth.edu/DefMechPic/table4.1.gif)
+    - **confidence**: high
+  -
+    - **fact**: Frost & Ashby give no surface-diffusion coefficient for Cu. Their boundary-diffusion entry for Cu is flagged as ESTIMATED via delta*D0b = b*D0v and Qb = 0.6*Qv (footnote h), not a direct measurement — so Qb = 104 kJ/mol is a construction, not a tracer result. The core-diffusion entry (Qc = 117 kJ/mol) was fitted to low-temperature creep data (footnote i).
+    - **source**: Frost & Ashby Table 4.1 footnotes (h),(i) — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+    - **confidence**: high
+  -
+    - **fact**: Derived from the verified Frost & Ashby constants: the grain-boundary/lattice diffusion crossover length delta*Db/Dv = 2.5e-10 * exp(93000/RT) m. It equals 10 um at ~1055 K (782 C) and 1.2 um at 1323 K (1050 C). Consequence: for a 10-30 um grain size, densification below ~780 C is grain-boundary-diffusion controlled and above it lattice-diffusion controlled.
+    - **source**: Derived in this work from Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+    - **confidence**: high
+  -
+    - **fact**: Copper binder jetting: sintering atmosphere dominates densification far more than temperature. Identical AcuPowder 500A (D50 15.3 um) green parts at 1060 C/2 h gave 52.9% TD and 5.5 vol% shrinkage in air+vacuum versus 78.2% TD and 37.1 vol% shrinkage in pure hydrogen.
+    - **source**: Bai Y., Williams C.B., 'An Exploration of Binder Jetting of Copper', SFF Symposium 2014, Table 5 — https://repositories.lib.utexas.edu/handle/2152/88789
+    - **confidence**: high
+  -
+    - **fact**: Increasing hydrogen concentration beyond that needed for oxide reduction gave no further densification benefit in Cu binder jetting (H2/Ar tested at 100/0, 80/20, 60/40, 20/80 at 100 ml/min).
+    - **source**: Bai & Williams, SFF 2014, Fig. 12 — https://repositories.lib.utexas.edu/handle/2152/88789
+    - **confidence**: high
+  -
+    - **fact**: Copper binder-jet parts fired at or above the Cu melting point (up to 1090 C) did not melt or lose shape; the authors attribute this to powder impurity/oxide surface layers raising the effective melting point.
+    - **source**: Bai & Williams, SFF 2014, section 3.2 — https://repositories.lib.utexas.edu/handle/2152/88789
+    - **confidence**: high
+  -
+    - **fact**: Recommended oxide-reduction practice for Cu powder: fully reduce oxides and remove water vapour BEFORE pore closure, i.e. hold isothermally before reaching ~85% relative density, or use hold temperatures no higher than ~900 C. Bai & Williams implemented this as an explicit 700 C hold in the reducing-atmosphere schedule.
+    - **source**: Bai & Williams, SFF 2014, section 3.4 (citing MIM practice) — https://repositories.lib.utexas.edu/handle/2152/88789
+    - **confidence**: high
+  -
+    - **fact**: Markforged Metal X bound-powder-extrusion copper: the measured Sinter-1 profile has three explicit intermediate holds (310 C, 500 C, 820 C) before the 1040 C/180 min densification hold, with a deliberately slow 0.5 K/min segment between 418 C and 500 C. Atmosphere ~4% H2 in Ar. TGA showed secondary (thermal) debinding complete at 440 C; the 500 C hold exists to guarantee thermal equilibration and complete binder removal before bulk diffusion starts.
+    - **source**: Moran S.P. et al., SAND2023-10043R, Sandia LDRD 230941, Table 1 — https://www.osti.gov/servlets/purl/2430184
+    - **confidence**: high
+  -
+    - **fact**: Copper is 'particularly susceptible to sintering deformation because of its ductility and high density'; brown/green Cu bars have essentially zero strength in the window between binder removal and the onset of sintering, and Sandia's bending specimens fractured there until a supported 'pre-sinter' step was added. Pre-sintering halved subsequent shrinkage rate and capped final density at 91% vs 97% for the standard route.
+    - **source**: Sandia SAND2023-10043R — https://www.osti.gov/servlets/purl/2430184
+    - **confidence**: high
+  -
+    - **fact**: HP Metal Jet copper sag scales steeply with temperature: 28 mm unsupported overhang distorted <1 deg at 500 C/30 min, 5 deg at 800 C/30 min, 12 deg at 1000 C/30 min and 20 deg at 1040 C/4 h. Multi-step profiles (300 C-1h + 500 C-2h + 650 C-1h + 1000 C-30min, or 600 C-1h + 1000 C-30min) reduced sag by 33% but did not eliminate it.
+    - **source**: Support-free sintering of 3D printed binder jet copper and stainless steel parts, SFF 2022, Table 1 — https://repositories.lib.utexas.edu/handle/2152/117351
+    - **confidence**: high
+  -
+    - **fact**: Lithography-based metal manufacturing (Incus Hammer Lab35) uses 55 vol% powder loading and XY/Z scaling factors of 1.21/1.24 (= 17.4% XY and 19.4% Z linear shrinkage). Thermal route: partial debind in open atmosphere to a maximum of 345 C, then hydrogen-furnace sintering. For comparison, Lithoz LCM alumina (Lithalox 350) uses XY 1.22 / Z 1.28 with preconditioning, debinding and sintering all in air.
+    - **source**: Cillessen D.E., 'Lithography-Based Additive Manufacturing of Ceramics and Metals...', PhD thesis (UTEP), Tables 1-2 — https://www.osti.gov/servlets/purl/3547197
+    - **confidence**: high
+  -
+    - **fact**: Solids loading of an unknown feedstock is recoverable from geometry: phi_solid = rho_rel,final * (1 - eps_linear)^3. Applying this to the Incus factors (eps_lin 17.4% XY) with ~97% final density returns 55 vol%, matching the stated loading — validating the inversion as a way to back out the Lithoz Cu binder content from one sintered coupon.
+    - **source**: Derived in this work from Incus/LMM data in https://www.osti.gov/servlets/purl/3547197
+    - **confidence**: high
+  -
+    - **fact**: A high green density lets copper densify well below 1080 C: a 63 vol% Cu metal filament (AM Extrusion GmbH), solvent-debound in acetone at 45 C, reached 96% relative density after sintering at only 950 C in H2 (90 min), with 13% isotropic shrinkage and <±80 um accuracy.
+    - **source**: Stepien L. et al., 'Pure Copper: Advanced Additive Manufacturing', IntechOpen 2022, DOI 10.5772/intechopen.103673 — https://www.intechopen.com/chapters/81649
+    - **confidence**: high
+  -
+    - **fact**: Bimodal powder in Cu binder jetting lowers the shrinkage-onset temperature by ~37 K (to 987.5 C) and reduces total dilatometric shrinkage from 17.3% (monomodal) to 12.4%, while raising conductivity from 52.6% to 84.7% IACS after 12 h at 1080 C.
+    - **source**: Stepien L. et al., IntechOpen 2022, DOI 10.5772/intechopen.103673 — https://www.intechopen.com/chapters/81649
+    - **confidence**: high
+  -
+    - **fact**: Physical density is NOT a sufficient proxy for electrical quality in Cu: hot-pressed Cu at 97.9-99.1% density still only reached 90.2% IACS, and 0.055 wt% dissolved carbon drops conductivity to 22.7e6 S/m (39.2% IACS). During debinding, carbon can dissolve into copper — the dominant conductivity risk for a binder-based route.
+    - **source**: Stepien L. et al., IntechOpen 2022, DOI 10.5772/intechopen.103673, citing Islak 2017 and Jadhav et al. Materials 2019, 12, 2469 — https://www.intechopen.com/chapters/81649
+    - **confidence**: high
+  -
+    - **fact**: Copper cannot form carbides, so residual carbon is removed only by oxidation to CO/CO2 or by dissolution — there is no carbide sink. This makes the debinding atmosphere a two-sided constraint: oxidising enough to burn carbon, reducing enough to avoid Cu2O. Pure H2 does not remove carbon efficiently at these temperatures; a controlled H2/H2O (dew-point-controlled) atmosphere is the standard lever.
+    - **source**: unverified (thermodynamic reasoning; no single primary source retrieved in this session)
+    - **confidence**: medium
+  -
+    - **fact**: Total hemispherical emittance of clean polished copper is very low and is well described (for rT<0.1) by the Davisson-Weeks Drude relation; measured values for polished Cu lie in the range ~0.02-0.06 between 300 and 1050 K, with the Davisson-Weeks theory over-predicting above ~300 K.
+    - **source**: COO-3151-80, 'Measurement of the total hemispherical emittance of copper and of spectrally selective surfaces', 1978, DOI 10.2172/5716987, Figs. 1 and 13 — https://www.osti.gov/servlets/purl/5716987 (numeric axis scale read from a scanned figure; treat exact values as approximate)
+    - **confidence**: medium
+  -
+    - **fact**: Oxidised copper emissivity is roughly an order of magnitude higher than clean copper (typically 0.6-0.8 for CuO-covered surfaces), so the radiative boundary condition in a furnace model changes qualitatively as the oxide is reduced during the debind-to-sinter transition.
+    - **source**: unverified (no primary source for the oxidised value retrieved in this session)
+    - **confidence**: low
+  -
+    - **fact**: Copper surface energy and grain-boundary energy were NOT verified in this session. Canonical sources whose DOIs are confirmed: Vitos L. et al., 'The surface energy of metals', Surf. Sci. 411 (1998) 186, DOI 10.1016/S0039-6028(98)00363-X; Olmsted D.L., Foiles S.M., Holm E.A., 'Survey of computed grain boundary properties in FCC metals: I. Grain boundary energy', Acta Mater. 57 (2009), DOI 10.1016/j.actamat.2009.04.007; Tran R. et al., 'Surface energies of elemental crystals', Sci. Data 3:160080 (2016). Values must be taken from these before use.
+    - **source**: Citations verified via Crossref; numeric values unverified
+    - **confidence**: high
+- **numbers**:
+  -
+    - **quantity**: Lattice (volume) self-diffusion pre-exponential, D0v
+    - **value**: 2.0e-5
+    - **units**: m^2/s
+    - **context**: Pure Cu, for Dv = D0v exp(-Qv/RT). Source data attributed to Kuper et al. (1954, 1956). Valid over the normal high-homologous-temperature range; use with Qv = 197 kJ/mol.
+    - **source**: Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: Lattice self-diffusion activation energy, Qv
+    - **value**: 197
+    - **units**: kJ/mol
+    - **context**: Pure Cu. Equivalent to 2.04 eV/atom. This is the value to use for final-stage (lattice-controlled) densification and for pore shrinkage above ~800 C.
+    - **source**: Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: Grain-boundary diffusion pre-exponential, delta*D0b
+    - **value**: 5.0e-15
+    - **units**: m^3/s
+    - **context**: Pure Cu, for delta*Db = delta*D0b exp(-Qb/RT). NOTE footnote (h): this is an ESTIMATE constructed as delta*D0b = b*D0v, not an independent measurement.
+    - **source**: Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: Grain-boundary diffusion activation energy, Qb
+    - **value**: 104
+    - **units**: kJ/mol
+    - **context**: Pure Cu. Estimated as 0.6*Qv (footnote h). Controls intermediate-stage densification and neck growth below ~780 C for 10 um grains. Cross-check against Surholt & Herzig, Acta Mater. 45 (1997) 3817, DOI 10.1016/S1359-6454(97)00037-2 before publication.
+    - **source**: Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: Dislocation-core diffusion, ac*D0c and Qc
+    - **value**: 1.0e-24 m^4/s; 117 kJ/mol
+    - **units**: m^4/s; kJ/mol
+    - **context**: Pure Cu; Qc chosen to match the activation energy for low-temperature creep. Relevant to pipe-diffusion-assisted creep during gravity sag of thin sections.
+    - **source**: Frost & Ashby Table 4.1 and Chapter 4 text — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: Power-law creep exponent n and Dorn constant A for Cu
+    - **value**: n = 4.8; A = 7.4e5 (tensile); alpha' (power-law breakdown) = 794
+    - **units**: dimensionless
+    - **context**: Pure Cu. Maps were built with As = (sqrt(3))^(n+1) * A for shear. Use for the viscoplastic (sag/slump) branch of a sintering distortion model. Frost & Ashby maps used grain size 0.1 mm and dislocation density 6.25e14 /m^2.
+    - **source**: Frost & Ashby Table 4.1 and Chapter 4 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: Shear modulus of Cu at 300 K and its temperature coefficient
+    - **value**: mu0 = 4.21e4 MN/m^2 (42.1 GPa); (Tm/mu0)(dmu/dT) = -0.54
+    - **units**: MPa; dimensionless
+    - **context**: Pure Cu; mu(T) = mu0[1 + ((T-300)/1356)(-0.54)]. Gives mu(1323 K) = 42.1*(1 - 0.54*1023/1356) = 24.9 GPa, i.e. ~59% of the room-temperature value at 1050 C. Convert to Young's modulus with E = 2mu(1+nu), nu ~ 0.34.
+    - **source**: Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: Obstacle-controlled glide parameters for Cu
+    - **value**: tau_hat/mu0 = 6.3e-3; gamma_dot_0 = 1e6 /s; DeltaF/(mu0 b^3) = 0.5
+    - **units**: dimensionless; 1/s; dimensionless
+    - **context**: Pure Cu, low-temperature plasticity branch of the deformation-mechanism map.
+    - **source**: Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: Dv(Cu) at 1050 C (1323 K)
+    - **value**: 3.3e-13
+    - **units**: m^2/s
+    - **context**: Computed from D0v = 2.0e-5 m^2/s, Qv = 197 kJ/mol. At 900 C: 3.4e-14 m^2/s. At 800 C: 5.1e-15 m^2/s. At 500 C: ~1e-18 m^2/s (negligible).
+    - **source**: Derived in this work from Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: delta*Db(Cu) at 1050 C (1323 K)
+    - **value**: 3.9e-19
+    - **units**: m^3/s
+    - **context**: Computed from delta*D0b = 5.0e-15 m^3/s, Qb = 104 kJ/mol. At 800 C: 4.3e-20 m^3/s.
+    - **source**: Derived in this work from Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: GB/lattice diffusion crossover grain size
+    - **value**: delta*Db/Dv = 2.5e-10 * exp(93000/RT) m; = 1.2 um at 1050 C, 8.5 um at 800 C; equals 10 um at 782 C
+    - **units**: m
+    - **context**: Pure Cu. Below this grain size GB diffusion dominates. Practical reading: for typical 5-30 um LCM/MIM Cu grains, GB diffusion controls below ~780 C and lattice diffusion above.
+    - **source**: Derived in this work from Frost & Ashby Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **quantity**: NIST-JANAF Shomate coefficients, solid Cu, 298-1358 K
+    - **value**: A=17.72891, B=28.09870, C=-31.25289, D=13.97243, E=0.068611, F=-6.056591, G=47.89592, H=0
+    - **units**: Cp in J/mol/K with t = T(K)/1000
+    - **context**: Cp = A + Bt + Ct^2 + Dt^3 + E/t^2. Gives Cp(298 K) = 24.47 J/mol/K = 385 J/kg/K; Cp(1000 K) = 28.62 J/mol/K = 450 J/kg/K; Cp(1358 K) = 33.3 J/mol/K = 524 J/kg/K. M(Cu) = 63.546 g/mol.
+    - **source**: NIST Chemistry WebBook SRD 69, Cu (CAS 7440-50-8), from Chase M.W. Jr., NIST-JANAF Thermochemical Tables 4th ed., J. Phys. Chem. Ref. Data Monograph 9, 1998 — https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440508&Units=SI&Mask=2
+  -
+    - **quantity**: Standard entropy of solid Cu, S(298.15 K)
+    - **value**: 33.15 ± 0.08
+    - **units**: J/mol/K
+    - **context**: CODATA key value. Liquid Cu S(1 bar) = 41.62 J/mol/K; DfH(liquid) = 11.86 kJ/mol (JANAF).
+    - **source**: NIST WebBook, Cox/Wagman/Medvedev CODATA 1984 and Chase 1998 — https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440508&Units=SI&Mask=2
+  -
+    - **quantity**: Liquid Cu Shomate coefficients, 1358-2843 K
+    - **value**: A=32.84450, B=-0.000084, C=0.000032, D=-0.000004, E=-0.000028, F=-1.804901, G=73.92310, H=11.85730
+    - **units**: Cp in J/mol/K, t = T/1000
+    - **context**: Cp(liquid Cu) ~ 32.84 J/mol/K = 517 J/kg/K, essentially constant. Needed only for over-temperature / incipient-melting excursion modelling.
+    - **source**: NIST WebBook / Chase 1998 — https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440508&Units=SI&Mask=2
+  -
+    - **quantity**: Copper melting point
+    - **value**: 1084.6 (1083 quoted in some sources); Tm = 1356 K in Frost & Ashby
+    - **units**: deg C / K
+    - **context**: Frost & Ashby use Tm = 1356 K (1082.9 C). Practical sintering window for fine Cu powder is 0.78-0.99 Tm.
+    - **source**: Frost & Ashby Table 4.1 (1356 K) — https://defmech.engineering.dartmouth.edu/chapter_4.htm ; 1083 C quoted in https://www.intechopen.com/chapters/81649
+  -
+    - **quantity**: Theoretical density of Cu
+    - **value**: 8.96 (8.94 at 20 C in the CDA-derived table)
+    - **units**: g/cm^3
+    - **context**: 8.96 g/cm^3 used as the pore-free reference in both Sandia and Virginia Tech work; 8.94 g/cm^3 quoted at 20 C by Fraunhofer IWS.
+    - **source**: https://www.osti.gov/servlets/purl/2430184 ; https://repositories.lib.utexas.edu/handle/2152/88789 ; https://www.intechopen.com/chapters/81649
+  -
+    - **quantity**: Cu room-temperature thermal conductivity, CTE, electrical conductivity
+    - **value**: k = 401 W/m/K at 20 C; alpha = 17.0e-6 /K (20-100 C); sigma = 59.6 MS/m at 20 C
+    - **units**: W/m/K; 1/K; S/m
+    - **context**: Bulk annealed pure Cu reference values. 100% IACS is DEFINED as 58.0e6 S/m at 20 C; Cu-ETP-1/Cu-OF-1 reach 58.58e6 S/m (101% IACS); 99.999% Cu = 103.06% IACS.
+    - **source**: Stepien L. et al., IntechOpen 2022, DOI 10.5772/intechopen.103673, Table 1 — https://www.intechopen.com/chapters/81649
+  -
+    - **quantity**: Cu thermal conductivity, specific heat and CTE at elevated temperature (400-1350 K)
+    - **value**: k falls from ~401 W/m/K at 300 K to ~330 W/m/K at 1000 K and ~320 W/m/K near Tm; alpha rises from 16.5e-6 to ~20-21e-6 /K near Tm; E falls from ~128 GPa to ~65-70 GPa near Tm
+    - **units**: W/m/K; 1/K; GPa
+    - **context**: Needed for the thermal solver and for thermal-stress/distortion. NOT VERIFIED in this session — NIST SRD (srd.nist.gov) and the CINDAS/TPRC sources were unreachable. The modulus trend IS verifiable via the Frost & Ashby mu(T) law, which gives mu(1323 K)/mu(300 K) = 0.59.
+    - **source**: unverified
+  -
+    - **quantity**: Total hemispherical emissivity of clean polished Cu
+    - **value**: approximately 0.02-0.06 over 300-1050 K
+    - **units**: dimensionless
+    - **context**: Measured on polished Cu in vacuum; the Davisson-Weeks Drude relation eps = 0.751(rT)^0.5 - 0.632(rT) - 0.670(rT)^1.5 - 0.607(rT)^2 (r in ohm-cm, T in K, valid rT<0.1) over-predicts above ~300 K. Numeric range read from a scanned figure axis; treat as approximate.
+    - **source**: COO-3151-80 (1978), DOI 10.2172/5716987 — https://www.osti.gov/servlets/purl/5716987
+  -
+    - **quantity**: Total emissivity of oxidised copper
+    - **value**: ~0.6-0.8
+    - **units**: dimensionless
+    - **context**: Order-of-magnitude increase over clean Cu; important because the surface oxidation state (and hence the radiative BC) changes during the debind-to-sinter transition.
+    - **source**: unverified
+  -
+    - **quantity**: Markforged Metal X / Sinter-1 copper thermal profile (measured)
+    - **value**: 20 C -> 310 C at 2.4 K/min; hold 60 min at 310 C; -> 418 C at 2.2 K/min; -> 500 C at 0.5 K/min; hold 100 min at 500 C; -> 820 C at 4.0 K/min; hold 100 min at 820 C; -> 1040 C at 2.0 K/min; hold 180 min at 1040 C; total ~980 min
+    - **units**: deg C, K/min, min
+    - **context**: Bound-powder-extrusion Cu (solvent-debound 'brown' state), ~4% H2 in Ar. TGA: secondary debinding complete at 440 C. The 0.5 K/min leg from 418-500 C is the binder-removal-limited segment.
+    - **source**: Sandia SAND2023-10043R, Table 1 — https://www.osti.gov/servlets/purl/2430184
+  -
+    - **quantity**: Markforged Cu shrinkage compensation and achieved density
+    - **value**: 16% horizontal, 19% vertical linear shrinkage; max relative density 91% (pre-sintered route), 97% (standard route)
+    - **units**: %
+    - **context**: Eiger slicer default compensation for Metal X copper; density measured against 8.96 g/cm^3 in 4% H2/Ar.
+    - **source**: Sandia SAND2023-10043R — https://www.osti.gov/servlets/purl/2430184
+  -
+    - **quantity**: Binder-jet Cu powder characteristics (ExOne R2)
+    - **value**: AcuPowder 153A: D50 75.2 um, packing 55% TD, 91.0 wt% Cu. Ozometal: D50 16.5 um, packing 63% TD, 95.3 wt% Cu. AcuPowder 500A: D50 15.3 um, packing 56% TD, 96.4 wt% Cu.
+    - **units**: um; % of theoretical; wt%
+    - **context**: Gas-atomised spherical Cu. Layer thicknesses 100/80/80 um, binder saturation 70/70/60-80%. Binder ExOne PM-B-SR-1-04, cured 190 C/2 h, TGA complete burnout at 450 C.
+    - **source**: Bai & Williams, SFF 2014, Tables 2-3 — https://repositories.lib.utexas.edu/handle/2152/88789
+  -
+    - **quantity**: Best binder-jet Cu sintering outcomes
+    - **value**: AcuPowder 500A: 1080 C/240 min in H2/Ar -> 85.5% TD, 43.4 vol% shrinkage (= 17.3% linear). Ozometal: 1080 C/120 min H2/Ar -> 77.6% TD, 22.7 vol% (8.2% linear). AcuPowder 153A: 1090 C/240 min air+vacuum -> 63.2% TD, 14.9 vol% (5.2% linear).
+    - **units**: deg C, min, % TD, vol%
+    - **context**: Ramps 5 K/min heat and cool; 450 C/30 min debind hold; additional 700 C hold in reducing gas for oxide reduction before pore closure. Linear values converted by 1-(1-Vshrink)^(1/3).
+    - **source**: Bai & Williams, SFF 2014, Table 4 — https://repositories.lib.utexas.edu/handle/2152/88789
+  -
+    - **quantity**: Atmosphere effect on Cu binder-jet densification
+    - **value**: air+vacuum: 52.9% TD, 5.5 vol% shrinkage. Pure H2: 78.2% TD, 37.1 vol% shrinkage.
+    - **units**: % TD; vol%
+    - **context**: Same powder (AcuPowder 500A), same cycle: 1060 C, 2 h. The single largest process lever identified.
+    - **source**: Bai & Williams, SFF 2014, Table 5 — https://repositories.lib.utexas.edu/handle/2152/88789
+  -
+    - **quantity**: Virginia Tech binder-jet Cu density ladder
+    - **value**: D50 75 um -> 63.2%; D50 15 um -> 85.5%; bimodal 30 um + 5 um at 17%+73% -> 92.3%; bimodal + HIP -> 99.7%; MOD ink -> 73.3% (vs 80.8% neat binder); nanoparticle-loaded ink -> 86.1% (vs 80.9%)
+    - **units**: % of theoretical density
+    - **context**: Sintering 1075-1080 C, dwell 2-10 h, mostly H2. Bimodal compositions show significantly less shrinkage.
+    - **source**: Stepien L. et al., IntechOpen 2022, Table 2, DOI 10.5772/intechopen.103673 — https://www.intechopen.com/chapters/81649
+  -
+    - **quantity**: Fraunhofer IWS bimodal Cu binder-jet results
+    - **value**: Max 84.7% IACS (bimodal, 80 um layer, 12 h at 1080 C) vs 52.6% IACS monomodal. Dilatometric total linear shrinkage 12.4% bimodal vs 17.3% monomodal. Shrinkage onset 37 K lower for bimodal, at 987.5 C.
+    - **units**: % IACS; % linear; deg C
+    - **context**: ExOne MFlex; powders m4p PureCu.04 (D10/D50/D90 = 3/8/15 um) and m4p PureCu1.0 (18/26/38 um), 73% coarse + 27% fine; dilatometer Netzsch DIL 402 Expedis. Pores >50 um remain at grain boundaries after 12 h.
+    - **source**: Stepien L. et al., IntechOpen 2022, Table 3 and Figs. 9-11 — https://www.intechopen.com/chapters/81649
+  -
+    - **quantity**: Metal filament (FFF) copper route
+    - **value**: 63 vol% Cu filament; solvent debind in acetone at 45 C; sinter 950 C in H2, 90 min -> 96% relative density; 13% shrinkage in x, y and z; accuracy <±80 um
+    - **units**: vol%; deg C; %; um
+    - **context**: AM Extrusion GmbH Cu filament, 300 um nozzle, nozzle 120 C, bed 70 C, layer 80-200 um. Demonstrates that high green density removes the need for near-melting-point sintering.
+    - **source**: Stepien L. et al., IntechOpen 2022, DOI 10.5772/intechopen.103673 — https://www.intechopen.com/chapters/81649
+  -
+    - **quantity**: Press-and-sinter copper benchmarks
+    - **value**: Compaction 207-248 MPa recommended; up to 730 MPa gives 97.6% sintered density for simple geometry; hot pressing at 50 MPa for 4 min at 600/700/800 C gives 97.9-99.1% density but only 90.2% IACS. CDA position: impractical to reach 8.94 g/cm^3 by press-and-sinter alone. Satisfactory densification reported for pressed Cu compacts in the 750-1000 C range with a max ~90% at 1000 C/100 min.
+    - **units**: MPa; %; % IACS; deg C
+    - **context**: Classical PM baselines against which any binder-based route must be judged. Underlying refs: Coble & Gupta 1967; Dixit & Srivastava, IOP Conf. Ser. MSE 377 (2018) 012209; Islak et al., Sci. Sintering 2017.
+    - **source**: Stepien L. et al., IntechOpen 2022 — https://www.intechopen.com/chapters/81649 ; and Bai & Williams SFF 2014 — https://repositories.lib.utexas.edu/handle/2152/88789
+  -
+    - **quantity**: MIM copper benchmark
+    - **value**: Oxide-reduced Cu, D50 ~10 um, sintered below 1050 C -> 95% relative density
+    - **units**: deg C; % TD
+    - **context**: Cited by Bai & Williams as the MIM baseline that binder jetting failed to match because of lower green packing. Confirms that with 10 um powder and a proper green density, sub-1050 C sintering reaches 95%.
+    - **source**: Bai & Williams, SFF 2014, section 3.2 (secondary citation; primary MIM reference not retrieved) — https://repositories.lib.utexas.edu/handle/2152/88789
+  -
+    - **quantity**: Incus Hammer Lab35 LMM process parameters
+    - **value**: 55 vol% powder loading; powder <25 um (D10 6.5, D50 14.1, D90 25.0 um), tap density 5.1 g/cm^3; layer 25 um; blade 85 C; chamber 17.5 C; coat speed 20 mm/s; exposure 600 mJ/cm^2 at 100 mW/cm^2; wait 65 s; XY scaling 1.21; Z scaling 1.24
+    - **units**: vol%; um; g/cm^3; deg C; mm/s; mJ/cm^2; mW/cm^2; s
+    - **context**: Kovar (Fe-29Ni-17Co) feedstock with Incus 101XT binder; the closest published analogue to a Lithoz/Incus-family metal photopolymer feedstock. Scaling factors imply 17.4% XY and 19.4% Z linear shrinkage.
+    - **source**: Cillessen D.E., PhD thesis, Table 1 — https://www.osti.gov/servlets/purl/3547197
+  -
+    - **quantity**: Incus LMM thermal route
+    - **value**: Stage 1: partial debind in OPEN-ATMOSPHERE furnace to a maximum of 345 C. Stage 2: hydrogen-furnace sintering to a measured maximum of 1315.8 C (for Kovar). Parts flat in a ceramic crucible.
+    - **units**: deg C
+    - **context**: Explicitly stated by the authors to be an initial, non-optimised condition. The two-stage air-debind-then-H2-sinter architecture is the LMM norm and is directly transferable to a Cu LCM feedstock (with the sintering temperature reduced to 950-1060 C).
+    - **source**: Cillessen D.E., PhD thesis, section 2.5 — https://www.osti.gov/servlets/purl/3547197
+  -
+    - **quantity**: Lithoz LCM ceramic (Lithalox 350) shrinkage compensation
+    - **value**: XY scaling 1.22, Z scaling 1.28 (~22% shrinkage); preconditioning, debinding and sintering all conducted in air; solvent LithaSol 20
+    - **units**: dimensionless; %
+    - **context**: Lithoz's own recommended values for their alumina on a CeraFab 8500. The anisotropy (Z > XY) is a general LCM signature and should be expected for the Cu slurry too.
+    - **source**: Cillessen D.E., PhD thesis, section on Lithalox 350 — https://www.osti.gov/servlets/purl/3547197
+  -
+    - **quantity**: HP Metal Jet copper powder and cycle
+    - **value**: Goodfellow Cu, <=50 um, D10 ~14 um, D50 ~30 um, mean ~33 um; bed preheated to ~100 C; sinter 1040 C for 4 h in forming gas
+    - **units**: um; deg C; h
+    - **context**: Distortion benchmark study; sag of a 28 mm span reached 20 deg under this cycle.
+    - **source**: SFF 2022 — https://repositories.lib.utexas.edu/handle/2152/117351
+  -
+    - **quantity**: Oxygen limit for ETP copper
+    - **value**: 400
+    - **units**: ppm (wt)
+    - **context**: Maximum allowed oxygen in electrolytic tough-pitch copper; a reasonable upper acceptance bound for a sintered Cu part before conductivity and H2-embrittlement risk become unacceptable.
+    - **source**: Stepien L. et al., IntechOpen 2022 — https://www.intechopen.com/chapters/81649
+  -
+    - **quantity**: Impurity sensitivity of sintered Cu thermal conductivity
+    - **value**: 2-5% porosity costs ~10 W/m/K; 200 mg/kg Fe costs ~40 W/m/K
+    - **units**: W/m/K
+    - **context**: Pressure-less sintered Cu powder bodies. Impurities depress conductivity more than residual porosity at these levels — a critical result for a binder-derived Cu part.
+    - **source**: Ott J., Burghardt A., Britz D., Muecklich F., Powder Metallurgy 64 (2021) 85-96, DOI 10.1080/00325899.2021.1871806 (summarised in https://www.intechopen.com/chapters/81649; primary text paywalled)
+  -
+    - **quantity**: Carbon contamination penalty
+    - **value**: 0.055 wt% C -> 22.7e6 S/m = 39.2% IACS
+    - **units**: wt%; S/m; % IACS
+    - **context**: Measured on LPBF Cu with carbon nanoparticle addition; the same mechanism (carbon dissolution during binder pyrolysis) is the principal conductivity risk for any binder-based Cu route.
+    - **source**: Jadhav S.D. et al., Materials 2019, 12, 2469, DOI 10.3390/ma12152469 (summarised in https://www.intechopen.com/chapters/81649)
+  -
+    - **quantity**: Copper surface diffusion D0s and Qs
+    - **value**: NOT RETRIEVED
+    - **units**: m^2/s; kJ/mol
+    - **context**: Required for the initial-stage (neck growth without shrinkage) branch of any sintering model and for the thermal-grooving/coarsening competition. Canonical source: Swinkels F.B. & Ashby M.F., 'A second report on sintering diagrams', Acta Metall. 29 (1981) 259-281, DOI 10.1016/0001-6160(81)90154-1. Also Gjostein, Acta Metall. 7 (1959), DOI 10.1016/0001-6160(59)90083-5; Hoehne & Sizmann, Phys. Status Solidi (a) 5 (1971), DOI 10.1002/pssa.2210050306.
+    - **source**: unverified
+  -
+    - **quantity**: Copper surface energy gamma_s and grain-boundary energy gamma_gb
+    - **value**: NOT RETRIEVED
+    - **units**: J/m^2
+    - **context**: Both are required to set the sintering stress (Sigma ~ gamma_s/r) and the dihedral angle (cos(psi/2) = gamma_gb/2*gamma_s). Get gamma_s from Vitos et al., Surf. Sci. 411 (1998) 186, DOI 10.1016/S0039-6028(98)00363-X, or Tran et al., Sci. Data 3:160080 (2016); get gamma_gb from Olmsted, Foiles & Holm, Acta Mater. 57 (2009), DOI 10.1016/j.actamat.2009.04.007.
+    - **source**: unverified
+  -
+    - **quantity**: Master-sintering-curve apparent activation energy for Cu densification
+    - **value**: NOT FOUND
+    - **units**: kJ/mol
+    - **context**: No published MSC Q value for pure Cu powder compacts was located in this session. It should be measured in-house (3+ constant heating rates in a dilatometer, then Su-Johnson minimisation). Expect it to land between Qb = 104 and Qv = 197 kJ/mol, biased toward Qv if the dominant window is >800 C.
+    - **source**: unverified
+- **models_or_methods**:
+  -
+    - **name**: Frost-Ashby diffusion laws and temperature-dependent shear modulus (the parameter backbone)
+    - **formulation**: Dv = D0v * exp(-Qv/(R*T));  delta*Db = delta*D0b * exp(-Qb/(R*T));  ac*Dc = ac*D0c * exp(-Qc/(R*T));  mu(T) = mu0 * [1 + ((T - 300)/Tm) * (Tm/mu0)(dmu/dT)].  For Cu: D0v=2.0e-5 m^2/s, Qv=197 kJ/mol; delta*D0b=5.0e-15 m^3/s, Qb=104 kJ/mol; ac*D0c=1.0e-24 m^4/s, Qc=117 kJ/mol; mu0=42.1 GPa, (Tm/mu0)(dmu/dT)=-0.54, Tm=1356 K.
+    - **when_to_use**: Every mechanism-based sintering or creep model. These are the only Cu transport constants verified in this session and they should be the single source of truth for D(T) and mu(T) in the codebase.
+    - **inputs_needed**: Temperature history only.
+    - **limitations**: delta*D0b and Qb are ESTIMATES (delta*D0b = b*D0v, Qb = 0.6*Qv) per Frost & Ashby footnote (h), not tracer measurements — they carry maybe a factor-of-3 uncertainty in delta*Db. No surface-diffusion entry exists for Cu in this table.
+    - **source**: Frost & Ashby, Deformation-Mechanism Maps, Pergamon 1982, Table 4.1 — https://defmech.engineering.dartmouth.edu/chapter_4.htm
+  -
+    - **name**: Master Sintering Curve (Su-Johnson)
+    - **formulation**: Theta(t,T(t)) = integral_0^t [1/T] * exp(-Q/(R*T)) dt'.  Densification rho is then a unique function of ln(Theta): rho = rho(ln Theta).  Q is found by running >=3 constant-heating-rate dilatometry experiments and minimising the mean residual squared of all (rho, ln Theta) points about a fitted sigmoid, e.g. rho = rho0 + (1-rho0)/(1 + exp(-(ln Theta - a)/b)).
+    - **when_to_use**: The fastest, lowest-risk route to an optimum Cu cycle when the binder chemistry is unknown. It needs no knowledge of the binder at all once debinding is complete, and it directly answers 'what hold time at what temperature gives what density'. Run it on brown (fully debound) LCM coupons.
+    - **inputs_needed**: 3-5 dilatometry runs at different constant heating rates (e.g. 2, 5, 10, 20 K/min) to 1060 C in the intended atmosphere; green density; final density.
+    - **limitations**: Assumes a single dominant densification mechanism over the whole range — questionable for Cu where GB diffusion controls below ~780 C and lattice above. Breaks down if oxide reduction is rate-limiting, which it will be for Cu in a marginal atmosphere. Does not predict distortion, only shrinkage.
+    - **source**: Su H., Johnson D.L., J. Am. Ceram. Soc. 79 (1996) 3211 (method; DOI not verified in this session). Application precedent in ceramics confirmed via Crossref, e.g. DOI 10.2298/sos0803251s (open access: http://www.doiserbia.nb.rs/ft.aspx?id=0350-820X0803251S)
+  -
+    - **name**: Skorohod-Olevsky Viscous Sintering (SOVS) continuum model for shrinkage and distortion
+    - **formulation**: Deviatoric/volumetric split of the viscous constitutive law:  sigma_ij = (2*eta/ (1-theta)) * [ phi(theta) * e_ij_dot + (psi(theta) - phi(theta)/3) * e_kk_dot * delta_ij ] + P_L * delta_ij,  where theta = porosity, phi and psi are normalised shear and bulk viscosity moduli (commonly phi = (1-theta)^2, psi = (2/3)*(1-theta)^3/theta), eta is the shear viscosity of the fully dense skeleton and P_L = (3*alpha/ r) * (1-theta)^2 is the sintering (Laplace) stress with alpha the surface energy and r the particle/pore radius.  The dense-skeleton viscosity is tied to diffusion by eta ~ (k*T*G^3)/(C * Omega * Deff) with Deff = Dv + pi*delta*Db/G.
+    - **when_to_use**: This is the model to build for the paper: it is what Sandia used for Markforged copper and it is the only framework that simultaneously predicts shrinkage, gravity sag, friction with the setter, and density-gradient-driven warping. Implementable in Abaqus/Ansys via UMAT/CREEP, in MOOSE, or in Simufact/Netfabb Sinter.
+    - **inputs_needed**: Green density field (from the print), particle size, grain-growth law, sintering stress (needs gamma_s), and a viscosity calibrated by an inverse method against a bending/sag experiment.
+    - **limitations**: The viscosity must be calibrated experimentally — Sandia calibrated theirs against vertical displacement of unsupported bend bars because first-principles values are unreliable. Assumes isotropic green body, which LCM parts are not (layer-wise anisotropy, XY vs Z shrinkage differ by ~2-3% absolute).
+    - **source**: Sandia SAND2023-10043R implements exactly this approach for Markforged Cu — https://www.osti.gov/servlets/purl/2430184 (the report cites its sintering-kinetics model as ref [5]; the SOVS formulation itself is standard, formulation transcribed here is unverified against a specific primary source)
+  -
+    - **name**: Herring scaling law (powder-size extrapolation of any cycle)
+    - **formulation**: For geometrically similar compacts, the time to reach an equivalent sintered state scales as t2/t1 = (a2/a1)^m, with m = 1 for viscous flow, 2 for evaporation-condensation, 3 for volume diffusion, 4 for grain-boundary AND surface diffusion.  a = particle radius.
+    - **when_to_use**: To transfer a published Cu cycle (e.g. the 1080 C/4 h binder-jet cycle for D50 = 15 um) onto the Lithoz Cu powder, which for a 30 um-pixel LCM slurry is almost certainly finer (likely D50 3-10 um). If the Lithoz powder is D50 = 5 um vs a reference 15 um and lattice diffusion controls (m = 3), the required time falls by 27x — i.e. minutes, not hours, at 1080 C, which is exactly why over-sintering/slumping is the real risk here, not under-sintering.
+    - **inputs_needed**: D50 of the Lithoz Cu powder (measure by laser diffraction on ashed feedstock), and an assumed dominant mechanism.
+    - **limitations**: Assumes identical green packing fraction and identical mechanism; fails when the rate-limiting step is oxide reduction or binder removal rather than diffusion.
+    - **source**: Standard sintering theory (Herring, J. Appl. Phys. 21 (1950) 301). Formulation is textbook; not independently verified in this session — mark 'unverified'.
+  -
+    - **name**: Davisson-Weeks total hemispherical emissivity for the radiative furnace boundary condition
+    - **formulation**: eps = 0.751*(r*T)^(1/2) - 0.632*(r*T) - 0.670*(r*T)^(3/2) - 0.607*(r*T)^2,  valid for r*T < 0.1, with r = bulk electrical resistivity in ohm-cm and T in K.
+    - **when_to_use**: Furnace-scale radiative heat transfer. Copper's emissivity is so low (0.02-0.08 clean) that radiation is a weak heating mechanism and the part lags the furnace badly at high ramp rates — but on oxidation eps jumps by ~10x, so the effective heating rate of a part is itself a function of its oxidation state. This coupling is publishable in its own right.
+    - **inputs_needed**: rho_el(T) of Cu; surface oxidation state (Cu, Cu2O or CuO).
+    - **limitations**: The measured emittance of polished Cu is BELOW this prediction above ~300 K (the source report was written specifically to show the discrepancy and propose a better model). Use the measured band 0.02-0.06 for clean Cu rather than the formula, and treat oxidised-Cu emissivity as a separate, unverified parameter.
+    - **source**: COO-3151-80 (1978), DOI 10.2172/5716987 — https://www.osti.gov/servlets/purl/5716987
+  -
+    - **name**: Effective properties of porous copper
+    - **formulation**: Maxwell-Eucken (dilute spherical pores, k_pore -> 0):  k_eff/k_s = 2*(1 - p) / (2 + p),  p = porosity.  Landauer / Bruggeman effective-medium (percolating, handles high p):  sum_i f_i * (k_i - k_eff)/(k_i + 2*k_eff) = 0, which for a two-phase solid/void mix gives k_eff/k_s = (2 - 3p)/2 for k_void = 0, vanishing at p = 2/3.  Gibson-Ashby open-cell foam (for the mechanically weak, high-porosity brown/partially-sintered state):  E*/E_s = C1 * (rho*/rho_s)^2 with C1 ~ 1, and sigma_pl*/sigma_ys = C2 * (rho*/rho_s)^(3/2) with C2 ~ 0.3.  Wiedemann-Franz link for cross-checking against IACS:  k = L * sigma * T, L = 2.44e-8 W*ohm/K^2.
+    - **when_to_use**: Maxwell-Eucken for p < ~0.1 (final-stage, closed porosity). Landauer/Bruggeman for the intermediate stage (p = 0.1-0.4, interconnected porosity — which is where LCM Cu spends most of its cycle). Gibson-Ashby for the brown and early-sinter state where the part must carry its own weight; this is the branch that predicts the failure Sandia observed (bars fractured between debind completion and sinter onset).
+    - **inputs_needed**: Porosity field from the densification model; k_s(T), E_s(T) from the dense-Cu property set.
+    - **limitations**: None of these capture the anisotropy of LCM layer-wise porosity, nor the binder-jetting-style 'primitive' porosity Bai observed where inter-primitive pores dominate. Measured Cu data show impurities depress k more than porosity at the 2-5% level, so a pure geometric model will over-predict k for a carbon/oxygen-contaminated part.
+    - **source**: Maxwell-Eucken, Landauer and Gibson-Ashby formulations transcribed from standard theory — unverified against a primary source in this session. The impurity-vs-porosity ranking is verified: Ott et al., Powder Metallurgy 64 (2021) 85-96, DOI 10.1080/00325899.2021.1871806
+  -
+    - **name**: Back-calculation of the unknown Lithoz solids loading from geometry
+    - **formulation**: phi_solid = rho_rel,final * (1 - eps_linear)^3,  where eps_linear is the measured isotropic linear shrinkage and rho_rel,final the measured Archimedes relative density.  Inversely, the required scaling factor is S = (rho_rel,final / phi_solid)^(1/3).  Validation: Incus state 55 vol% loading and publish XY/Z scaling of 1.21/1.24; taking rho_rel,final ~ 0.97 and phi = 0.55 gives S = (0.97/0.55)^(1/3) = 1.206, matching 1.21 to three significant figures.
+    - **when_to_use**: Immediately, on the very first coupon. This is the single highest-information experiment available and it defeats the proprietary-binder problem: you do not need Lithoz to tell you the binder content, you measure it. Run it on a simple bar in three orientations to capture XY/Z anisotropy.
+    - **inputs_needed**: One printed, debound and sintered bar; calipers/CMM before and after; Archimedes density with oil impregnation (surface-connected porosity otherwise corrupts pycnometry — Bai found gas pycnometry read near-theoretical density on porous Cu because the pores were surface-connected).
+    - **limitations**: Assumes negligible mass loss of metal and no residual binder/carbon. Requires near-full densification for accuracy; at 85% density the inversion is still valid but the two measurements must both be accurate. Anisotropic shrinkage means using a single isotropic eps introduces a few percent error — use the geometric mean (eps_x*eps_y*eps_z)^(1/3).
+    - **source**: Derived in this work; validated against Incus LMM data in https://www.osti.gov/servlets/purl/3547197
+  -
+    - **name**: Atmosphere design: Cu/Cu2O equilibrium and the carbon-removal window
+    - **formulation**: Reduction:  Cu2O + H2 = 2Cu + H2O, with equilibrium set by the ratio p(H2O)/p(H2), i.e. by the dew point of the gas.  Equivalently, oxidation is avoided when p(O2) < p(O2)_eq for 4Cu + O2 = 2Cu2O.  Carbon removal has no carbide route in Cu, so it proceeds only by  C + H2O = CO + H2  or  C + CO2 = 2CO (Boudouard),  both of which require a FINITE water/CO2 activity — i.e. bone-dry H2 removes oxide but not carbon.  The design window is therefore a dew-point band: wet enough that C + H2O -> CO + H2 runs, dry enough that Cu stays reduced.  Hydrogen embrittlement (steam bubbles from Cu2O + H2 -> 2Cu + H2O in closed porosity) is avoided by completing oxide reduction BEFORE pore closure.
+    - **when_to_use**: Setting the debinding and sintering atmosphere. This is the central thermodynamic design problem for Cu and the one most likely to generate a publishable contribution, since it is not addressed quantitatively anywhere in the retrieved AM-copper literature.
+    - **inputs_needed**: Gibbs energies for Cu2O formation, H2O formation and the Boudouard reaction as functions of T; furnace dew-point control capability; TGA/EGA of the Lithoz feedstock to quantify the carbon load.
+    - **limitations**: The specific Gibbs-energy expressions and the resulting dew-point window were NOT verified in this session. The experimental precedent is that reducing atmosphere is worth >20 percentage points of final density (Bai & Williams) and that the oxide must be reduced before ~85% relative density or before 900 C, whichever comes first.
+    - **source**: Practice rules verified: Bai & Williams, SFF 2014, section 3.4 — https://repositories.lib.utexas.edu/handle/2152/88789. Thermodynamic expressions: unverified.
+- **open_questions**:
+  - What are Cu surface self-diffusion D0s and Qs? Swinkels & Ashby, 'A second report on sintering diagrams', Acta Metall. 29 (1981) 259-281 (DOI 10.1016/0001-6160(81)90154-1) tabulates exactly this for Cu and was not retrievable here. Without it the initial-stage neck-growth branch cannot be parameterised, and the surface-diffusion-driven 'rigidification without shrinkage' that ruins fine-powder cycles cannot be predicted.
+  - What are gamma_s and gamma_gb for Cu at sintering temperature, and hence the dihedral angle psi from cos(psi/2) = gamma_gb/(2*gamma_s)? These set the sintering stress and the pore-stability criterion (pores with coordination number above the critical value for the dihedral angle will not close). Get from Vitos 1998 (DOI 10.1016/S0039-6028(98)00363-X) or Tran 2016 Sci. Data 3:160080 and Olmsted 2009 (DOI 10.1016/j.actamat.2009.04.007).
+  - Has anyone published a master sintering curve activation energy for pure copper powder? Nothing was found. If genuinely absent, measuring one (3-5 constant heating rates, dilatometry in 4% H2/Ar on debound LCM coupons) is a publishable result in its own right and directly serves the project.
+  - What is the D50 and morphology of the Lithoz copper powder? Everything downstream — sintering temperature, Herring-law scaling, expected shrinkage, slumping risk — hinges on it. Ash a feedstock sample and run laser diffraction plus SEM. If D50 is 3-8 um (likely, given the 30 um pixel), the 1080 C cycles in the binder-jet literature are far too aggressive and 900-1000 C should be the starting point.
+  - What is the solids loading? Recoverable without Lithoz's cooperation via phi = rho_rel * (1-eps_lin)^3, but it should also be checked directly by TGA-to-constant-mass in air on green feedstock (burn the binder, weigh the residue, correct for oxidation to CuO).
+  - What is the binder's decomposition profile? Coupled TGA-DSC-MS or TGA-FTIR on the green feedstock in the actual sintering atmosphere (not in nitrogen — the Sandia TGA showed an unexplained mass GAIN at high temperature in N2, almost certainly Cu oxidation, which corrupts the binder-loss measurement). This gives the debinding holds directly without knowing the chemistry.
+  - What dew point (p_H2O/p_H2) simultaneously reduces Cu2O and oxidises residual carbon, and over what temperature range is that window open? This is the key unanswered thermodynamic question and the most likely locus of a novel contribution.
+  - Where exactly does pore closure occur for this feedstock, and can oxide reduction be completed before it? The literature rule is 'before 85% relative density or below 900 C' but it has not been verified for an LCM-derived green body with ~45-55 vol% loading and very fine powder, where closure may occur earlier.
+  - How anisotropic is LCM Cu shrinkage? Lithoz alumina needs 1.22 XY / 1.28 Z and Incus Kovar 1.21 / 1.24; a Cu equivalent is unpublished. Needs a designed experiment with bars in three orientations.
+  - What is the residual carbon and oxygen content achievable, and what %IACS does that imply? Binder-jet Cu tops out around 84.7% IACS even at 12 h; 0.055 wt% C alone costs 60% of conductivity. LECO C/O/N analysis on sintered coupons is mandatory before any conductivity claim.
+  - Is there a real over-sintering/slumping risk? Bai reported that Cu binder-jet parts did NOT slump even at 1090 C (above Tm) because of oxide skins — but a properly reduced, fine-powder, high-green-density LCM part will have no such skin and may genuinely incipient-melt. The safe design is to stay at or below ~1020-1050 C and buy density with time and powder fineness rather than temperature.
+  - Copper thermophysical properties above 400 K — k(T), alpha(T), E(T), sigma_y(T) — could not be verified here because NIST SRD and the CINDAS/TPRC volumes were unreachable. Obtain Ho, Powell & Liley (J. Phys. Chem. Ref. Data 1 (1972) 279) for k and Touloukian TPRC Vol. 12 for expansion, or use the Frost & Ashby mu(T) law for the elastic branch.
+  - What total hemispherical emissivity should be used for a partially-sintered, partially-oxidised porous Cu surface? Clean Cu is 0.02-0.06 and oxidised Cu ~0.6-0.8, but a porous brown body behaves as a cavity radiator with an apparent emissivity well above the flat-surface value. This is a genuine modelling gap for radiative furnace heat transfer on this material.
+- **references**:
+  -
+    - **citation**: Frost H.J., Ashby M.F., Deformation-Mechanism Maps: The Plasticity and Creep of Metals and Ceramics, Pergamon Press, 1982, Chapter 4 and Table 4.1 (FCC metals).
+    - **url**: https://defmech.engineering.dartmouth.edu/chapter_4.htm
+    - **why**: The single authoritative, fully verified source for Cu lattice, boundary and core diffusion constants, shear modulus and its temperature dependence, and power-law creep parameters. Table image at https://defmech.engineering.dartmouth.edu/DefMechPic/table4.1.gif. Note it contains NO surface-diffusion entry and its boundary-diffusion values are explicitly estimates.
+  -
+    - **citation**: Moran S.P., Saul V., Johnson K.L., To A., Paudel B., 'Compensating for Sintering Distortion in Additively Manufactured Shaped Charge Liners using Physics-Informed Machine Learning', Sandia National Laboratories, SAND2023-10043R, LDRD 230941 (2023). DOI 10.2172/2430184.
+    - **url**: https://www.osti.gov/servlets/purl/2430184
+    - **why**: The most directly transferable document found: a complete, furnace-measured debind+sinter profile for bound-powder copper (9 steps, 3 holds, ~16 h), TGA-derived debinding completion at 440 C, 4% H2/Ar, 16%/19% shrinkage compensation, and a calibrated viscoplastic FEA distortion model. It also documents the green-strength failure window that will bite an LCM Cu part.
+  -
+    - **citation**: Bai Y., Williams C.B., 'An Exploration of Binder Jetting of Copper', Proc. Solid Freeform Fabrication Symposium, Austin TX, 2014, pp. 793-814.
+    - **url**: https://repositories.lib.utexas.edu/handle/2152/88789
+    - **why**: The foundational quantitative study of Cu sintering from a binder-based green body: powder PSDs, packing densities, full sintering matrices (1060-1090 C, 2-8 h), the decisive air-vs-H2 comparison (52.9% vs 78.2% TD), and the oxide-reduction-before-pore-closure rule with an explicit 700 C hold.
+  -
+    - **citation**: Cillessen D.E., 'Lithography-Based Additive Manufacturing of Ceramics and Metals for Structural Integrity, Joining, and Multi-Material Integration', PhD dissertation, University of Texas at El Paso (2026). OSTI 3547197.
+    - **url**: https://www.osti.gov/servlets/purl/3547197
+    - **why**: Contains both a Lithoz CeraFab LCM alumina workflow (XY 1.22 / Z 1.28 scaling, air debind, LithaSol 20 cleaning) and an Incus Hammer Lab35 LMM metal workflow (55 vol% loading, 101XT binder, 25 um layers, 600 mJ/cm^2, XY 1.21 / Z 1.24, air debind to 345 C then H2 sinter). The closest published process analogue to the user's situation.
+  -
+    - **citation**: Stepien L., Gruber S., Greifzu M., Riede M., Roch A., 'Pure Copper: Advanced Additive Manufacturing', in Advanced Additive Manufacturing, IntechOpen (2022). DOI 10.5772/intechopen.103673.
+    - **url**: https://www.intechopen.com/chapters/81649
+    - **why**: Best single quantitative cross-process survey: binder-jet Cu density ladder (63.2 to 99.7% with HIP), Fraunhofer IWS bimodal dilatometry (12.4% vs 17.3% shrinkage, 987.5 C onset, 84.7% vs 52.6% IACS), the 63 vol% FFF filament route (950 C/90 min H2 -> 96%, 13% shrinkage), press-and-sinter baselines, IACS definitions, and the carbon/oxygen conductivity penalties.
+  -
+    - **citation**: 'Support-free sintering of 3D printed binder jet copper and stainless steel parts', Proc. Solid Freeform Fabrication Symposium 2022 (HP Labs).
+    - **url**: https://repositories.lib.utexas.edu/handle/2152/117351
+    - **why**: Quantified sag of unsupported Cu spans as a function of thermal cycle (<1 deg at 500 C to 20 deg at 1040 C/4 h) and showed multi-step profiles cut sag by only 33%. This is the validation dataset for a distortion model and the evidence that setters/coatings, not cycle tuning alone, are needed for overhangs.
+  -
+    - **citation**: NIST Chemistry WebBook SRD 69, Copper (CAS 7440-50-8), condensed-phase thermochemistry, from Chase M.W. Jr., NIST-JANAF Thermochemical Tables 4th ed., J. Phys. Chem. Ref. Data Monograph 9 (1998).
+    - **url**: https://webbook.nist.gov/cgi/cbook.cgi?ID=C7440508&Units=SI&Mask=2
+    - **why**: Verified Shomate coefficients for solid Cu (298-1358 K) and liquid Cu (1358-2843 K), plus CODATA S(298). Gives Cp(T) for the thermal solver with no fitting.
+  -
+    - **citation**: 'Measurement of the total hemispherical emittance of copper and of spectrally selective surfaces', Report COO-3151-80 (1978). DOI 10.2172/5716987.
+    - **url**: https://www.osti.gov/servlets/purl/5716987
+    - **why**: Source of the Davisson-Weeks total hemispherical emissivity relation for metals and of measured polished-Cu emittance data over 300-1050 K showing values of a few percent. Needed for any credible radiative furnace boundary condition on copper.
+  -
+    - **citation**: Swinkels F.B., Ashby M.F., 'A second report on sintering diagrams', Acta Metallurgica 29 (1981) 259-281. DOI 10.1016/0001-6160(81)90154-1. (Also Ashby M.F., 'A first report on sintering diagrams', Acta Metallurgica 22 (1974) 275, DOI 10.1016/0001-6160(74)90167-9.)
+    - **url**: https://doi.org/10.1016/0001-6160(81)90154-1
+    - **why**: The canonical sintering-mechanism-map papers, and the source of the Cu surface-diffusion constants that Frost & Ashby's Table 4.1 omits. DOI verified via Crossref; full text not obtained — this is the highest-priority document to acquire.
+  -
+    - **citation**: Surholt T., Herzig C., 'Grain boundary self-diffusion in Cu polycrystals of different purity', Acta Materialia 45 (1997) 3817-3823. DOI 10.1016/S1359-6454(97)00037-2.
+    - **url**: https://doi.org/10.1016/s1359-6454(97)00037-2
+    - **why**: The definitive tracer measurement of Cu grain-boundary self-diffusion, needed to replace the Frost & Ashby estimate (delta*D0b = b*D0v, Qb = 0.6*Qv) with real data. DOI verified; values not obtained.
+  -
+    - **citation**: Ott J., Burghardt A., Britz D., Muecklich F., 'Influence of porosity and impurities on the thermal conductivity of pressure-less sintered Cu powder green bodies', Powder Metallurgy 64 (2021) 85-96. DOI 10.1080/00325899.2021.1871806.
+    - **url**: https://doi.org/10.1080/00325899.2021.1871806
+    - **why**: The effective-property reference for porous sintered Cu, with the key finding that impurities (200 mg/kg Fe costs ~40 W/m/K) depress conductivity more than 2-5% porosity (~10 W/m/K). Paywalled; values above are from the IntechOpen summary.
+  -
+    - **citation**: Cano Cano S., Peritsch P., Bosters J., Anand A., Gierl-Mayer C., Harakaly G.A., 'Recent advances of Lithography-based Metal Manufacturing of copper', Euro PM2024 Proceedings, EPMA. DOI 10.59499/EP246281350. Affiliations: Incus GmbH and TU Wien (Institute of Chemical Technologies and Analytics).
+    - **url**: https://www.publications.epma.com/product/recent-advances-of-lithography-based-metal-manufacturing-of-copper/
+    - **why**: The only known published study of lithography-based vat-photopolymerisation copper. Abstract confirms feedstock evaluation across suppliers plus sintered thermal/electrical property measurement. Paywalled — buy it, or contact the authors; the TU Wien co-author (Gierl-Mayer) is a thermal-analysis specialist and the natural collaborator for the debinding work.
+  -
+    - **citation**: Jadhav S.D., Dadbakhsh S., Vleugels J., Hofkens J., Van Puyvelde P., Yang S., Kruth J.P., Van Humbeeck J., Vanmeensel K., 'Influence of carbon nanoparticle addition (and impurities) on selective laser melting of pure copper', Materials 12 (2019) 2469. DOI 10.3390/ma12152469.
+    - **url**: https://doi.org/10.3390/ma12152469
+    - **why**: Source of the 0.055 wt% C -> 39.2% IACS datum, the sharpest available quantification of the carbon-contamination penalty that binder-derived copper must avoid.
+  -
+    - **citation**: Vitos L., Ruban A.V., Skriver H.L., Kollar J., 'The surface energy of metals', Surface Science 411 (1998) 186-202. DOI 10.1016/S0039-6028(98)00363-X; and Olmsted D.L., Foiles S.M., Holm E.A., 'Survey of computed grain boundary properties in face-centered cubic metals: I. Grain boundary energy', Acta Materialia 57 (2009) 3694. DOI 10.1016/j.actamat.2009.04.007.
+    - **url**: https://doi.org/10.1016/s0039-6028(98)00363-x
+    - **why**: The two standard sources for Cu surface energy and grain-boundary energy respectively — required for sintering stress and dihedral angle. DOIs verified via Crossref; numeric values not obtained in this session and must not be quoted until they are.
