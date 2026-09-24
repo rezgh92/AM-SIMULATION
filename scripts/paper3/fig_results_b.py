@@ -142,7 +142,7 @@ def fig_programme():
         ax.plot(t, 100 * S["eps_gc"], color=fs.GC, lw=1.4, label="glass-ceramic")
         ax.fill_between(t, 100 * S["eps_cu"], 100 * S["eps_gc"], color=fs.ORANGE, alpha=0.15, lw=0,
                         label="mismatch")
-        ax.set_ylabel("Free strain (%)")
+        ax.set_ylabel("Free log. strain (%)")
         ax = axs[3, c]
         ax.plot(t, np.log10(np.maximum(S["C_gc"], 0.1)), color=fs.GC, lw=1.3, label="glass-ceramic")
         ax.plot(t, np.log10(np.maximum(S["C_cu"], 0.1)), color=fs.CU, lw=1.1, label="copper")

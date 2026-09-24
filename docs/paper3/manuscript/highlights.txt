@@ -1,7 +1,7 @@
 Highlights
 
 - Model couples char removal, glass sintering, crystallisation and copper co-firing
-- Steam held at a fraction of the Cu/Cu2O limit reproduces the IBM burnout window
-- Fine copper sinters during burnout, far ahead of the glass: 15.6 % mismatch
-- Char-timed copper release gives 3.7 % mismatch; a robust design holds 9-11 %
+- Steam held at a fraction of the Cu/Cu2O limit matches the IBM burnout atmosphere
+- Fine copper sinters during burnout, far ahead of the glass: 15.6% mismatch
+- Char-timed copper release gives 3.7% mismatch; a robust design holds 9-11%
 - Char gasification kinetics and glass viscosity are the first things to measure

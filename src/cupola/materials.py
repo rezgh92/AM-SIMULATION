@@ -144,7 +144,7 @@ class Setup:
         # ---------------- carbon
         self.T_ref_g = 800.0 + T0C
         self.x_h2o_ref = float(thermo.x_h2o_from_dewpoint(20.0))
-        self.K_inh = 25.0
+        self.K_inh = float(g.get("K_H2_inh", 25.0))     # hydrogen inhibition of steam gasification
         self.k_g_ref = math.log(2.0) / (g["t_half_gasif_h"] * 3600.0)
         self.E_g = g["E_gasif"] * 1e3
         self.T_cth = g["T_carbothermic_C"] + T0C

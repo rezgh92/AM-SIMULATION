@@ -33,7 +33,7 @@ for k, (lab, title) in enumerate(cases):
     ax.set_ylim(0, 32); ax.set_xlim(5, 18)
     ax.tick_params(labelsize=6)
     if k == 0:
-        ax.set_ylabel("Free shrinkage (%)", fontsize=6.6)
+        ax.set_ylabel("Free log. shrinkage (%)", fontsize=6.6)
         ax.legend(loc="lower right", fontsize=6)
     else:
         ax.set_yticklabels([])
