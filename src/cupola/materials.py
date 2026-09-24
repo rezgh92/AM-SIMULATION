@@ -109,6 +109,7 @@ class Setup:
         self.mb0 = (1.0 - self.phi) * self.rho_b          # kg binder / m^3
         self.nCu = self.phi * RHO_CU / M_CU               # mol Cu / m^3
         self.mCu = self.phi * RHO_CU
+        self.V_solid_eq = self.nCu * V_CU                 # metal-equivalent solid volume / m^3 green
         w1 = g["solvent_frac"]
         wnet = 1.0 - w1
         w3 = wnet * g["w_backbone"]
@@ -241,6 +242,23 @@ class Setup:
 
     def kG_rate(self, T):
         return self.kG * np.exp(-QB / (R * T))
+
+    def dG_dt(self, T, G, theta):
+        """Grain growth rate, um/s (parabolic, grain-boundary diffusion, pinned by porosity)."""
+        return 1e6 * self.kG_rate(T) / (3.0 * G ** 2) * (THETA_PIN / (theta + THETA_PIN)) ** 2
+
+    def carbon_factor(self, C_ppm):
+        """Viscosity multiplier from residual carbon (empirical for Cu: ~1550 ppm C held a compact at
+        ~59 % TD, US5302562A)."""
+        return 1.0 + (C_ppm / self.C_inh) ** 2
+
+    def cp(self, T):
+        """Specific heat of the inorganic solid, J/(kg K)."""
+        return cp_cu(T)
+
+    def melt_margin(self, T, O_ppm):
+        """Distance below the Cu-O solidus minus the safety margin, K (>0 is safe)."""
+        return (thermo.T_solidus_Cu_O(O_ppm) - self.T_margin) - T
 
     # --------------------------------------------------------------- thermal
     def k_eff(self, T, w_b, rho):

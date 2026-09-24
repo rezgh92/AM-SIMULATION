@@ -8,7 +8,7 @@ segment program can execute, so every cycle the model evaluates is runnable.
 from __future__ import annotations
 
 from dataclasses import dataclass, asdict, field
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -24,6 +24,7 @@ class Segment:
     H2: float = 0.0          # H2 mole fraction in the inlet
     dp_C: float = -60.0      # inlet dew point, degC (-60 = dry)
     note: str = ""
+    x_h2o: Optional[float] = None   # explicit inlet steam fraction (steam generator); overrides dp_C
 
 
 @dataclass
@@ -64,7 +65,13 @@ class Cycle:
         return self.segments[-1].T_end_C + T0C
 
     def to_dict(self):
-        return dict(name=self.name, T_start_C=self.T_start_C, segments=[asdict(s) for s in self.segments])
+        segs = []
+        for s in self.segments:
+            d = asdict(s)
+            if d.get("x_h2o") is None:
+                d.pop("x_h2o", None)
+            segs.append(d)
+        return dict(name=self.name, T_start_C=self.T_start_C, segments=segs)
 
     @staticmethod
     def from_dict(d):

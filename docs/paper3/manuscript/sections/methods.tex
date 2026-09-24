@@ -1,0 +1,112 @@
+\section{Model formulation}
+\label{sec:model}
+
+\subsection{Structure of the model}
+
+The co-fired part is represented at two levels (Fig.~\ref{fig:overview}b). At the first level, each material is followed through the firing programme by a one-dimensional slab model that resolves heat transfer, binder decomposition, char formation and removal, pore closure and densification through the thickness of its critical section. The glass-ceramic body and the copper conductor are simulated separately but share the furnace set point and the inlet gas, so both see the same thermal and chemical history. At the second level, the two densification histories are coupled mechanically: analytically, through the viscous analogue of laminate theory, and numerically, through a three-dimensional finite-element model in which both materials occupy the voxels of the printed part. Both levels use the same constitutive law for the porous body, so a free sample in the finite-element model reproduces the slab model exactly.
+
+The copper slab model was developed and verified for single-material copper parts printed from a lithography-based slurry; its chemistry and its calibration against published copper data are summarised in \ref{app:copper}. The additions made here are the crystallising glass-ceramic, the copper paste with an inert filler, the steam burnout atmosphere, and the co-firing mechanics.
+
+\subsection{Binder removal and residual carbon}
+\label{sec:binder}
+
+The photocured binder is lumped into three pseudo-components $i$ (a non-reactive solvent, a crosslinked network and a char-forming backbone), each decomposing by first-order kinetics,
+\begin{equation}
+\frac{\mathrm{d}B_i}{\mathrm{d}t} = -k_i(T)\,B_i,\qquad
+k_i(T) = \frac{E_i\beta_{\mathrm{ref}}}{R T_{\mathrm{p},i}^2}\exp\!\left[-\frac{E_i}{R}\left(\frac{1}{T}-\frac{1}{T_{\mathrm{p},i}}\right)\right],
+\label{eq:binder}
+\end{equation}
+where $T_{\mathrm{p},i}$ is the temperature of the corresponding peak in a thermogravimetric trace at $\beta_{\mathrm{ref}} = 10$~K\,min$^{-1}$. Writing the rate constant in terms of the peak temperature keeps the two fitted quantities nearly independent and lets them be read directly from a single thermogravimetric curve. A fraction $\chi$ of the network and backbone mass remains as char. In a steam-bearing atmosphere the char is gasified by $\mathrm{C} + \mathrm{H_2O} \rightarrow \mathrm{CO} + \mathrm{H_2}$ at the rate
+\begin{equation}
+r_{\mathrm{g}} = a(\varepsilon_{\mathrm{o}})\,\bigl(1-f_{\mathrm{cl}}\bigr)\,k_{\mathrm{g}}(T)\,\frac{c}{M_{\mathrm{C}}}
+\left(\frac{x_{\mathrm{H_2O}}}{x_{\mathrm{ref}}}\right)^{1/2}
+\frac{1+K_{\mathrm{H}}\,x_{\mathrm{H_2}}^{\mathrm{ref}}}{1+K_{\mathrm{H}}\,x_{\mathrm{H_2}}}
+\left(1-\frac{Q}{K_{\mathrm{st}}(T)}\right)_{+},
+\label{eq:gasif}
+\end{equation}
+in which $c$ is the char concentration, $a(\varepsilon_{\mathrm{o}})$ the fraction of pore surface reachable through open porosity $\varepsilon_{\mathrm{o}}$, $f_{\mathrm{cl}}$ the closed-pore fraction, $K_{\mathrm{H}}$ an inhibition constant for hydrogen adsorption, $Q = x_{\mathrm{CO}}x_{\mathrm{H_2}}/x_{\mathrm{H_2O}}$ the reaction quotient and $K_{\mathrm{st}}$ the equilibrium constant from NIST-JANAF data \cite{chase1998janaf}. Char in closed pores is not gasified: once the pores seal, whatever carbon remains stays in the part. The rate constant $k_{\mathrm{g}}$ is parameterised by a half-life at 800~$^\circ$C in the reference atmosphere and an activation energy; no measured value exists for char on either material, so both enter the sensitivity analysis. A Thiele-modulus estimate ($k_{\mathrm{g}}L^2/D_{\mathrm{eff}} \sim 10^{-4}$ for $L = 2$~mm) shows that gasification is kinetically controlled, so steam access is represented by the open-pore accessibility $a(\varepsilon_{\mathrm{o}})$ rather than by a diffusion equation.
+
+Pyrolysis gas raises the pore pressure. The overpressure is computed from the compressible Darcy equation with Kozeny--Carman and Knudsen contributions to the permeability and a polymer-permeation term that carries the flux before the pore network percolates; it is compared with the green or brown strength through a safety factor. The same slab tracks the through-thickness temperature difference and converts it into a thermal-stress index.
+
+\subsection{Densification}
+\label{sec:densification}
+
+Both materials densify according to the Skorohod--Olevsky viscous sintering model \cite{olevsky1998theory}. For a porous body of porosity $\theta$ and matrix shear viscosity $\eta$, the stress is
+\begin{equation}
+\boldsymbol{\sigma} = 2\eta\left[\varphi(\theta)\,\dot{\boldsymbol{\varepsilon}}' + \psi(\theta)\,\mathrm{tr}(\dot{\boldsymbol{\varepsilon}})\,\mathbf{I}\right] + P_{\mathrm{L}}(\theta)\,\mathbf{I},
+\label{eq:sovs}
+\end{equation}
+with $\varphi = (1-\theta)^2$, $\psi = \tfrac{2}{3}(1-\theta)^3/\theta$ and sintering stress $P_{\mathrm{L}} = 3\gamma(1-\theta)^2/r$, where $\gamma$ is the surface energy and $r$ half the Sauter mean particle diameter. A free body densifies at $\mathrm{tr}(\dot{\boldsymbol{\varepsilon}}) = -(P_{\mathrm{L}}-\Delta p)/(2\eta\psi)$, where $\Delta p$ is the pressure of insoluble gas trapped in closed pores. The two materials differ only in $\eta$, $\gamma$ and $r$.
+
+\paragraph{Glass-ceramic} The residual melt is Newtonian. Its viscosity follows the MYEGA equation \cite{mauro2009viscosity},
+\begin{equation}
+\log_{10}\eta_{\mathrm{g}} = \log_{10}\eta_\infty + \left(12-\log_{10}\eta_\infty\right)\frac{T_{\mathrm{g}}}{T}\exp\!\left[\left(\frac{m}{12-\log_{10}\eta_\infty}-1\right)\left(\frac{T_{\mathrm{g}}}{T}-1\right)\right],
+\label{eq:myega}
+\end{equation}
+with $\log_{10}\eta_\infty = -3$ (Pa\,s), glass transition $T_{\mathrm{g}}$ (defined at $10^{12}$~Pa\,s) and fragility index $m$. Crystallisation during firing follows non-isothermal Johnson--Mehl--Avrami--Kolmogorov kinetics \cite{avrami1939kinetics} written in terms of the extended-volume integral,
+\begin{equation}
+\dot{\xi} = k_{\mathrm{c}}(T) = k_{\mathrm{c,p}}\exp\!\left[-\frac{E_{\mathrm{c}}}{R}\left(\frac{1}{T}-\frac{1}{T_{\mathrm{p,c}}}\right)\right],\qquad X = 1-\exp\left(-\xi^{n}\right),
+\label{eq:jmak}
+\end{equation}
+which avoids the singularity of the rate form at $X = 0$ for $n > 1$. The constant $k_{\mathrm{c,p}}$ is fixed numerically so that the simulated crystallisation exotherm at 10~K\,min$^{-1}$ peaks exactly at the measured temperature $T_{\mathrm{p,c}}$; Kissinger's closed form \cite{kissinger1957reaction} is exact only for $n = 1$ and would misplace the peak by about 1~K for $n = 2$. Crystals stiffen the melt as rigid inclusions,
+\begin{equation}
+\eta = \eta_{\mathrm{g}}(T)\left(1-\frac{X}{X_{\mathrm{m}}}\right)^{-[\eta]X_{\mathrm{m}}}\left(1-\frac{f_{\mathrm{C}}}{0.64}\right)^{-[\eta]\,0.64},
+\label{eq:kd}
+\end{equation}
+the Krieger--Dougherty law \cite{krieger1959mechanism} with intrinsic viscosity $[\eta] = 2.5$ and maximum packing $X_{\mathrm{m}}$. The second factor treats residual char particles, volume fraction $f_{\mathrm{C}}$, the same way. Once $X$ approaches $X_{\mathrm{m}}$ the body stops flowing, which is how crystallisation arrests densification.
+
+\paragraph{Copper} The copper skeleton creeps by diffusion. Its matrix viscosity combines lattice and grain-boundary diffusion \cite{frost1982deformation},
+\begin{equation}
+\eta_{\mathrm{Cu}} = f_\eta\,\frac{k_{\mathrm{B}}T\,G^2}{42\,\Omega\left(D_{\mathrm{v}} + \pi\,\delta D_{\mathrm{b}}/G\right)}\left(1+\frac{C^2}{C_{\mathrm{inh}}^2}\right)\left(1-\frac{f}{0.64}\right)^{-1.6},
+\label{eq:etacu}
+\end{equation}
+where $G$ is the grain size, $\Omega$ the atomic volume and $f_\eta$ a calibration factor fitted to published copper densification data (\ref{app:copper}). The carbon term $C$ (in ppm) describes the retarding effect of residual carbon on copper, and the last factor accounts for an inert ceramic filler of volume fraction $f$ added to the conductor paste, a standard way to slow a metal paste down to the pace of its ceramic \cite{chang1998effects}. Grain growth is parabolic, driven by grain-boundary diffusion and pinned by porosity. The filler also lowers the conductivity; together with porosity,
+\begin{equation}
+\frac{\sigma}{\sigma_0} = (1-\theta)^{3/2}\,\frac{1-f}{1+f/2},
+\label{eq:conductivity}
+\end{equation}
+the second factor being the Maxwell Garnett result for insulating inclusions \cite{garnett1904colours}.
+
+\subsection{Atmosphere and the metallic state of copper}
+\label{sec:atmosphere}
+
+Steam removes char but oxidises copper once the water-to-hydrogen ratio exceeds the equilibrium of $\mathrm{Cu_2O} + \mathrm{H_2} \rightleftharpoons 2\,\mathrm{Cu} + \mathrm{H_2O}$,
+\begin{equation}
+\frac{p_{\mathrm{H_2O}}}{p_{\mathrm{H_2}}} < K_{\mathrm{Cu}}(T) = \exp\!\left(-\frac{\Delta G^\circ(T)}{RT}\right).
+\label{eq:cuwindow}
+\end{equation}
+During the burnout segment the inlet hydrogen is therefore tied to the steam content, $x_{\mathrm{H_2}} = x_{\mathrm{H_2O}}/(s\,K_{\mathrm{Cu}}(T_{\mathrm{B}}))$, with a safety factor $s = 0.2$. The copper stays metallic by construction, and the steam is as oxidising towards carbon as the metal allows. This is the principle of the steam co-sintering developed for glass-ceramic/copper substrates \cite{master1991cosintering,tummala1991ceramic}; here it is applied in a model that says how long, at what temperature and in how much steam. Carbon gasification itself is thermodynamically unconstrained over the whole window (Section~\ref{sec:res_atm}); its limits are kinetic.
+
+\subsection{Mechanics of co-firing}
+\label{sec:mechanics}
+
+\paragraph{Porous viscosities} Eq.~\eqref{eq:sovs} describes an isotropic, linear viscous solid with shear viscosity $G_v = \eta\varphi$ and bulk viscosity $K_v = 2\eta\psi$, hence uniaxial viscosity $E_v = 9K_vG_v/(3K_v+G_v)$, viscous Poisson ratio $\nu_v = (3K_v-2G_v)/[2(3K_v+G_v)]$ and biaxial viscosity $B = E_v/(1-\nu_v)$. The free linear sintering rate is $\dot{\varepsilon}_{\mathrm{f}} = -P_{\mathrm{L}}/(6\eta\psi)$. All three quantities follow from the slab histories of $T$, $\theta$, $G$ or $\xi$, and carbon.
+
+\paragraph{Camber} By the elastic--viscous correspondence principle, a bilayer of two linear viscous layers bends at a curvature rate given by Timoshenko's bimetal solution \cite{timoshenko1925analysis}, with elastic moduli replaced by biaxial viscosities and thermal strain by the difference in free sintering rates \cite{cai1997constrainedII,jean1997cofiring,olevsky2013sintering}:
+\begin{equation}
+\dot{\kappa} = \frac{6\,(1+\lambda)^2\,\left(\dot{\varepsilon}_{\mathrm{f},2}-\dot{\varepsilon}_{\mathrm{f},1}\right)}{h\left[3(1+\lambda)^2+(1+\lambda\mu)\left(\lambda^2+\dfrac{1}{\lambda\mu}\right)\right]},\qquad \lambda = \frac{h_1}{h_2},\quad \mu = \frac{B_1}{B_2}.
+\label{eq:camber}
+\end{equation}
+Layer 1 is copper and layer 2 the glass-ceramic; positive curvature is concave towards the copper. Eq.~\eqref{eq:camber} is integrated over the firing with the layer thicknesses updated by their own shrinkage. The reference stack is a 0.1~mm copper plane on 1~mm of glass-ceramic.
+
+\paragraph{Embedded conductors} A conductor line buried in the body cannot curl; its misfit is taken up by stress. We represent line and surrounding body as two Maxwell elements in series, each with a porous elastic modulus and a biaxial viscosity:
+\begin{equation}
+\dot{\varepsilon}_{\mathrm{f,GC}}-\dot{\varepsilon}_{\mathrm{f,Cu}} = \dot{\sigma}\left(\frac{1}{E_{\mathrm{Cu}}}+\frac{1}{E_{\mathrm{GC}}}\right)+\sigma\left(\frac{1}{B_{\mathrm{Cu}}}+\frac{1}{B_{\mathrm{GC}}}\right).
+\label{eq:maxwell}
+\end{equation}
+A compliant line follows the body and carries $B_{\mathrm{Cu}}$ times the misfit rate; a stiff line forces the body to flow around it. Tension in the copper ($\sigma > 0$) opens voids and breaks the line; compression in the copper means the body is shrinking onto a stiff inclusion and is itself in hoop tension, the classic origin of radial cracks around conductors \cite{cai1997constrainedI,green2008constrained}. Two damage indices compare these stresses with the strength of the weaker partner at that moment,
+\begin{equation}
+\Pi_{\mathrm{Cu}} = \frac{\max(\sigma,0)}{\sigma_{\mathrm{s,Cu}}(\rho_{\mathrm{Cu}})},\qquad
+\Pi_{\mathrm{GC}} = \frac{\max(-\sigma,0)}{\sigma_{\mathrm{s,GC}}(\rho_{\mathrm{GC}})},
+\label{eq:damage}
+\end{equation}
+where the strengths $\sigma_{\mathrm{s}}$ grow from the binder-carried green strength through the neck-controlled brown strength. The series coupling carries an Eshelby factor of order unity \cite{eshelby1957determination} that we do not resolve, so the indices are used comparatively. The same coupling is resolved exactly in three dimensions below.
+
+\paragraph{Three-dimensional co-sintering} The printed part is meshed voxel by voxel with trilinear hexahedra, so the mesh is the printed pixel grid. Each element carries its material, porosity and microstructural state. The velocity field satisfies $\nabla\cdot\boldsymbol{\sigma} + \rho_{\mathrm{b}}\mathbf{g} = \mathbf{0}$ with Eq.~\eqref{eq:sovs}, gravity, and a setter plate beneath the part: zero normal velocity and regularised Coulomb friction ($\mu = 0.6$) iterated to convergence at each step. Volumetric terms use one-point quadrature, which avoids locking as $\theta \to 0$. The problem is assembled with scikit-fem \cite{gustafsson2020scikit} and solved by conjugate gradients preconditioned with smoothed-aggregation algebraic multigrid carrying the six rigid-body modes \cite{bell2022pyamg}. Porosity is advanced with the exact mass-conserving update $1-\theta^{n+1} = (1-\theta^{n})\exp(-\mathrm{tr}\,\dot{\boldsymbol{\varepsilon}}\,\Delta t)$. The temperature and carbon histories are taken from the two slab simulations.
+
+\paragraph{Cooling} Below a stress-free temperature $T_{\mathrm{sf}}$, where the residual glass stops relaxing, the thermal-expansion mismatch is carried elastically by the glass-ceramic and elastoplastically by the copper. The copper layer is treated as elastic--perfectly plastic with a temperature-dependent yield stress; its mean stress is capped at yield by a uniform plastic strain, and the curvature follows from Timoshenko's elastic solution for the remaining elastic misfit.
+
+\subsection{Numerical solution, design search and sensitivity}
+\label{sec:numerics}
+
+The slab equations are integrated with a linearly implicit Rosenbrock method of orders 2(3) \cite{shampine1997matlab} on a geometrically graded mesh that is finest at the surface. A co-firing evaluation, two slab simulations and the mechanical post-processing, takes about 6~s. Designs were searched by differential evolution \cite{storn1997differential} over eleven variables: copper median particle size, filler fraction and solids loading; burnout temperature, time and steam fraction; temperature and duration of an intermediate matching hold; heating rate to the peak; peak temperature and hold. The objective was the final camber of the reference bilayer, subject to hard constraints on carbon at glass pore closure, densities, crystallinity, damage indices, trapped-gas pressure and the melting margin, and to a cycle-time budget (the $\varepsilon$-constraint form of the time--camber trade-off). The influence of uncertain inputs was screened with Morris elementary effects \cite{morris1991factorial}.

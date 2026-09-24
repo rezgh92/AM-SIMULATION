@@ -20,6 +20,8 @@ def inlet_composition(seg, su: Setup):
     x_o2 = min(max(seg.O2, 0.0), 0.2095) if su.s["has_air_bleed"] >= 0.5 else 0.0
     x_o2 = x_o2 + su.x_o2_imp * (1.0 - x_o2 / 0.2095)
     x_h2 = min(max(seg.H2, 0.0), su.s["h2_max"])
+    if getattr(seg, "x_h2o", None) is not None:          # steam generator: explicit steam fraction
+        return x_o2, x_h2, float(min(max(seg.x_h2o, 0.0), 1.0 - x_h2))
     dp = min(seg.dp_C, su.s["dp_max_C"])
     x_h2o = float(thermo.x_h2o_from_dewpoint(dp)) if dp > -60.0 else float(thermo.x_h2o_from_dewpoint(-60.0))
     return x_o2, x_h2, x_h2o
@@ -40,9 +42,9 @@ class Result:
 
 
 def simulate(scenario: Optional[dict] = None, cycle: Optional[Cycle] = None, N: Optional[int] = None,
-             rtol: float = 1e-4, keep_states: bool = False, stop_when=None) -> Result:
+             rtol: float = 1e-4, keep_states: bool = False, stop_when=None, setup_cls=Setup) -> Result:
     s = dict(defaults()) if scenario is None else dict(scenario)
-    su = Setup(s)
+    su = setup_cls(s)
     slab = Slab(su, N)
     if cycle is None:
         from .cycle import baseline_v0

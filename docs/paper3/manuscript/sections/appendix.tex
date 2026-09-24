@@ -1,0 +1,17 @@
+\appendix
+
+\section{Copper slab model and its calibration}
+\label{app:copper}
+
+The copper conductor uses the slab model developed for single-material copper parts printed from a photocurable slurry. Besides the binder chemistry of Section~\ref{sec:binder}, it tracks the oxygen bound in the powder as Cu$_2$O. The oxide grows in oxygen-bearing gas by a decelerating law fitted to powder oxidation data, is reduced by hydrogen above the equilibrium ratio of Eq.~\eqref{eq:cuwindow}, and reacts with char by $\mathrm{Cu_2O} + \mathrm{C} \rightarrow 2\,\mathrm{Cu} + \mathrm{CO}$. None of these oxidation paths is active in the co-firing programmes studied here, because the inlet gas contains no oxygen and the water-to-hydrogen ratio is held below the copper--oxide equilibrium. What matters for co-firing is the sintering viscosity. Eq.~\eqref{eq:etacu} uses the lattice and grain-boundary diffusion data for copper tabulated by Frost and Ashby \cite{frost1982deformation}, with one factor, $f_\eta$, fitted to the densification of copper parts printed from a 60~vol\% photocurable slurry of 22~$\mu$m powder and sintered for 4~h at 1050~$^\circ$C in hydrogen, which reached 90--94\% relative density \cite{roumanie2021influence}. The fit gives $f_\eta = 0.28$, with 0.22--0.34 spanning the reported density range. The powder size enters Eq.~\eqref{eq:etacu} through the grain size, set initially to 0.4 times the median particle size, and through the sintering stress. Transferring $f_\eta$ from 22~$\mu$m to the 3--12~$\mu$m powders considered here therefore rests on the diffusional scaling of Eq.~\eqref{eq:etacu}; this is why $f_\eta$ is included in the sensitivity analysis of Section~\ref{sec:res_sens}.
+
+\section{Verification}
+\label{app:verification}
+
+\paragraph{Viscous densification of the glass-ceramic} With crystallisation and char removed, and open porosity, Eq.~\eqref{eq:sovs} with a Newtonian matrix gives $\dot{\theta} = -9\gamma\theta/(4r\eta)$. The slab model was run through isothermal holds at 810, 830 and 850~$^\circ$C with 4, 8 and 16 cells. The simulated porosity follows the closed form, integrated along the simulated part temperature, to within $1.7\times10^{-4}$ over the full range of densification before pore closure, independently of the mesh (Fig.~\ref{fig:verification}a).
+
+\paragraph{Bilayer curvature} The three-dimensional model of a free $12\times12$~mm plate made of 0.6~mm copper on 1.8~mm glass-ceramic was solved for the instantaneous velocity field at 900~$^\circ$C, and the curvature rate was fitted to the mid-plane deflection. It converges to the viscous Timoshenko value of Eq.~\eqref{eq:camber} with second-order behaviour: the error falls from 3.4\% at 0.6~mm voxels to 0.69, 0.22 and 0.05\% at 0.3, 0.2 and 0.15~mm (Fig.~\ref{fig:verification}b).
+
+\paragraph{Free sintering and mass conservation} A free, frictionless cube held isothermally densifies homogeneously and isotropically, matches the closed-form Skorohod--Olevsky solution to 0.22\% in density, and conserves solid mass to 0.07\%.
+
+\paragraph{Crystallisation kinetics} With the rate constant calibrated as described in Section~\ref{sec:densification}, the simulated exotherm at 10~K\,min$^{-1}$ peaks within 0.01~K of the prescribed temperature for Avrami exponents between 1 and 4.

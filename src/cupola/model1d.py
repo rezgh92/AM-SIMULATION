@@ -34,10 +34,10 @@ import numpy as np
 
 from .constants import (R, SIGMA_SB, P_ATM, M_C, M_O2, RHO_CHAR, V_CU, V_CU_IN_CU2O, V_CU_IN_CUO, T0C)
 from . import thermo
-from .materials import (Setup, cp_cu, mu_gas, D_O2_N2, smoothstep, sigmoid,
+from .materials import (Setup, mu_gas, D_O2_N2, smoothstep, sigmoid,
                         CUOX_M, CUOX_X0, NU_O2_BINDER, N_CO2_BINDER, N_H2O_BINDER,
                         DH_CU_OX, DH_RED_H2, DH_CARBOTHERMIC, DH_GASIF, DH_CHAR_OX,
-                        CP_BINDER, CP_CHAR, THETA_PIN)
+                        CP_BINDER, CP_CHAR)
 
 NV = 10
 IT, IB1, IB2, IB3, IC, IX, IY, ILV, IG, INT = range(NV)
@@ -160,7 +160,7 @@ class Slab:
         # Pore closure is a sintering event: judge it on the metal-equivalent density. Oxide growing
         # into pores (+68 % volume) also chokes gas access, but through eps (porosity) not closure,
         # and it reverses on reduction.
-        rho_m = np.clip(su.nCu * V_CU / V, 1e-3, 0.99999)
+        rho_m = np.clip(su.V_solid_eq / V, 1e-3, 0.99999)
         u_cl = (rho_m - (su.rho_close - 0.03)) / 0.06
         f_cl = smoothstep(u_cl)
         eps_open = eps * (1.0 - f_cl)
@@ -225,7 +225,7 @@ class Slab:
         q = (-0.4e6 * r_p[..., 0, :] - su.dHpyr * r_p[..., 1:, :].sum(axis=-2)
              + su.dHc * r_o.sum(axis=-2) + DH_CHAR_OX * r_co / M_C + DH_CU_OX * su.nCu * dX_ox
              + DH_RED_H2 * n_red - DH_CARBOTHERMIC * r_cth - DH_GASIF * r_g)
-        Ccap = m_inorg * cp_cu(T) + B.sum(axis=-2) * CP_BINDER + c * CP_CHAR
+        Ccap = m_inorg * su.cp(T) + B.sum(axis=-2) * CP_BINDER + c * CP_CHAR
         s = np.exp(lnV / 3.0)
         kk = su.k_eff(T, w_b, rho_s)
         kf = 2.0 * kk[..., :-1] * kk[..., 1:] / (kk[..., :-1] + kk[..., 1:])
@@ -287,12 +287,12 @@ class Slab:
         # blister); saturate it so the swelling rate stays bounded. Pi_bloat reports the raw value.
         dP_raw = f_cl * (p_g - P_ATM)
         dP = 3.0 * PL * np.tanh(dP_raw / (3.0 * PL))
-        eta = su.eta0(T, G) * (1.0 + (C_ppm / su.C_inh) ** 2) * (1.0 + 1e4 * w_b)
+        eta = su.eta0(T, G) * su.carbon_factor(C_ppm) * (1.0 + 1e4 * w_b)
         e_dot = -(PL - dP) / (2.0 * eta * psi)
         dvdX = np.where(X < 0.5, (V_CU_IN_CU2O - V_CU) / 0.5, (V_CU_IN_CUO - V_CU_IN_CU2O) / 0.5) * su.nCu
         swell = smoothstep((0.04 - eps) / 0.04) * dvdX * dXdt / V
         dlnVdt = e_dot + swell
-        dGdt = 1e6 * su.kG_rate(T) / (3.0 * G ** 2) * (THETA_PIN / (th + THETA_PIN)) ** 2
+        dGdt = su.dG_dt(T, G, th)
 
         # closure can come from sintering OR from oxide filling the pores (+68 % volume); both are
         # reversible (reduction reopens oxide-filled pores), so gas is trapped on closing and
@@ -387,8 +387,7 @@ class Slab:
         # merely lags the furnace on cooling (emissivity ~0.1) must not count
         exo_gen = np.where(q.max(axis=-1) > 1e3, exo, -np.inf)
         O_ppm = su.O_ppm(X)
-        T_sol = thermo.T_solidus_Cu_O(O_ppm)
-        melt_margin = (T_sol - su.T_margin) - T                                  # >0 is safe
+        melt_margin = su.melt_margin(T, O_ppm)                                   # >0 is safe
         # only where closed pores dominate is "gas pressure vs sintering stress" meaningful
         Pi_bloat = np.where(f_cl >= 0.5, (p_g - P_ATM) / PL, 0.0)
         d = dict(
