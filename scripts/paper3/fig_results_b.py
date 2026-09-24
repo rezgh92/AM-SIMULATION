@@ -109,14 +109,17 @@ def fig_programme():
     m, ser = cofire_metrics(gc, cu, s0)
     runs.append(dict(label="baseline", m=m, ser=ser, gc=gc, cu=cu, cyc=base))
     runs.append(run_series(f"{D}/opt_main.json", "optimised"))
-    fig, axs = plt.subplots(5, 2, figsize=(fs.COL2, 1.05 * fs.COL2), sharex="col",
-                            gridspec_kw=dict(hspace=0.14, wspace=0.22, height_ratios=[1.15, 1, 1, 0.85, 0.7]))
+    runs.append(run_series(f"{D}/opt_robust.json", "robust"))
+    fig, axs = plt.subplots(5, 3, figsize=(fs.COL2, 1.0 * fs.COL2), sharex="col", sharey="row",
+                            gridspec_kw=dict(hspace=0.14, wspace=0.08, height_ratios=[1.15, 1, 1, 0.85, 0.7]))
     atm_col = {"A": "#D2DAE0", "B": "#BFE6D6", "C": "#C8DBF3", "D": "#E6E9EC"}
-    o = json.load(open(f"{D}/opt_main.json"))
-    xo = dict(zip(o["names"], o["x"]))
-    titles = ["(a) baseline: 3 µm Cu, burnout 780 °C / 4 h, peak 960 °C",
-              f"(b) optimised: {10 ** xo['log10_d50']:.1f} µm Cu + {100 * xo['filler']:.0f} % filler, "
-              f"burnout {xo['T_B']:.0f} °C, holds {xo['T_H']:.0f} / {xo['T_C']:.0f} °C"]
+    xo = dict(zip(*[json.load(open(f"{D}/opt_main.json"))[k] for k in ("names", "x")]))
+    xr = dict(zip(*[json.load(open(f"{D}/opt_robust.json"))[k] for k in ("names", "x")]))
+    titles = ["(a) baseline\n3 µm Cu; burnout 780 °C, 4 h; peak 960 °C",
+              f"(b) nominal optimum\n{10 ** xo['log10_d50']:.1f} µm Cu + {100 * xo['filler']:.0f} % filler; "
+              f"burnout {xo['T_B']:.0f} °C, {10 ** xo['log10_tB']:.1f} h",
+              f"(c) robust design\n{10 ** xr['log10_d50']:.1f} µm Cu + {100 * xr['filler']:.0f} % filler; "
+              f"burnout {xr['T_B']:.0f} °C, {10 ** xr['log10_tB']:.1f} h"]
     for c, r in enumerate(runs):
         S, gc, cu, cyc = r["ser"], r["gc"], r["cu"], r["cyc"]
         t = S["t_h"]
@@ -127,7 +130,7 @@ def fig_programme():
         ax.plot(t, S["T_C"], color=fs.INK, lw=1.3, label="part")
         ax.set_ylim(0, 1100)
         ax.set_ylabel("T (°C)")
-        ax.set_title(titles[c], fontsize=6.8, loc="left")
+        ax.set_title(titles[c], fontsize=6.4, loc="left", linespacing=1.25)
         ax = axs[1, c]
         ax.plot(t, S["rho_gc"], color=fs.GC, lw=1.4, label="glass-ceramic")
         ax.plot(t, S["rho_cu"], color=fs.CU, lw=1.4, label="copper")
@@ -153,13 +156,13 @@ def fig_programme():
         ax.set_ylim(0, 1.9)
         ax.set_xlabel("Time (h)")
     for ax in axs[:, 0]:
-        ax.yaxis.set_label_coords(-0.1, 0.5)
-    for ax in axs[:, 1]:
-        ax.yaxis.set_label_coords(-0.1, 0.5)
+        ax.yaxis.set_label_coords(-0.16, 0.5)
+    for ax in axs[:, 1:].ravel():
+        ax.set_ylabel("")
     axs[0, 0].legend(loc="upper left", fontsize=6)
     axs[1, 0].legend(loc="upper left", fontsize=6)
     axs[2, 0].legend(loc="lower left", fontsize=6)
-    axs[3, 0].legend(loc="upper left", fontsize=5.8, ncol=1, handlelength=1.2)
+    axs[3, 2].legend(loc="center right", fontsize=5.8, ncol=1, handlelength=1.2)
     axs[3, 0].text(0.99, 2.12, "100 ppm", transform=axs[3, 0].get_yaxis_transform(), ha="right", va="bottom",
                    fontsize=5.8, color=fs.MUTED)
     axs[4, 0].text(0.99, 1.05, "Π = 1", transform=axs[4, 0].get_yaxis_transform(), ha="right", va="bottom",

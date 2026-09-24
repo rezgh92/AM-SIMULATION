@@ -62,7 +62,7 @@ Mechanically, it fails. As soon as steam begins to remove the char, the copper s
 \begin{figure*}[!tp]
 \centering
 \includegraphics[width=\textwidth]{fig07_programme}
-\caption{Co-firing histories. (a) Baseline: 3~$\mu$m copper without filler, 4~h steam burnout at 780~$^\circ$C, 1~h at 960~$^\circ$C. (b) Optimised paste and programme (Table~\ref{tab:opt}). From top: furnace set point and part temperature, with the atmosphere of each segment shown by the band at the bottom (grey, N$_2$; green, steam; blue, dry H$_2$/N$_2$); relative densities and crystallised fraction of the glass; free logarithmic shrinkage of each material, the shaded area being the mismatch; carbon in the glass-ceramic and damage index of an embedded copper line.}
+\caption{Co-firing histories of (a) the baseline, (b) the nominal optimum and (c) the robust design of Table~\ref{tab:opt}. From top: furnace set point and part temperature, with the atmosphere of each segment shown by the band at the bottom (grey, N$_2$; green, steam; blue, dry H$_2$/N$_2$); relative densities and crystallised fraction of the glass; free logarithmic shrinkage of each material, the shaded area being the mismatch; carbon in the glass-ceramic and damage index of an embedded copper line.}
 \label{fig:programme}
 \end{figure*}
 
@@ -87,7 +87,9 @@ Neither the paste nor the glass alone brings the peak mismatch below about 6\%, 
 
 The optimiser found a mechanism rather than a compromise. The copper cannot sinter while it carries char (Section~\ref{sec:res_baseline}), so the burnout releases it. Placing the burnout just below the coalescence of the glass, and making it fast with a high steam fraction, releases the copper at the moment the glass begins to flow. The two materials then densify together (Fig.~\ref{fig:programme}b), and the filler slows the copper just enough to follow the glass rather than lead it. The hold at 916~$^\circ$C lets the glass finish densifying before it crystallises, and the peak at 1018~$^\circ$C finishes the copper.
 
-The optimum has two weaknesses. The first is conductivity: 24\% filler limits the copper to 64\% IACS. The second is robustness. The coincidence on which the optimum rests is sharp, and Table~\ref{tab:opt} shows what happens when the two least certain inputs are varied within plausible bounds. If the char gasifies half as fast as assumed, the carbon at closure rises from 0.2 to 76~ppm and the peak mismatch from 3.7 to 11.1\%; at a quarter of the assumed rate the carbon limit is exceeded by an order of magnitude. A glass transition 15~K higher or lower than calibrated raises the peak mismatch to about 10\%. A factor of two in the viscosity of copper matters less (5.8--6.2\%). A design that relies on the timing of char removal is therefore only as good as the gasification kinetics and the viscosity of the glass, and neither has been measured for this material pair. %% ROBUST
+The optimum has two weaknesses. The first is conductivity: 24\% filler limits the copper to 64\% IACS. The second is robustness. The coincidence on which the optimum rests is sharp, and Table~\ref{tab:opt} shows what happens when the two least certain inputs are varied within plausible bounds. If the char gasifies half as fast as assumed, the carbon at closure rises from 0.2 to 76~ppm and the peak mismatch from 3.7 to 11.1\%; at a quarter of the assumed rate the carbon limit is exceeded by an order of magnitude. A glass transition 15~K higher or lower than calibrated raises the peak mismatch to about 10\%. A factor of two in the viscosity of copper matters less (5.8--6.2\%). A design that relies on the timing of char removal is therefore only as good as the gasification kinetics and the viscosity of the glass, and neither has been measured for this material pair.
+
+The robust search (Section~\ref{sec:numerics}) therefore asked for a design that meets every constraint at two corners of this uncertainty and, in addition, keeps the copper above 80\% IACS. The result, listed in the last column of Table~\ref{tab:opt} and shown in Fig.~\ref{fig:programme}c, follows a different strategy. It uses a coarser 7~$\mu$m copper with almost no filler and a higher solids loading, and burns out for 2.8~h at 806~$^\circ$C in 83\% steam, some 40~K below the temperature at which the glass would seal during the hold. It then heats quickly to a short peak at 1017~$^\circ$C and needs 16.0~h in all. Both materials start to densify during the burnout hold, the copper once its char has gone and the glass because it is already soft. Being coarse, the copper runs only a few per cent ahead of the glass; the glass overtakes it during the heating to the peak. At nominal inputs the peak mismatch is 9.3\%, the conductivity 89\% IACS and the damage index 0.30. In both corners the carbon stays below 50~ppm, the damage index below 0.43 and the peak mismatch at or below 11.4\%. The single-factor changes of Table~\ref{tab:opt} move its peak mismatch only between 9.3 and 9.9\%. Robustness has a price: the nominal mismatch is two and a half times that of the sharp optimum, and the final camber, $-187$~m$^{-1}$, is larger. Most of the remaining mismatch is a difference in final shrinkage, 8.4\%, because the paste now carries more solids than the glass slurry (56 against 45~vol\%), which helps the copper reach density without filler. A gasification rate four times slower than assumed defeats both designs, which leave 940 and 1295~ppm of carbon in the glass.
 
 \begin{table*}[!tp]
 \centering
@@ -99,25 +101,25 @@ The optimum has two weaknesses. The first is conductivity: 24\% filler limits th
  & Baseline & Nominal optimum & Robust design \\
 \midrule
 \multicolumn{4}{@{}l}{\textit{Paste and programme}}\\
-Copper $d_{50}$ ($\mu$m) / filler (vol\%) / solids (vol\%) & 3.0 / 0 / 50 & 3.9 / 24 / 47 & %%R1 \\
-Burnout: $T$ ($^\circ$C) / time (h) / steam (\%) & 780 / 4.0 / 30 & 840 / 1.3 / 81 & %%R2 \\
-Matching hold: $T$ ($^\circ$C) / time (h) & -- & 916 / 1.7 & %%R3 \\
-Peak: $T$ ($^\circ$C) / time (h) & 960 / 1.0 & 1018 / 1.2 & %%R4 \\
-Cycle time (h) & 17.7 & 17.3 & %%R5 \\
+Copper $d_{50}$ ($\mu$m) / filler (vol\%) / solids (vol\%) & 3.0 / 0 / 50 & 3.9 / 24 / 47 & 7.0 / 2 / 56 \\
+Burnout: $T$ ($^\circ$C) / time (h) / steam (\%) & 780 / 4.0 / 30 & 840 / 1.3 / 81 & 806 / 2.8 / 83 \\
+Matching hold: $T$ ($^\circ$C) / time (h) & -- & 916 / 1.7 & 889 / 0.2 \\
+Peak: $T$ ($^\circ$C) / time (h) & 960 / 1.0 & 1018 / 1.2 & 1017 / 0.2 \\
+Cycle time (h) & 17.7 & 17.3 & 16.0 \\
 \midrule
 \multicolumn{4}{@{}l}{\textit{Outcome at nominal inputs}}\\
-Carbon at glass pore closure (ppm) & 33 & 0.2 & %%R6 \\
-Glass-ceramic density / crystallised fraction & 0.991 / 1.00 & 0.990 / 1.00 & %%R7 \\
-Copper density / conductivity (\% IACS) & 0.976 / 96 & 0.965 / 64 & %%R8 \\
-Peak free-strain mismatch (\%) & 15.6 & 3.7 & %%R9 \\
-Line damage index $\Pi_{\mathrm{Cu}}$ & \textbf{1.63} & 0.83 & %%R10 \\
-Final camber of reference bilayer (m$^{-1}$) & $-254$ & $-76$ & %%R11 \\
+Carbon at glass pore closure (ppm) & 33 & 0.2 & 0.03 \\
+Glass-ceramic density / crystallised fraction & 0.991 / 1.00 & 0.990 / 1.00 & 0.990 / 1.00 \\
+Copper density / conductivity (\% IACS) & 0.976 / 96 & 0.965 / 64 & 0.950 / 89 \\
+Peak free-strain mismatch (\%) & 15.6 & 3.7 & 9.3 \\
+Line damage index $\Pi_{\mathrm{Cu}}$ & \textbf{1.63} & 0.83 & 0.30 \\
+Final camber of reference bilayer (m$^{-1}$) & $-254$ & $-76$ & $-187$ \\
 \midrule
 \multicolumn{4}{@{}l}{\textit{Robustness: carbon at closure (ppm) / peak mismatch (\%)}}\\
-$t_{1/2} = 4$~h & -- & 76 / 11.1 & %%R12 \\
-$t_{1/2} = 8$~h & -- & \textbf{1295} / 17.9 & %%R13 \\
-$T_{\mathrm{g}} - 15$~K & -- & 84 / 9.9 & %%R14 \\
-$T_{\mathrm{g}} + 15$~K & -- & 0.06 / 9.5 & %%R15 \\
+$t_{1/2} = 4$~h & -- & 76 / 11.1 & 37 / 9.9 \\
+$t_{1/2} = 8$~h & -- & \textbf{1295} / 17.9 & \textbf{940} / 14.4 \\
+$T_{\mathrm{g}} - 15$~K & -- & 84 / 9.9 & 0.06 / 9.4 \\
+$T_{\mathrm{g}} + 15$~K & -- & 0.06 / 9.5 & 0.03 / 9.8 \\
 \bottomrule
 \end{tabular}
 \end{table*}
