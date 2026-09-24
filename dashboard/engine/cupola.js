@@ -702,6 +702,18 @@
     ] };
   }
 
+  function ifamReference() {
+    return { name: "IFAM reference", T_start_C: 25, segments: [
+      Segment(120, 1.0, 24.0, 0.21, 0, 10, "air"), Segment(250, 1.0, 63.0, 0.21, 0, 10, "air"),
+      Segment(25, 5.0, 0, 0, 0, -60, "cool, transfer"), Segment(1050, 5.0, 2.0, 0, 1.0, -60, "H2 sinter"),
+      Segment(25, 5.0, 0, 0, 1.0, -60, "cool")] };
+  }
+  function ceaReference() {
+    return { name: "CEA reference", T_start_C: 25, segments: [
+      Segment(400, 1.0, 4.0, 0.21, 0, 10, "air debind"), Segment(25, 5.0, 0, 0, 0, -60, "cool, transfer"),
+      Segment(1050, 5.0, 4.0, 0, 1.0, -60, "H2 sinter"), Segment(25, 5.0, 0, 0, 1.0, -60, "cool")] };
+  }
+
   function inletComposition(sg, su) {
     let xo2 = su.s.has_air_bleed >= 0.5 ? min(max(sg.O2, 0), 0.2095) : 0;
     xo2 = xo2 + su.x_o2_imp * (1 - xo2 / 0.2095);
@@ -739,6 +751,41 @@
       Y = r.ys[r.ys.length - 1];
       h = r.ts.length > 1 ? min(max(r.ts[r.ts.length - 1] - r.ts[r.ts.length - 2], 1), 600) : null;
       if (opts.onSegment) opts.onSegment(k + 1, bounds.length);
+    }
+    const pp = postprocess(sl, cyc, bounds, ts, ys, segOf);
+    pp.ok = ok; pp.message = message; pp.nstep = nstep; pp.cycle = cyc;
+    return pp;
+  }
+
+  /** Same as simulate(), but yields to the event loop between segments and reports progress. */
+  async function simulateAsync(scenario, cyc, opts) {
+    opts = opts || {};
+    const su = new Setup(scenario);
+    const sl = new Slab(su, opts.N);
+    const rtol = opts.rtol || 1e-3;
+    const bounds = cycleBoundaries(cyc);
+    const total = bounds.length ? bounds[bounds.length - 1][1] : 1;
+    let Y = sl.y0((cyc.T_start_C == null ? 25 : cyc.T_start_C) + T0C, inletComposition(bounds[0][2], su));
+    const ts = [0], ys = [Float64Array.from(Y)], segOf = [0];
+    let h = null, ok = true, message = "", nstep = 0;
+    for (let k = 0; k < bounds.length; k++) {
+      const [t0, t1, sg, Tfrom, kind] = bounds[k];
+      const [xo2, xh2, xh2o] = inletComposition(sg, su);
+      const Ta = (kind === "ramp" ? Tfrom : sg.T_end_C) + T0C;
+      const ctl = new Controls(t0, t1, Ta, sg.T_end_C + T0C, xo2, xh2, xh2o);
+      let r;
+      try {
+        r = ode23s((t, y, out) => sl.evaluate(t, y, ctl, out, false), t0, t1, Y, sl.atol, rtol,
+                   { scale: sl.scale, h0: h, hmax: max(600, 0.02 * (t1 - t0)) });
+      } catch (e) {
+        ok = false; message = "integration failed in segment '" + sg.note + "' (" + kind + "): " + e.message; break;
+      }
+      nstep += r.nstep;
+      for (let i = 1; i < r.ts.length; i++) { ts.push(r.ts[i]); ys.push(r.ys[i]); segOf.push(k); }
+      Y = r.ys[r.ys.length - 1];
+      h = r.ts.length > 1 ? min(max(r.ts[r.ts.length - 1] - r.ts[r.ts.length - 2], 1), 600) : null;
+      if (opts.progress) opts.progress(t1 / total);
+      await new Promise((res) => setTimeout(res, 0));
     }
     const pp = postprocess(sl, cyc, bounds, ts, ys, segOf);
     pp.ok = ok; pp.message = message; pp.nstep = nstep; pp.cycle = cyc;
@@ -958,8 +1005,10 @@
         if (atCap) break;
       }
     }
+    // nothing safe (flagged): hold while heating, keep cooling at the fastest ramp while cooling
     const atm = atmOpts[atmOpts.length - 1];
-    const d = run.advance(dt, 0, TcapK, atm);
+    const rFb = phase[0] === "D" && !atCap ? min(rampMax, ramps[0]) : 0;
+    const d = run.advance(dt, rFb, TcapK, atm);
     const T0 = run.log.length ? run.log[run.log.length - 1].T1_C : 25;
     run.log.push({ t0: run.t - dt, t1: run.t, T0_C: T0, T1_C: run.Tset - T0C, atm, phase, limit: "INFEASIBLE:" + (firstFail || "") });
     return d;
@@ -1003,7 +1052,11 @@
     let O = 0; for (const v of d.O_ppm) O = max(O, v);
     const Tpeak = min(thermo.T_solidus_Cu_O(O + 5) - su.T_margin - 1 - T0C, su.s.T_furnace_max_C);
     let guard = 0;
-    while (run.Tset < Tpeak + T0C - 1e-6 && guard++ < MAX_ITER) { stepCtl(run, Tpeak + T0C, [atm], "C densify", margin); if (prog) { prog(run); await tick(); } }
+    while (run.Tset < Tpeak + T0C - 1e-6 && guard++ < MAX_ITER) {
+      stepCtl(run, Tpeak + T0C, [atm], "C densify", margin);
+      if (run.log[run.log.length - 1].limit.indexOf("INFEASIBLE") === 0) return;   // no safe way up: cool
+      if (prog) { prog(run); await tick(); }
+    }
     const th = run.t;
     let lastRho = null;
     while (run.t - th < 8 * 3600) {
@@ -1085,9 +1138,10 @@
         await phaseCool(run, margin);
         const cyc = quantise(run.log);
         cyc.name = name + " | T_B " + TB + " C";
-        const infeasible = run.log.some((iv) => iv.limit.indexOf("INFEASIBLE") === 0);
-        cands.push({ topology: name, T_B_C: TB, feasible: !infeasible, duration_h: cycleDurationH(cyc), cycle: cyc,
-                     note: infeasible ? "unsafe interval forced" : "", log: run.log });
+        const why = Array.from(new Set(run.log.filter((iv) => iv.limit.indexOf("INFEASIBLE") === 0)
+                                              .map((iv) => iv.limit.split(":")[1] || "?"))).sort();
+        cands.push({ topology: name, T_B_C: TB, feasible: !why.length, duration_h: cycleDurationH(cyc), cycle: cyc,
+                     note: why.length ? "unsafe interval forced (" + why.join(", ") + ")" : "", log: run.log });
         done++;
         progress({ stage: "candidate done", frac: done / total });
         await tick();
@@ -1104,7 +1158,7 @@
   const Cupola = {
     constants: { R, T0C, P_ATM, NV, NG, IT, IB1, IB2, IB3, IC, IX, IY, ILV, IG, INT, GTF, GO2, GH2, GH2O, GCO, GCO2, GEZ },
     thermo, Setup, Slab, Controls, ode23s, StepFailure, Segment, cycleBoundaries, cycleDurationH, cycleTsetK,
-    baselineV0, inletComposition, simulate, postprocess, verdict,
+    baselineV0, ifamReference, ceaReference, inletComposition, simulate, simulateAsync, postprocess, verdict,
     Runner, Atmos, quantise, topologies, synthesize,
     _util: { pos, clip, smoothstep, sigmoid },
   };

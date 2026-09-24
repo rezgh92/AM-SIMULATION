@@ -60,7 +60,8 @@ _P = [
           "oxidation/reduction rates, sintering stress (1/d) and initial grain size. Measure: laser diffraction "
           "on powder recovered by solvent washing."),
     Param("span", 1.0, "-", 0.4, 2.5, "powder", "ANALOGUE", "PSD span (d90-d10)/d50",
-          "IFAM powder A: (25-9)/16 = 1.0. Sets the Sauter mean d32 used for surface-area terms."),
+          "IFAM powder A: (25-9)/16 = 1.0. Sets the Sauter mean d32 used for surface-area terms. Measure: laser "
+          "diffraction, in the same test as D50."),
     Param("native_oxide_nm", 4.0, "nm", 1.0, 20.0, "powder", "ANALOGUE", "Native oxide thickness",
           "Gas-atomised Cu carries a 2-10 nm Cu2O film. Converts to initial oxygen via surface area. "
           "Measure: LECO O on recovered powder."),
@@ -95,7 +96,8 @@ _P = [
           "Fraction of non-solvent binder in the slow char-forming component.", advanced=True),
     Param("char_yield", 0.05, "-", 0.0, 0.15, "feedstock", "ANALOGUE", "Char yield in inert gas",
           "Roumanie (CEA): 0.394 wt% C after 400 C/4 h in Ar on a 60 vol% Cu part = ~5 % of the binder. "
-          "Aromatic light-absorbing dyes (present in LCM slurries, absent from the CEA study) would raise it."),
+          "Aromatic light-absorbing dyes (present in LCM slurries, absent from the CEA study) would raise it. "
+          "Measure: LECO C on a coupon after 600 C in N2."),
     Param("dHc_MJkg", 25.0, "MJ/kg", 18.0, 32.0, "feedstock", "ANALOGUE", "Binder heat of combustion",
           "Acrylates 24-28 MJ/kg. Heat released in the part follows Thornton's rule (13.1 MJ per kg O2). "
           "Measure: bomb calorimetry."),
@@ -114,7 +116,8 @@ _P = [
     Param("eps_perc", 0.04, "-", 0.01, 0.12, "feedstock", "GUESS", "Pore percolation threshold",
           "Porosity at which binder removal opens a connected escape path.", advanced=True),
     Param("sigma_green_MPa", 17.0, "MPa", 5.0, 30.0, "feedstock", "ANALOGUE", "Green strength (RT)",
-          "IFAM LMM Cu: 20 (X;Z), 17 (Y;Z), 13 (Z;Y) MPa."),
+          "IFAM LMM Cu: 20 (X;Z), 17 (Y;Z), 13 (Z;Y) MPa. Measure: 3-point bending of printed bars in the "
+          "three build orientations."),
     Param("interlayer_factor", 0.65, "-", 0.3, 1.0, "feedstock", "ANALOGUE", "Interlayer strength factor",
           "13/20 from IFAM build-orientation data; applies to the build-direction (delamination) mode."),
     Param("Tg_C", 100.0, "C", 40.0, 180.0, "feedstock", "GUESS", "Binder glass transition", "", advanced=True),
@@ -134,7 +137,7 @@ _P = [
     Param("half_thickness_mm", 2.5, "mm", 0.25, 15.0, "part", "GUESS", "Critical half-thickness",
           "Half of the thickest section (a 5 mm wall has 2.5 mm)."),
     Param("anisotropy", 0.08, "-", 0.0, 0.3, "part", "GUESS", "Build-direction shrinkage anisotropy",
-          "Extra shrinkage in z from layered green structure (LCM ceramics: z 1-3 %% larger)."),
+          "Extra shrinkage in z from layered green structure (LCM ceramics: z 1-3 % larger)."),
     Param("load_cm3", 5.0, "cm3", 0.1, 500.0, "part", "GUESS", "Total green volume in retort",
           "Sets how much the load depletes or enriches the furnace gas.", log=True),
     Param("n_nodes", 12, "-", 6, 40, "part", "DERIVED", "Through-thickness nodes", "", advanced=True, kind="int"),
@@ -181,14 +184,14 @@ _P = [
     Param("gamma_s", 1.5, "J/m2", 1.0, 2.0, "sinter", "ANALOGUE", "Cu surface energy", "", advanced=True),
     Param("f_eta", 0.28, "-", 0.05, 10.0, "sinter", "DERIVED", "Sintering viscosity factor",
           "Multiplies the Coble + Nabarro-Herring viscosity from Frost & Ashby Cu diffusion data. Default fitted "
-          "to CEA-LITEN DLP copper (22 um, 60 vol%, 1050 C/4 h H2 -> 90-94 %%): 0.28 (0.22-0.34). THE calibration "
-          "knob for your powder: refit from caliper shrinkage of coupons from 3-4 interrupted sinter runs "
-          "(no dilatometer needed; scripts/calibrate_sintering.py).", log=True),
+          "to CEA-LITEN DLP copper (22 um, 60 vol%, 1050 C/4 h H2 -> 90-94 %): 0.28 (0.22-0.34). The calibration "
+          "knob for your powder, and no dilatometer is needed. Measure: caliper or Archimedes density of coupons "
+          "pulled from 3-4 interrupted sinter runs, then refit with scripts/calibrate_sintering.py.", log=True),
     Param("kG_mult", 1.0, "-", 0.1, 10.0, "sinter", "GUESS", "Grain growth rate factor", "", log=True, advanced=True),
     Param("rho_close", 0.92, "-", 0.88, 0.95, "sinter", "ANALOGUE", "Pore closure density",
           "Scheibler: pores closed at 92-95 %.", advanced=True),
     Param("C_inhibit_ppm", 200.0, "ppm", 50.0, 2000.0, "sinter", "ANALOGUE", "Carbon inhibition scale",
-          "Viscosity x (1 + (C/C_inh)^2). ~1550 ppm C held a Cu compact at ~59 %% TD (US5302562A).",
+          "Viscosity x (1 + (C/C_inh)^2). ~1550 ppm C held a Cu compact at ~59 % TD (US5302562A).",
           log=True, advanced=True),
 
     # ------------------------------------------------------------------ limits

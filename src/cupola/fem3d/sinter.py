@@ -50,7 +50,7 @@ def _bulk(u, v, w):
 
 @BilinearForm
 def _friction(u, v, w):
-    return w["cf"] * (u.value[0] * v.value[0] + u.value[1] * v.value[1])
+    return w["cf"] * (u[0] * v[0] + u[1] * v[1])
 
 
 @LinearForm
@@ -67,7 +67,7 @@ def _aniso_rhs(v, w):
 
 @LinearForm
 def _gravity(v, w):
-    return -w["rg"] * v.value[2]
+    return -w["rg"] * v[2]
 
 
 @dataclass
@@ -105,23 +105,82 @@ class Sinter3D:
         return MeshHex(self.p, self.t_conn)
 
     # ------------------------------------------------------------------ one velocity solve
-    def solve(self, T: float, C_ppm: float, picard: int = 8, tol: float = 0.02):
-        """Velocity solve with Picard iterations on the regularised Coulomb friction law."""
+    def solve(self, T: float, C_ppm: float, picard: int = 8, tol: float = 0.03):
+        """Velocity solve with Picard iterations on the regularised Coulomb friction law.
+
+        The material operator and load are assembled once per step; each friction iteration only
+        re-assembles the small boundary term and re-solves with a warm start.
+        """
+        m = self.mesh()
+        b8 = Basis(m, ELEM, intorder=2)
+        b1 = Basis(m, ELEM, quadrature=CENTRE)
+        A0, rhs = self._material(T, C_ppm, b8, b1)
+        fac = m.facets_satisfying(lambda x: np.isclose(x[2], self.p[2].min()))
+        fb = FacetBasis(m, ELEM, facets=fac, intorder=2) if len(fac) else None
+        D = b8.nodal_dofs[2, self.bottom_nodes]
         v_prev = None
         for it in range(picard):
-            v, edot = self._solve_once(T, C_ppm)
+            A = A0 + (self._friction(fb, b1) if fb is not None else 0 * A0)
+            v = self._linsolve(A, rhs, D, m)
+            self.v = v
             vb = self._vel_nodes(v)[:2, self.bottom_nodes]
             if v_prev is not None:
                 dvn = np.linalg.norm(vb - v_prev) / max(np.linalg.norm(vb), 1e-30)
                 if dvn < tol:
                     break
             v_prev = vb
+        dv = b1.interpolate(v)
+        edot = trace(sym_grad(dv))[:, 0]
         return v, edot
 
-    def _solve_once(self, T: float, C_ppm: float):
-        m = self.mesh()
-        b8 = Basis(m, ELEM, intorder=2)
-        b1 = Basis(m, ELEM, quadrature=CENTRE)
+    def _rigid_modes(self, m, I):
+        nd = self.nodal_dofs
+        x, y, z = m.p
+        n = 3 * m.nvertices
+        B = np.zeros((n, 6))
+        for k in range(3):
+            B[nd[k], k] = 1.0
+        B[nd[0], 3], B[nd[1], 3] = -y, x
+        B[nd[1], 4], B[nd[2], 4] = -z, y
+        B[nd[0], 5], B[nd[2], 5] = z, -x
+        return B[I]
+
+    def _linsolve(self, A, rhs, D, m):
+        Ac, bc, xc, I = condense(A, rhs, D=D)
+        Ac = Ac.tocsr()
+        x0 = self.v[I] if np.any(self.v) else None
+        if pyamg is not None and Ac.shape[0] > 3000:
+            # rebuild the AMG hierarchy every few steps; in between it preconditions CG on a matrix that
+            # has changed only slightly (small strain per step)
+            if getattr(self, "_ml", None) is None or self._ml_age >= 6 or self._ml_n != Ac.shape[0]:
+                self._ml = pyamg.smoothed_aggregation_solver(Ac, B=self._rigid_modes(m, I), symmetry="symmetric",
+                                                             max_coarse=500)
+                self._ml_age, self._ml_n = 0, Ac.shape[0]
+            self._ml_age += 1
+            from scipy.sparse.linalg import cg
+            x, info = cg(Ac, bc, x0=x0, rtol=1e-9, maxiter=500, M=self._ml.aspreconditioner(cycle="V"))
+            if info != 0:          # fall back to a fresh hierarchy
+                self._ml = pyamg.smoothed_aggregation_solver(Ac, B=self._rigid_modes(m, I), symmetry="symmetric")
+                x = self._ml.solve(bc, x0=x0, tol=1e-9, accel="cg", maxiter=800)
+        else:
+            x = spsolve(Ac.tocsc(), bc)
+        v = np.zeros(A.shape[0])
+        v[I] = x
+        return v
+
+    def _friction(self, fb, b1):
+        th = np.clip(self.theta, 1e-4, 0.999)
+        weight = float(np.sum((RHO_CU * (1.0 - th)) * b1.dx[:, 0])) * G_ACC
+        area = float(np.sum(fb.dx))
+        p_n = weight / max(area, 1e-12)
+        vt = fb.interpolate(self.v)
+        speed = np.sqrt(vt[0] ** 2 + vt[1] ** 2)
+        if not np.any(self.v):
+            speed = np.full_like(speed, 1e-3)      # start sliding; Picard settles stick/slip
+        cf = self.mu_f * p_n / np.maximum(speed, self.v_reg)
+        return asm(_friction, fb, cf=cf)
+
+    def _material(self, T: float, C_ppm: float, b8, b1):
         su = self.su
         th = np.clip(self.theta, 1e-4, 0.999)
         eta = su.eta0(T, self.G) * (1.0 + (C_ppm / su.C_inh) ** 2)
@@ -137,33 +196,7 @@ class Sinter3D:
         if self.gravity:
             rho_b = RHO_CU * (1.0 - th)
             rhs = rhs + asm(_gravity, b8, rg=np.repeat((rho_b * G_ACC)[:, None], q8, axis=1))
-        # setter friction on the bottom face (Coulomb, regularised, lagged on the previous velocity)
-        fac = m.facets_satisfying(lambda x: np.isclose(x[2], self.p[2].min()))
-        if len(fac):
-            fb = FacetBasis(m, ELEM, facets=fac, intorder=2)
-            weight = float(np.sum((RHO_CU * (1.0 - th)) * self._elem_volumes(m))) * G_ACC
-            area = float(np.sum(fb.dx))
-            p_n = weight / max(area, 1e-12)
-            vt = fb.interpolate(self.v)
-            speed = np.sqrt(vt.value[0] ** 2 + vt.value[1] ** 2)
-            if not np.any(self.v):
-                speed = np.full_like(speed, 1e-3)      # start sliding; Picard settles stick/slip
-            cf = self.mu_f * p_n / np.maximum(speed, self.v_reg)
-            A = A + asm(_friction, fb, cf=cf)
-        D = b8.nodal_dofs[2, self.bottom_nodes]
-        Ac, bc, xc, I = condense(A, rhs, D=D)
-        if pyamg is not None and Ac.shape[0] > 3000:
-            ml = pyamg.smoothed_aggregation_solver(Ac.tocsr(), symmetry="symmetric")
-            x = ml.solve(bc, tol=1e-10, accel="cg", maxiter=400)
-        else:
-            x = spsolve(Ac.tocsc(), bc)
-        v = np.zeros(A.shape[0])
-        v[I] = x
-        self.v = v
-        # element volumetric strain rate at the centre
-        dv = b1.interpolate(v)
-        edot = trace(sym_grad(dv))[:, 0]
-        return v, edot
+        return A, rhs
 
     @staticmethod
     def _elem_volumes(m):
@@ -179,8 +212,11 @@ class Sinter3D:
         frame_times = np.linspace(t, t_end, n_frames)
         k_frame = 0
         dt = 60.0
+        T_peak_t = float(t_s[int(np.argmax(T_K))])
         while t < t_end - 1e-9:
             T = float(np.interp(t, t_s, T_K))
+            if t > T_peak_t and T < 973.15:        # cooled below 700 C: deformation is frozen
+                break
             C = float(np.interp(t, t_s, C_ppm))
             v, edot = self.solve(T, C)
             # step limits: element strain increment <= max_strain, and relative porosity change <= 5 %
@@ -188,10 +224,10 @@ class Sinter3D:
             rate = max(np.max(np.abs(edot)), 1e-12)
             rel = max(np.max(np.abs(edot) * (1.0 - self.theta) / np.maximum(self.theta, 1e-4)), 1e-12)
             dt = min(max_strain / rate, 0.05 / rel, 3600.0, t_end - t)
-            # do not step over a large temperature change (keeps eta accurate)
-            j = np.searchsorted(t_s, t, side="right")
-            if j < len(t_s):
-                dt = min(dt, max(t_s[j] - t, 30.0))
+            # temperature budget: at most 10 K change per step (eta is strongly T-dependent)
+            dTdt = abs(float(np.interp(t + 60.0, t_s, T_K)) - T) / 60.0
+            if dTdt > 0:
+                dt = min(dt, max(10.0 / dTdt, 30.0))
             while k_frame < n_frames and frame_times[k_frame] <= t + 1e-9:
                 self.frames.append(Frame(t / 3600.0, T - 273.15, self.p.copy(), self.theta.copy(), self.G.copy() * 1e6))
                 k_frame += 1
@@ -221,7 +257,9 @@ def history_from_1d(result, t_start_h: Optional[float] = None):
     S = result.series
     t_h = result.t_h
     if t_start_h is None:
-        idx = np.where(S["binder_left"] < 1e-3)[0]
+        # start once the binder is gone AND the part is hot enough for copper to sinter (below ~600 C
+        # the 1-D densification is < 0.1 %, and 3-D steps there are pure cost)
+        idx = np.where((S["binder_left"] < 1e-3) & (0.5 * (S["T_center"] + S["T_surface"]) > 600.0))[0]
         i0 = int(idx[0]) if idx.size else 0
     else:
         i0 = int(np.searchsorted(t_h, t_start_h))

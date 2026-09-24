@@ -217,9 +217,12 @@ def _step(run: Runner, T_cap_K, atm_options: List[Atmos], phase: str, margin: fl
                 first_fail = why
             if at_cap:
                 break
-    # nothing safe: hold in the least aggressive atmosphere (should be rare; flagged)
+    # nothing safe (flagged). Heating: hold in the least aggressive atmosphere, which lets gas escape
+    # and heat even out. Cooling: keep cooling at the fastest ramp, since holding hot cannot relieve
+    # trapped-gas or melting risk and would stall the cycle at the peak.
     atm = atm_options[-1]
-    diag = run.advance(dt, 0.0, T_cap_K, atm)
+    r_fb = min(ramp_max, ramps[0]) if phase.startswith("D") and not at_cap else 0.0
+    diag = run.advance(dt, r_fb, T_cap_K, atm)
     T0 = run.log[-1].T1_C if run.log else 25.0
     run.log.append(Interval(run.t - dt, run.t, T0, run.Tset - T0C, atm, phase, "INFEASIBLE:" + (first_fail or "")))
     return diag
@@ -285,6 +288,8 @@ def phase_densify(run: Runner, margin: float, max_hold_h=8.0):
     while run.Tset < T_peak + T0C - 1e-6 and guard < MAX_ITER:
         _step(run, T_peak + T0C, [atm], "C densify", margin)
         guard += 1
+        if run.log[-1].limit.startswith("INFEASIBLE"):
+            return run          # no safe way up: stop densifying here and cool
     t_hold = run.t
     last_rho = None
     while run.t - t_hold < max_hold_h * 3600.0:
@@ -412,9 +417,9 @@ def synthesize(scenario: Optional[dict] = None, margin: float = 0.8, T_B_list=(8
             phase_cool(run, margin)
             cyc = quantise(run.log)
             cyc.name = f"{name} | T_B {TB:.0f} C"
-            infeasible = any(iv.limit.startswith("INFEASIBLE") for iv in run.log)
-            cands.append(Candidate(name, TB, not infeasible, cyc.duration_h(), cyc,
-                                   "unsafe interval forced" if infeasible else ""))
+            why = sorted({iv.limit.split(":", 1)[1] or "?" for iv in run.log if iv.limit.startswith("INFEASIBLE")})
+            cands.append(Candidate(name, TB, not why, cyc.duration_h(), cyc,
+                                   "unsafe interval forced (" + ", ".join(why) + ")" if why else ""))
             if verbose:
                 print(f"  T_B={TB}: {cyc.duration_h():.1f} h, {len(cyc.segments)} segments")
     feas = [c for c in cands if c.feasible and c.cycle is not None]

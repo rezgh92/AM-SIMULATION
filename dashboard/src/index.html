@@ -1,0 +1,201 @@
+<title>Cupola Cycle Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/*@CSS@*/
+</style>
+
+<header class="top">
+  <div class="brand">
+    <span class="mark">CUPOLA</span>
+    <span class="sub">Debind + sinter cycle studio · Lithoz R&amp;D copper slurry · CeraFab Multi 2M30</span>
+  </div>
+  <button class="btn small railbtn" id="railBtn" aria-controls="rail" aria-expanded="false">Inputs</button>
+  <nav class="secnav" aria-label="Sections">
+    <a href="#results">Results</a><a href="#program">Program</a><a href="#traces">Traces</a><a href="#optimiser">Optimiser</a>
+    <a href="#shape">3-D</a><a href="#unknowns">Unknowns</a><a href="#powders">Powders</a><a href="#model">Model</a>
+  </nav>
+  <div class="runstate" id="runState" role="status" aria-live="polite"><span class="dot" id="runDot"></span><span id="runText">ready</span></div>
+</header>
+
+<div class="shell">
+  <aside class="rail" id="rail" data-collapsed="true" aria-label="Inputs">
+    <div class="rail-head"><h2>Inputs</h2><button class="btn ghost small" id="resetAll">Reset all</button></div>
+    <div class="railbody">
+      <p class="note">Every uncertain quantity is a control. Defaults are the best assumption we can execute; the tag says where each one comes from.</p>
+      <div class="taglegend">
+        <span class="tag tag-DERIVED">DERIVED</span><span>fitted to published copper data</span>
+        <span class="tag tag-ANALOGUE">ANALOGUE</span><span>taken from similar Cu or LCM systems</span>
+        <span class="tag tag-GUESS">GUESS</span><span>engineering estimate; measure it</span>
+      </div>
+      <h3>Powder preset</h3>
+      <div class="chips" id="powderChips"></div>
+      <p class="presetdoc" id="powderDoc"></p>
+      <h3>Furnace preset</h3>
+      <div class="chips" id="furnaceChips"></div>
+      <p class="presetdoc" id="furnaceDoc"></p>
+      <label class="toggle"><input type="checkbox" id="advToggle"> <span>Show advanced inputs <span class="num" id="advCount"></span></span></label>
+      <div id="groups"></div>
+    </div>
+  </aside>
+
+  <main>
+    <section id="results" aria-labelledby="h-results">
+      <div class="sechead"><h2 id="h-results">Cycle result</h2>
+        <p class="lede">A 1-D coupon through the critical wall of your part, solved on every change. Pick a cycle, move an input, read the verdict.</p></div>
+      <div class="cyclebar">
+        <div class="segctl" id="srcSeg" role="group" aria-label="Cycle">
+          <button data-src="opt" aria-pressed="true">Optimised</button>
+          <button data-src="v0">v0 envelope</button>
+          <button data-src="ifam">IFAM route</button>
+          <button data-src="cea">CEA route</button>
+          <button data-src="custom">Custom</button>
+        </div>
+        <div class="runctl">
+          <select id="fidelity" aria-label="Resolution">
+            <option value="8">Preview · 8 nodes</option>
+            <option value="12">Full · 12 nodes</option>
+          </select>
+          <label class="toggle" style="margin:0"><input type="checkbox" id="liveToggle" checked> Auto-run</label>
+          <button class="btn primary" id="runBtn">Run</button>
+        </div>
+      </div>
+      <div class="cyclemeta" id="cycleMeta"></div>
+      <div class="summary">
+        <div class="kpis" id="kpis"></div>
+        <div class="panel">
+          <div class="verdict-head" id="verdictHead"></div>
+          <div class="vlist" id="verdict"></div>
+        </div>
+      </div>
+      <figure class="chart" id="ch-temp"></figure>
+    </section>
+
+    <section id="program" aria-labelledby="h-program">
+      <div class="sechead"><h2 id="h-program">Furnace program</h2>
+        <p class="lede">The cycle as a furnace controller would run it. Edit any cell to make a Custom cycle; values your furnace cannot deliver are flagged and clipped the same way the model clips them.</p></div>
+      <div class="progwrap">
+        <table class="prog" id="progTable">
+          <thead><tr><th>#</th><th>Target °C</th><th>Ramp K/min</th><th>Hold h</th><th>O₂ %</th><th>H₂ %</th><th>Dew point °C</th><th>Atmosphere</th><th>Note</th><th>Segment h</th><th></th></tr></thead>
+          <tbody></tbody>
+        </table>
+        <div class="progfoot">
+          <button class="btn small" id="addSeg">Add segment</button>
+          <button class="btn small" id="copyTsv">Copy as table</button>
+          <button class="btn small" id="copyJson">Copy as JSON</button>
+          <span class="tot">Total <b id="progTotal">–</b> h</span>
+        </div>
+      </div>
+      <div class="issues" id="progIssues"></div>
+      <textarea class="copybox" id="copyBox" hidden readonly aria-label="Copied text"></textarea>
+    </section>
+
+    <section id="traces" aria-labelledby="h-traces">
+      <div class="sechead"><h2 id="h-traces">Through the cycle</h2>
+        <p class="lede">Hover any chart to read every chart at the same moment. Each chart has a table view.</p></div>
+      <div class="eyebrow">Chemistry</div>
+      <div class="grid3"><figure class="chart" id="ch-binder"></figure><figure class="chart" id="ch-carbon"></figure><figure class="chart" id="ch-oxygen"></figure></div>
+      <div class="eyebrow">Densification</div>
+      <div class="grid3"><figure class="chart" id="ch-rho"></figure><figure class="chart" id="ch-shrink"></figure><figure class="chart" id="ch-grain"></figure></div>
+      <div class="eyebrow">Risk</div>
+      <div class="grid2"><figure class="chart" id="ch-risk"></figure><figure class="chart" id="ch-melt"></figure></div>
+      <div class="eyebrow">What your exhaust sensors should read</div>
+      <div class="grid2"><figure class="chart" id="ch-dew"></figure><figure class="chart" id="ch-gas"></figure></div>
+    </section>
+
+    <section id="optimiser" aria-labelledby="h-opt">
+      <div class="sechead"><h2 id="h-opt">Cycle optimiser</h2>
+        <p class="lede">Builds the shortest cycle that passes all ten checks for the current inputs and furnace. It moves the furnace in 15-minute steps, each time taking the fastest ramp and gas that keeps every risk index under 80 % of its limit and still leaves the part recoverable.</p></div>
+      <div class="phases">
+        <div class="phase"><span class="pl">PHASE A</span><h4>Debind</h4><p>N₂ or O₂-throttled N₂. Ramp limited by gas pressure, self-heating and the guard ramp while binder remains.</p></div>
+        <div class="phase"><span class="pl">PHASE B</span><h4>Clean</h4><p>Wet forming gas at a hold temperature T<sub>B</sub>. Steam gasifies char, H₂ reduces oxide. Ends when the core is clean.</p></div>
+        <div class="phase"><span class="pl">PHASE C</span><h4>Densify</h4><p>Dry forming gas up to the Cu–O solidus minus your margin. Ends at the density target or when densification stalls.</p></div>
+        <div class="phase"><span class="pl">PHASE D</span><h4>Cool</h4><p>Fastest ramp the thermal-stress limit and the furnace allow, reducing gas kept on down to 600 °C.</p></div>
+      </div>
+      <div class="optbar">
+        <button class="btn primary" id="optBtn">Optimise for current inputs</button>
+        <button class="btn ghost" id="optCancel" hidden>Cancel</button>
+        <div class="progress" id="optProg" hidden><i></i></div>
+        <span class="stage" id="optStage"></span>
+      </div>
+      <div class="progwrap"><table class="cands" id="candTable"><thead><tr><th>Debind strategy</th><th>T<sub>B</sub></th><th>Result</th><th>Cycle time</th><th></th></tr></thead><tbody></tbody></table></div>
+      <p class="note" id="candNote"></p>
+    </section>
+
+    <section id="shape" aria-labelledby="h-shape">
+      <div class="sechead"><h2 id="h-shape">Shape change in 3-D</h2>
+        <p class="lede">Finite-element sintering of three printed test parts, voxel for voxel as the 2M30 builds them, with gravity and friction on the setter. Drag to orbit; scrub through the cycle.</p></div>
+      <div class="cyclebar"><div class="segctl" id="geoSeg" role="group" aria-label="Part"></div></div>
+      <div class="three">
+        <div class="viewer" id="viewer">
+          <canvas id="glc" aria-label="3-D view of the part during sintering"></canvas>
+          <div class="hud" id="hud"></div>
+          <div class="cbar"><span>relative density</span><i id="cbarGrad"></i><div class="ticks"><span>0.55</span><span>0.75</span><span>1.00</span></div></div>
+          <div class="scrub"><button class="btn small" id="playBtn" aria-label="Play">Play</button><input type="range" id="frameRange" min="0" max="0" value="0" aria-label="Time in cycle"><label class="toggle" style="margin:0"><input type="checkbox" id="ghostToggle" checked> Green part</label><span class="m" id="frameInfo"></span></div>
+        </div>
+        <div class="facts" id="facts"></div>
+      </div>
+    </section>
+
+    <section id="unknowns" aria-labelledby="h-unk">
+      <div class="sechead"><h2 id="h-unk">Which unknowns matter</h2>
+        <p class="lede">Each input swept alone from its slider minimum to its maximum, everything else held, on the default optimised cycle (or the current cycle after you recompute). Long bars are the numbers to measure first. Furnace and load settings are your choices, so they are hidden unless you ask.</p></div>
+      <div class="cyclebar">
+        <div class="segctl" id="metricSeg" role="group" aria-label="Outcome"></div>
+        <label class="toggle" style="margin:0"><input type="checkbox" id="sensAll"> Include furnace and load settings</label>
+        <div class="runctl"><button class="btn" id="sensBtn">Recompute for current inputs</button><div class="progress" id="sensProg" hidden><i></i></div></div>
+      </div>
+      <div class="grid2" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)">
+        <div class="panel"><div class="legend" id="sensLegend"></div><div class="tornado" id="tornado"></div><p class="note" id="sensNote" style="margin-top:8px"></p></div>
+        <div class="panel"><h3 style="font-size:14.5px;font-weight:600">Measure these first</h3><ol class="measure" id="measure"></ol></div>
+      </div>
+    </section>
+
+    <section id="powders" aria-labelledby="h-pow">
+      <div class="sechead"><h2 id="h-pow">If the powder is finer or coarser</h2>
+        <p class="lede">Lithoz has not given the particle size. Each preset was run twice: through the default optimised cycle, and through a cycle optimised for that powder. Load a row to explore it.</p></div>
+      <div class="grid2"><figure class="chart" id="ch-pow-h"></figure><figure class="chart" id="ch-pow-rho"></figure></div>
+      <div class="progwrap"><table class="cands" id="powTable"><thead><tr><th>Powder</th><th>D50</th><th>Span</th><th>Oxide film</th><th>Own optimum</th><th>Peak</th><th>Density</th><th>Shrinkage x-y</th><th></th></tr></thead><tbody></tbody></table></div>
+    </section>
+
+    <section id="model" aria-labelledby="h-model">
+      <div class="sechead"><h2 id="h-model">What is inside</h2></div>
+      <div class="facts-grid">
+        <div class="panel"><h3>Physics in the 1-D coupon</h3><ul>
+          <li>Heat conduction with furnace lag, radiation and H₂-dependent convection</li>
+          <li>Three-channel binder pyrolysis plus oxidative degradation, char yield and heat release</li>
+          <li>Pore gas: diffusion, Knudsen flow and pyrolysis blowing; retort gas balance</li>
+          <li>Cu oxidation and H₂ reduction, char gasification by steam, carbothermic reduction</li>
+          <li>Olevsky viscous sintering with Frost–Ashby diffusion, carbon inhibition, grain growth, trapped gas</li>
+        </ul></div>
+        <div class="panel"><h3>Checks it has passed</h3><ul>
+          <li>Sintering viscosity fitted to CEA-LITEN DLP copper (f<sub>η</sub> = 0.28)</li>
+          <li>Out-of-sample Cu compact oxidation (Roumanie): within 30 %</li>
+          <li>Mesh convergence of every risk index; carbon and energy balances within 2 %</li>
+          <li>Closed-form sintering rate to 0.1 %; 3-D free-cube density to 0.3 %</li>
+          <li>This browser engine matches the Python reference on 99.9 % of all terms</li>
+        </ul></div>
+        <div class="panel"><h3>Where it is weakest</h3><ul>
+          <li>No TGA of this binder yet: pyrolysis peaks are acrylate analogues</li>
+          <li>Char gasification rate on copper has no published constant</li>
+          <li>Sintering is calibrated on 22 µm powder; recalibrate f<sub>η</sub> from 3–4 interrupted runs with calipers</li>
+          <li>Cracking is predicted from stress/strength ratios, not fracture mechanics</li>
+        </ul></div>
+      </div>
+      <p class="foot" id="foot"></p>
+    </section>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script id="cupola-engine">
+/*@ENGINE@*/
+</script>
+<script>
+/*@DATA@*/
+</script>
+<script>
+/*@APP@*/
+</script>
