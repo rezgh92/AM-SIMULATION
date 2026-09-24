@@ -82,7 +82,7 @@ def fig_design():
             ax.set_yticklabels([])
         fs.panel(ax, "efgh"[k], x=-0.04, y=1.05)
     axs[1, 0].set_ylabel("Crystallisation peak (°C)")
-    fs.save(fig, "fig06_design", O)
+    fs.save(fig, "fig07_design", O)
 
 
 # ----------------------------------------------------------------------------- optimised programme
@@ -167,7 +167,7 @@ def fig_programme():
                    fontsize=5.8, color=fs.MUTED)
     axs[4, 0].text(0.99, 1.05, "Π = 1", transform=axs[4, 0].get_yaxis_transform(), ha="right", va="bottom",
                    fontsize=5.8, color=fs.CRIT)
-    fs.save(fig, "fig07_programme", O)
+    fs.save(fig, "fig06_programme", O)
     json.dump({r["label"]: r["m"] for r in runs}, open(f"{D}/programme_metrics.json", "w"), indent=1)
     keep = ("t_h", "T_C", "eps_gc", "eps_cu", "rho_gc", "rho_cu", "X_gc", "C_gc", "C_cu", "Pi_line", "kappa")
     json.dump({r["label"]: {k: np.asarray(r["ser"][k]).tolist() for k in keep} for r in runs},
@@ -221,7 +221,8 @@ def fig_package():
     names = {"baseline": "baseline", "optimised": "nominal optimum", "robust": "robust design"}
     runs = [json.load(open(f"{D}/package_{k}.json")) for k in names if os.path.exists(f"{D}/package_{k}.json")]
     nr = len(runs)
-    fig = plt.figure(figsize=(fs.COL2, 0.27 * nr * fs.COL2))
+    fig = plt.figure(figsize=(fs.COL2, 0.30 * nr * fs.COL2))
+    fig.subplots_adjust(hspace=0.42, wspace=0.08, left=0.0, right=0.94, top=0.96, bottom=0.06)
     L = "abcdefghi"
     reliefs = [top_relief(r) for r in runs]
     lim = max(np.nanmax(np.abs(z)) for _, _, z in reliefs)
@@ -241,7 +242,9 @@ def fig_package():
         X, Y, Z = reliefs[k]
         pc = ax.pcolormesh(X, Y, Z, cmap=fs.DIVERGE, vmin=-lim, vmax=lim, shading="gouraud")
         ax.set_aspect("equal")
-        ax.set_xlabel("x (mm)"); ax.set_ylabel("y (mm)")
+        ax.set_ylabel("y (mm)")
+        if k == nr - 1:
+            ax.set_xlabel("x (mm)")
         ax.set_title(f"({L[3 * k + 2]}) top surface, range {np.nanmax(Z) - np.nanmin(Z):.0f} µm", fontsize=6.6, loc="left")
         cb = fig.colorbar(pc, ax=ax, fraction=0.046, pad=0.03)
         cb.set_label("height − mean (µm)", fontsize=6.2); cb.ax.tick_params(labelsize=5.8)

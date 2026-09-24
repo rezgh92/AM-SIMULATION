@@ -61,7 +61,7 @@ Mechanically, it fails. As soon as steam begins to remove the char, the copper s
 
 \begin{figure*}[!tp]
 \centering
-\includegraphics[width=\textwidth]{fig07_programme}
+\includegraphics[width=\textwidth]{fig06_programme}
 \caption{Co-firing histories of (a) the baseline, (b) the nominal optimum and (c) the robust design of Table~\ref{tab:opt}. From top: furnace set point and part temperature, with the atmosphere of each segment shown by the band at the bottom (grey, N$_2$; green, steam; blue, dry H$_2$/N$_2$); relative densities and crystallised fraction of the glass; free logarithmic shrinkage of each material, the shaded area being the mismatch; carbon in the glass-ceramic and damage index of an embedded copper line.}
 \label{fig:programme}
 \end{figure*}
@@ -75,7 +75,7 @@ The lower row varies the glass, with the baseline paste. The glass transition de
 
 \begin{figure*}[!tp]
 \centering
-\includegraphics[width=\textwidth]{fig06_design}
+\includegraphics[width=\textwidth]{fig07_design}
 \caption{Design maps at the baseline programme. Top: copper paste, median particle size against filler fraction, with the baseline paste marked (circle): (a) peak free-strain mismatch; (b) damage index of an embedded line, orange contour $\Pi = 1$; (c) copper density; (d) conductivity. The dashed line is the density limit $\rho_{\mathrm{Cu}} = 0.92$; pastes to its right fail it. Bottom: glass, transition temperature against crystallisation peak, with the calibrated glass marked (diamond) and the baseline paste: (e) carbon at pore closure, orange contour 100~ppm; (f) density of the glass-ceramic, orange contour 0.97; (g) crystallised fraction, orange contour 0.8; (h) peak mismatch.}
 \label{fig:design}
 \end{figure*}
@@ -127,7 +127,16 @@ $T_{\mathrm{g}} + 15$~K & -- & 0.06 / 9.5 & 0.03 / 9.8 \\
 \subsection{The printed test vehicle}
 \label{sec:res_3d}
 
-%% PACKAGE
+The three designs were then fired in three dimensions as the printed test vehicle of Fig.~\ref{fig:overview}a: a $12\times12\times2.4$~mm glass-ceramic block with a buried copper ground plane, a square spiral and a via to a top pad, meshed with 12\,800 voxels of 0.3~mm and resting on a setter. Each run starts after binder removal and ends when the glass-ceramic is 98\% dense, at 903--917~$^\circ$C (Fig.~\ref{fig:package}). The setter keeps the lower face flat. The distortion therefore appears on the upper face, which dishes over the buried plane.
+
+The buried plane dominates the result. In the baseline the copper has already densified when the glass begins to flow, so the plane acts as a rigid inclusion. The block shrinks by only 14.9\% in plane, against 23.1\% for the free glass-ceramic, and the glass above the plane, unable to shrink laterally, densifies by shrinking more in thickness. The upper face ends 622~$\mu$m lower at the centre than at the rim (Fig.~\ref{fig:package}c), about a third of the fired thickness. In the nominal optimum the copper and the glass densify together. The plane then offers little resistance, the in-plane shrinkage rises to 21.2\%, and the relief of the upper face falls to 150~$\mu$m. The robust design lies between them: 18.3\% in-plane shrinkage and 317~$\mu$m of relief, consistent with its larger final mismatch. The via and pad raise a small plateau at the centre of every part. The ranking of the three designs by relief follows the ranking by mismatch of the one-dimensional analysis, which supports the use of that analysis for design. The absolute values, however, depend on the area of copper. A plane that covers 56\% of the part, as here, is the most demanding case, and a real layout would divide it or add dummy metal in the rim.
+
+\begin{figure*}[!tp]
+\centering
+\includegraphics[width=\textwidth]{fig08_package}
+\caption{Three-dimensional co-sintering of the printed test vehicle (0.3~mm voxels, setter support, gravity) for the three designs of Table~\ref{tab:opt}, from binder removal to 98\% density of the glass-ceramic. Left: part sectioned through its centre, showing the buried plane, the spiral and the via. Centre: the copper, coloured by density. Right: height of the upper face relative to its mean; the lower face is held flat by the setter.}
+\label{fig:package}
+\end{figure*}
 
 \subsection{Cooling from the stress-free temperature}
 \label{sec:res_cool}

@@ -25,6 +25,8 @@ python scripts/paper3/optimise.py          $D/opt_main.json 18 15 8 mismatch 4
 python scripts/paper3/design_map.py        $D/design_map.json '{"t_B": 4.0}'
 python scripts/paper3/package3d.py baseline      $D/package_baseline.json
 python scripts/paper3/package3d.py $D/opt_main.json $D/package_optimised.json
+python scripts/paper3/optimise_robust.py $D/opt_robust.json 20 80 8 6 3
+python scripts/paper3/package3d.py $D/opt_robust.json $D/package_robust.json
 python scripts/paper3/cooling.py           $D/cooling.json             # Fig. 9
 python scripts/paper3/morris.py            $D/morris.json $D/opt_main.json 16
 python scripts/paper3/fig_overview.py $F
@@ -35,4 +37,4 @@ python scripts/paper3/fig_graphical_abstract.py $D $F
 sh docs/paper3/manuscript/build.sh
 ```
 
-Timings on four cores: the optimiser takes about 1.5 h, each 3-D package run 1–2 h, and the Morris screening about 10 min. Everything else takes minutes.
+Timings on four cores: each optimiser run takes 1.5–2 h, each 3-D package run about 1 h, and the Morris screening about 25 min. Everything else takes minutes.
