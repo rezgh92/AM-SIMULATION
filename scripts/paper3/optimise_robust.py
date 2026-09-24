@@ -60,6 +60,8 @@ if __name__ == "__main__":
     maxiter = int(sys.argv[4]) if len(sys.argv) > 4 else 12
     popsize = int(sys.argv[5]) if len(sys.argv) > 5 else 8
     workers = int(sys.argv[6]) if len(sys.argv) > 6 else 3
+    # seed: a coarse paste with a long, moderate burnout that meets every constraint in both corners
+    x0 = [np.log10(9.0), 0.0, 0.50, 790.0, np.log10(4.5), 0.9, 900.0, np.log10(1.0), 5.0, 1000.0, 1.0]
     t0 = time.time()
     hist = []
 
@@ -70,7 +72,7 @@ if __name__ == "__main__":
 
     res = differential_evolution(objective, opt.BOUNDS, args=(budget, iacs_min), maxiter=maxiter, popsize=popsize,
                                  tol=1e-3, mutation=(0.5, 1.0), recombination=0.7, seed=11, polish=False,
-                                 workers=workers, updating="deferred", callback=cb, init="sobol")
+                                 workers=workers, updating="deferred", callback=cb, init="sobol", x0=x0)
     ms, cyc = evaluate_all(res.x, N=8)
     spec = dict(opt.SPEC, iacs=iacs_min)
     json.dump(dict(budget_h=budget, objective="worst-case mismatch", spec=spec, scenarios=SCENARIOS,
