@@ -83,7 +83,44 @@ The lower row varies the glass, with the baseline paste. The glass transition de
 \subsection{A matched paste and programme}
 \label{sec:res_opt}
 
-%% OPTIMISED
+Neither the paste nor the glass alone brings the peak mismatch below about 6\%, so the paste and the programme were searched together (Section~\ref{sec:numerics}). The optimum found within an 18~h cycle is listed in Table~\ref{tab:opt} and its history is shown in Fig.~\ref{fig:programme}b. It uses a 3.9~$\mu$m copper powder with 24~vol\% filler. The burnout is short and hot: 1.3~h at 840~$^\circ$C in 81\% steam, just below the temperature at which the glass would seal during the hold (Fig.~\ref{fig:race}a). A 1.7~h hold at 916~$^\circ$C follows, and then 1.2~h at 1018~$^\circ$C. The peak mismatch falls from 15.6 to 3.7\%, the damage index of an embedded line from 1.6 to 0.83, and the final camber of the reference bilayer from $-254$ to $-76$~m$^{-1}$. The glass-ceramic is 99.0\% dense and fully crystallised, with 0.2~ppm of carbon at pore closure.
+
+The optimiser found a mechanism rather than a compromise. The copper cannot sinter while it carries char (Section~\ref{sec:res_baseline}), so the burnout releases it. Placing the burnout just below the coalescence of the glass, and making it fast with a high steam fraction, releases the copper at the moment the glass begins to flow. The two materials then densify together (Fig.~\ref{fig:programme}b), and the filler slows the copper just enough to follow the glass rather than lead it. The hold at 916~$^\circ$C lets the glass finish densifying before it crystallises, and the peak at 1018~$^\circ$C finishes the copper.
+
+The optimum has two weaknesses. The first is conductivity: 24\% filler limits the copper to 64\% IACS. The second is robustness. The coincidence on which the optimum rests is sharp, and Table~\ref{tab:opt} shows what happens when the two least certain inputs are varied within plausible bounds. If the char gasifies half as fast as assumed, the carbon at closure rises from 0.2 to 76~ppm and the peak mismatch from 3.7 to 11.1\%; at a quarter of the assumed rate the carbon limit is exceeded by an order of magnitude. A glass transition 15~K higher or lower than calibrated raises the peak mismatch to about 10\%. A factor of two in the viscosity of copper matters less (5.8--6.2\%). A design that relies on the timing of char removal is therefore only as good as the gasification kinetics and the viscosity of the glass, and neither has been measured for this material pair. %% ROBUST
+
+\begin{table*}[t]
+\centering
+\caption{Baseline and optimised designs. Robustness: the nominal optimum and the robust design re-evaluated with the char gasification half-life ($t_{1/2}$, nominal 2~h) or the glass transition ($T_{\mathrm{g}}$, nominal 734~$^\circ$C) changed as indicated. Values that violate a constraint are in bold.}
+\label{tab:opt}
+\footnotesize
+\begin{tabular}{@{}lccc@{}}
+\toprule
+ & Baseline & Nominal optimum & Robust design \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Paste and programme}}\\
+Copper $d_{50}$ ($\mu$m) / filler (vol\%) / solids (vol\%) & 3.0 / 0 / 50 & 3.9 / 24 / 47 & %%R1 \\
+Burnout: $T$ ($^\circ$C) / time (h) / steam (\%) & 780 / 4.0 / 30 & 840 / 1.3 / 81 & %%R2 \\
+Matching hold: $T$ ($^\circ$C) / time (h) & -- & 916 / 1.7 & %%R3 \\
+Peak: $T$ ($^\circ$C) / time (h) & 960 / 1.0 & 1018 / 1.2 & %%R4 \\
+Cycle time (h) & 17.7 & 17.3 & %%R5 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Outcome at nominal inputs}}\\
+Carbon at glass pore closure (ppm) & 33 & 0.2 & %%R6 \\
+Glass-ceramic density / crystallised fraction & 0.991 / 1.00 & 0.990 / 1.00 & %%R7 \\
+Copper density / conductivity (\% IACS) & 0.976 / 96 & 0.965 / 64 & %%R8 \\
+Peak free-strain mismatch (\%) & 15.6 & 3.7 & %%R9 \\
+Line damage index $\Pi_{\mathrm{Cu}}$ & \textbf{1.63} & 0.83 & %%R10 \\
+Final camber of reference bilayer (m$^{-1}$) & $-254$ & $-76$ & %%R11 \\
+\midrule
+\multicolumn{4}{@{}l}{\textit{Robustness: carbon at closure (ppm) / peak mismatch (\%)}}\\
+$t_{1/2} = 4$~h & -- & 76 / 11.1 & %%R12 \\
+$t_{1/2} = 8$~h & -- & \textbf{1295} / 17.9 & %%R13 \\
+$T_{\mathrm{g}} - 15$~K & -- & 84 / 9.9 & %%R14 \\
+$T_{\mathrm{g}} + 15$~K & -- & 0.06 / 9.5 & %%R15 \\
+\bottomrule
+\end{tabular}
+\end{table*}
 
 \subsection{The printed test vehicle}
 \label{sec:res_3d}

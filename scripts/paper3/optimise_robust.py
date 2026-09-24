@@ -3,8 +3,8 @@ decide the timing, not only at their nominal values.
 
 Scenarios: nominal; A, slow char gasification with a low glass transition (the glass seals before the
 char has gone); B, fast gasification with a high glass transition (the copper is released before the
-glass is ready). The objective is the worst-case largest free-strain mismatch over the scenarios, the
-constraints of optimise.py must hold in every scenario, and the copper must reach a minimum conductivity.
+glass is ready). The objective is the worst-case largest free-strain mismatch over the two corners, the
+constraints of optimise.py must hold at both (the nominal case, between them, is checked at the end), and the copper must reach a minimum conductivity.
 
     python scripts/paper3/optimise_robust.py <out.json> <budget_h> <min_IACS> [maxiter] [popsize] [workers]
 """
@@ -23,10 +23,14 @@ SCENARIOS = {
 }
 
 
-def evaluate_all(x, N=6):
+SEARCH = [k for k in SCENARIOS if k != "nominal"]   # the corners bound the nominal case; it is checked at the end
+
+
+def evaluate_all(x, N=5, names=None):
     over, cyc = opt.design(x)
     out = {}
-    for name, sc in SCENARIOS.items():
+    for name in (names or list(SCENARIOS)):
+        sc = SCENARIOS[name]
         s = cofire_scenario(**over, **sc)
         try:
             gc, cu = run_pair(s, cyc, N=N)
@@ -40,13 +44,13 @@ def evaluate_all(x, N=6):
 
 
 def objective(x, budget_h, iacs_min):
-    ms, cyc = evaluate_all(x)
+    ms, cyc = evaluate_all(x, names=SEARCH)
     if ms is None:
         return 1e6
     pen = 0.0
     for m in ms.values():
         pen += sum(opt.violations(m, iacs_min).values())
-    pen += max(0.0, ms["nominal"]["duration_h"] - budget_h)
+    pen += max(0.0, max(m["duration_h"] for m in ms.values()) - budget_h)
     worst = max(m["mismatch_max_pct"] for m in ms.values())
     return math.log10(worst + 1e-3) + 10.0 * pen
 
