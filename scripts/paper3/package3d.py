@@ -79,7 +79,7 @@ if __name__ == "__main__":
         d = json.load(open(spec))
         over = dict(d50_um=10 ** d["x"][0], cu_filler=d["x"][1], phi=d["x"][2])
         cyc = Cycle.from_dict(d["cycle"])
-        label = "optimised"
+        label = "robust" if "robust" in spec else "optimised"
     s = cofire_scenario(**over)
     r_gc, r_cu = run_pair(s, cyc, N=8)
     t, T, C_gc, C_cu = histories(r_gc, r_cu)

@@ -203,31 +203,39 @@ def draw_body(ax, p, conn, theta, mat, view, title, zscale=1.0, cmap_gc=fs.SEQ_B
 
 
 def fig_package():
-    runs = [json.load(open(f"{D}/package_{k}.json")) for k in ("baseline", "optimised") if os.path.exists(f"{D}/package_{k}.json")]
-    fig = plt.figure(figsize=(fs.COL2, 0.52 * fs.COL2))
+    names = {"baseline": "baseline", "optimised": "nominal optimum", "robust": "robust design"}
+    runs = [json.load(open(f"{D}/package_{k}.json")) for k in names if os.path.exists(f"{D}/package_{k}.json")]
+    nr = len(runs)
+    fig = plt.figure(figsize=(fs.COL2, 0.27 * nr * fs.COL2))
+    L = "abcdefghi"
+    bows = []
     for k, r in enumerate(runs):
         mat = np.array(r["mat"]); theta = np.array(r["theta"]); conn = np.array(r["t_conn"]); p = np.array(r["p"])
-        # cut-away: keep elements with y below the centre so the buried copper is visible
         cen = p[conn].mean(axis=1)
-        keep = cen[:, 1] <= np.median(cen[:, 1])
-        ax = fig.add_subplot(2, 3, 3 * k + 1, projection="3d")
+        keep = cen[:, 1] <= np.median(cen[:, 1])          # cut-away so the buried copper is visible
+        ax = fig.add_subplot(nr, 3, 3 * k + 1, projection="3d")
         draw_body(ax, p, conn[keep], theta[keep], mat[keep], (24, -60),
-                  f"{'(a)' if k == 0 else '(d)'} {r['label']}: sectioned part", zscale=2.0)
-        # copper only
-        ax = fig.add_subplot(2, 3, 3 * k + 2, projection="3d")
+                  f"({L[3 * k]}) {names[r['label']]}: sectioned part", zscale=2.0)
+        ax = fig.add_subplot(nr, 3, 3 * k + 2, projection="3d")
         cu = mat == 1
-        draw_body(ax, p, conn[cu], theta[cu], mat[cu], (32, -60), f"{'(b)' if k == 0 else '(e)'} copper density", zscale=2.0)
-        # bottom-surface profile (warpage), magnified
-        ax = fig.add_subplot(2, 3, 3 * k + 3)
+        rho_cu = 1 - theta[cu]
+        draw_body(ax, p, conn[cu], theta[cu], mat[cu], (32, -60),
+                  f"({L[3 * k + 1]}) copper, mean ρ = {rho_cu.mean():.3f}", zscale=2.0)
+        ax = fig.add_subplot(nr, 3, 3 * k + 3)
         p0 = np.array(r["p0"]) * 1e3
         bot = np.isclose(p0[:, 2], p0[:, 2].min())
         yc = np.isclose(p0[:, 1], p0[bot, 1][np.argmin(abs(p0[bot, 1] - np.median(p0[bot, 1])))])
         sel = bot & yc
-        x = p[sel, 0]; z = p[sel, 2]
+        x = p[sel, 0] * 1e3; z = p[sel, 2] * 1e3
         o = np.argsort(x)
         ax.plot(x[o] - x.mean(), (z[o] - z.min()) * 1e3, color=fs.INK, lw=1.3)
-        ax.set_xlabel("x (mm)"); ax.set_ylabel("bottom surface lift (µm)")
-        ax.set_title(f"{'(c)' if k == 0 else '(f)'} bow {r['bow_bottom_um']:.0f} µm, shrink {r['shrink_xy_pct']:.1f} %", fontsize=6.8, loc="left")
+        ax.set_xlabel("x (mm)"); ax.set_ylabel("lift of bottom surface (µm)")
+        ax.set_title(f"({L[3 * k + 2]}) bow {r['bow_bottom_um']:.0f} µm, shrinkage {r['shrink_xy_pct']:.1f} %",
+                     fontsize=6.6, loc="left")
+        bows.append(ax)
+    top = max(a.get_ylim()[1] for a in bows)
+    for a in bows:
+        a.set_ylim(0, top)
     fs.save(fig, "fig08_package", O)
 
 
