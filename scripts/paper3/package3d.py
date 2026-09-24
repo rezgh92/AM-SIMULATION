@@ -105,7 +105,11 @@ if __name__ == "__main__":
             print(f"  t={tc/3600:6.2f} h T={Tc-T0C:6.0f} C  rho_gc={np.mean(1-obj.theta[mat==0]):.3f} "
                   f"rho_cu={np.mean(1-obj.theta[mat==1]):.3f} ({time.time()-t_wall:.0f} s)", flush=True)
 
-    frames = s3.run(tt, T[i0:], [C_gc[i0:], C_cu[i0:]], n_frames=30, progress=prog)
+    # stop once the glass-ceramic is 90 % crystallised: the body is then rigid and its shape frozen
+    X_gc = np.asarray(su_gc.crystal_fraction(r_gc.series["G_um"]))
+    i_x = int(np.argmax(X_gc >= 0.9)) if np.any(X_gc >= 0.9) else len(t) - 1
+    t_stop = float(t[max(i_x, i0 + 1)] - t[i0])
+    frames = s3.run(tt, T[i0:], [C_gc[i0:], C_cu[i0:]], n_frames=30, progress=prog, t_stop=t_stop)
     # export
     m0 = MeshHex(s3.p0, s3.t_conn)
     verts, tris, _ = surface(m0)
@@ -118,6 +122,7 @@ if __name__ == "__main__":
     bottom = np.isclose(s3.p0[2], s3.p0[2].min())
     top = np.isclose(s3.p0[2], s3.p0[2].max())
     res = dict(label=label, h_mm=h, design=over, cycle=cyc.to_dict(), wall_s=time.time() - t_wall,
+               t_stop_h=float((t[i0] + t_stop) / 3600), T_stop_C=float(np.interp(t[i0] + t_stop, t, T) - T0C),
                n_el=int(mesh.nelements), mat=mat.tolist(), t_start_h=float(t[i0] / 3600),
                p0=s3.p0.T.tolist(), p=pF.T.tolist(), t_conn=s3.t_conn.T.tolist(),
                theta=s3.theta.tolist(), frames=fr,

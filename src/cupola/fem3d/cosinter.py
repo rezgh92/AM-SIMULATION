@@ -56,7 +56,10 @@ class CoSinter3D(Sinter3D):
         ne = len(self.mat)
         eta = np.empty(ne)
         PL = np.empty(ne)
-        th = np.clip(self.theta, 1e-4, 0.999)
+        # the constitutive law uses at least 0.3 % porosity: below that the bulk viscosity 2 eta psi grows
+        # as 1/theta, the remaining densification no longer changes the shape, and the velocity solve
+        # becomes too ill-conditioned for the preconditioned CG to converge
+        th = np.clip(self.theta, 3e-3, 0.999)
         for k, su in enumerate(self.setups):
             sel = self.mat == k
             if not np.any(sel):
