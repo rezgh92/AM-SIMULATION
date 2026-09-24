@@ -118,6 +118,9 @@ def fig_programme():
     axs[3, 1].legend(loc="upper right", fontsize=6)
     fs.save(fig, "fig07_programme", O)
     json.dump({r["label"]: r["m"] for r in runs}, open(f"{D}/programme_metrics.json", "w"), indent=1)
+    keep = ("t_h", "T_C", "eps_gc", "eps_cu", "rho_gc", "rho_cu", "X_gc", "C_gc", "Pi_line", "kappa")
+    json.dump({r["label"]: {k: np.asarray(r["ser"][k]).tolist() for k in keep} for r in runs},
+              open(f"{D}/programme_series.json", "w"))
 
 
 # ----------------------------------------------------------------------------- 3-D test vehicle

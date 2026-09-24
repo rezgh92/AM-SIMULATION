@@ -8,10 +8,10 @@ The copper conductor uses the slab model developed for single-material copper pa
 \section{Verification}
 \label{app:verification}
 
-\paragraph{Viscous densification of the glass-ceramic} With crystallisation and char removed, and open porosity, Eq.~\eqref{eq:sovs} with a Newtonian matrix gives $\dot{\theta} = -9\gamma\theta/(4r\eta)$. The slab model was run through isothermal holds at 810, 830 and 850~$^\circ$C with 4, 8 and 16 cells. The simulated porosity follows the closed form, integrated along the simulated part temperature, to within $1.7\times10^{-4}$ over the full range of densification before pore closure, independently of the mesh (Fig.~\ref{fig:verification}a).
+\paragraph{Viscous densification of the glass-ceramic} With crystallisation and char removed, and open porosity, Eq.~\eqref{eq:sovs} with a Newtonian matrix gives $\dot{\theta} = -9\gamma\theta/(4r\eta)$. The slab model was run through isothermal holds at 810, 830 and 850~$^\circ$C with 4, 8 and 16 cells. The simulated porosity follows the closed form, integrated along the simulated part temperature, to within $1.3\times10^{-4}$ over the full range of densification before pore closure, independently of the mesh (Fig.~\ref{fig:verification}a).
 
 \paragraph{Bilayer curvature} The three-dimensional model of a free $12\times12$~mm plate made of 0.6~mm copper on 1.8~mm glass-ceramic was solved for the instantaneous velocity field at 900~$^\circ$C, and the curvature rate was fitted to the mid-plane deflection. It converges to the viscous Timoshenko value of Eq.~\eqref{eq:camber} with second-order behaviour: the error falls from 3.4\% at 0.6~mm voxels to 0.69, 0.22 and 0.05\% at 0.3, 0.2 and 0.15~mm (Fig.~\ref{fig:verification}b).
 
 \paragraph{Free sintering and mass conservation} A free, frictionless cube held isothermally densifies homogeneously and isotropically, matches the closed-form Skorohod--Olevsky solution to 0.22\% in density, and conserves solid mass to 0.07\%.
 
-\paragraph{Crystallisation kinetics} With the rate constant calibrated as described in Section~\ref{sec:densification}, the simulated exotherm at 10~K\,min$^{-1}$ peaks within 0.01~K of the prescribed temperature for Avrami exponents between 1 and 4.
+\paragraph{Crystallisation kinetics} With the rate constant calibrated as described in Section~\ref{sec:densification}, the simulated exotherm at 10~K\,min$^{-1}$ peaks within 0.01~K of the prescribed temperature for Avrami exponents of 1, 2 and 3.
