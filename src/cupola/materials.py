@@ -176,6 +176,7 @@ class Setup:
         self.k_green = g["k_green"]
         # ---------------- limits
         self.dT_exo = g["dT_exo_max"]
+        self.ramp_guard = g["debind_ramp_cap_Kmin"]
         self.sf_gas = g["sf_gas"]
         self.C_spec = g["C_spec_ppm"]
         self.O_spec = g["O_spec_ppm"]

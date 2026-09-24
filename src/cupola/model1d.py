@@ -175,7 +175,7 @@ class Slab:
         r_o = k_o * B[..., 1:, :] * (y[..., None, :] / 0.21)                   # oxidative, network only
         chi = su.chi[:, None] * (1.0 - 0.36 * ex(xH2r))[..., None, :]
         char_form = (chi * r_p).sum(axis=-2)
-        r_co = su.k_char_ox(T) * c * (y / 0.21)                               # kg C/m^3/s
+        r_co = su.k_char_ox(T) * c * (y / 0.21) * (1.0 - f_cl)                # kg C/m^3/s, open pores only
 
         # ---------------- copper oxide and carbon chemistry
         yO2 = y
@@ -189,14 +189,19 @@ class Slab:
         th_red = pos(1.0 - ratio / thermo.h2o_h2_boundary_Cu(T), 0.01)
         fH2 = 2.0 * ex(xH2r) / (ex(xH2r) + 0.04)
         hot = sigmoid((T - 600.0) / 20.0)
-        acc_h2 = np.maximum(acc, f_cl * hot)                                  # H2 reaches closed pores by lattice diffusion
-        rX_red = acc_h2 * su.k_red(T) * X * fH2 * th_red                       # 1/s, reduction rate of X
+        k_rX = su.k_red(T) * X * fH2 * th_red
+        # open pores: H2 from the gas, H2O vents. Closed pores: H2 arrives by lattice diffusion through
+        # Cu, but the H2O it makes is insoluble and stays (hydrogen disease / steam blistering).
+        rX_open = acc * (1.0 - f_cl) * k_rX
+        rX_closed = f_cl * hot * k_rX
+        rX_red = rX_open + rX_closed                                           # 1/s
 
         Kst = thermo.K_steam_gasification(T)
         Qst = ex(xCOr) * ex(xH2r) / np.maximum(ex(xH2Or), 1e-12)
         th_g = pos(1.0 - Qst / Kst, 0.01)
         inh = (1.0 + su.K_inh * 0.04) / (1.0 + su.K_inh * ex(xH2r))
-        r_g = acc * su.k_gasif(T) * (c / M_C) * np.sqrt(ex(xH2Or) / su.x_h2o_ref) * inh * th_g   # mol C/m^3/s
+        # steam cannot reach char sealed in closed pores: it stays, inert, and inhibits sintering
+        r_g = acc * (1.0 - f_cl) * su.k_gasif(T) * (c / M_C) * np.sqrt(ex(xH2Or) / su.x_h2o_ref) * inh * th_g
         r_cth = su.k_carbothermic(T) * (c / M_C) * X / (X + X_SWITCH)                          # mol C/m^3/s
 
         dXdt = dX_ox - rX_red - r_cth / su.nCu
@@ -208,6 +213,8 @@ class Slab:
         n_vol = (r_p * (1.0 - chi) / su.Mgas[:, None]).sum(axis=-2)
         n_ox_net = (N_CO2_BINDER + N_H2O_BINDER - NU_O2_BINDER) * r_o.sum(axis=-2)
         n_red = su.nCu * rX_red                                                # H2O made = H2 used
+        n_red_open = su.nCu * rX_open
+        n_red_closed = su.nCu * rX_closed
         ndot = n_vol + n_ox_net - 0.5 * su.nCu * dX_ox + r_g + r_cth
         R_O2 = NU_O2_BINDER * r_o.sum(axis=-2) + r_co / M_C + 0.5 * su.nCu * dX_ox
 
@@ -292,7 +299,7 @@ class Slab:
         dfcl = 6.0 * uc * (1.0 - uc) / 0.06 * drho
         x_insol = 1.0 - ex(xH2r)
         trap = (P_ATM / (R * T)) * x_insol * eps * V * pos(dfcl, 1e-12)
-        gen_cl = f_cl * (n_red + r_cth + r_g)
+        gen_cl = n_red_closed + f_cl * r_cth                                   # insoluble gas made inside closed pores
         release = ntr * pos(-dfcl, 1e-12) / np.maximum(f_cl, 1e-3) \
             + ntr * (1.0 - smoothstep(f_cl / 0.01)) * 1e-3
         dntr = trap + gen_cl - release
@@ -308,9 +315,9 @@ class Slab:
         mean = lambda a_: (a_ * wt).sum(axis=-1)
         esc = 1.0 - f_cl
         S_O2 = -vol * Ns / su.L0
-        S_H2O = vol * mean(esc * n_red + N_H2O_BINDER * r_o.sum(axis=-2) - r_g)
-        S_H2 = vol * mean(-n_red + esc * r_g)
-        S_CO = vol * mean(esc * (r_g + r_cth))
+        S_H2O = vol * mean(n_red_open + N_H2O_BINDER * r_o.sum(axis=-2) - r_g)
+        S_H2 = vol * mean(-n_red + r_g)
+        S_CO = vol * mean(r_g + esc * r_cth)
         S_CO2 = vol * mean(N_CO2_BINDER * r_o.sum(axis=-2) + r_co / M_C)
         S_HC = vol * mean(n_vol)
         # gas-phase: volatile combustion above ignition, H2/O2 recombination
@@ -362,7 +369,8 @@ class Slab:
         g_face = 2.0 * mu * R * T * np.maximum(J, 0.0) / K_app                  # at cell outer faces, Pa^2/m
         # integrate from surface inward: Phi_i = P^2 + sum_{j>=i} g_j w_j (face-based)
         Phi = P_ATM ** 2 + np.flip(np.cumsum(np.flip(g_face * w * s, -1), axis=-1), -1)
-        dp_gas = np.sqrt(Phi) - P_ATM
+        dPhi = Phi - P_ATM ** 2
+        dp_gas = dPhi / (np.sqrt(Phi) + P_ATM)                               # sqrt(P^2+d)-P without cancellation
         sig_t = su.sigma_green(T, a_net) + su.sigma_brown(rho_s)
         sig_t_z = su.f_int * su.sigma_green(T, a_net) + su.sigma_brown(rho_s)
         Pi_gas = su.sf_gas * dp_gas / sig_t_z
@@ -371,6 +379,9 @@ class Slab:
         sig_th = Eg * 30e-6 * (2.0 / 3.0) * ex(dT_int) / 0.7
         Pi_th = (sig_th / sig_t).max(axis=-1)
         exo = T.max(axis=-1) - Tf
+        # self-heating = hotter than the furnace BECAUSE reactions release heat; a clean Cu part that
+        # merely lags the furnace on cooling (emissivity ~0.1) must not count
+        exo_gen = np.where(q.max(axis=-1) > 1e3, exo, -np.inf)
         O_ppm = su.O_ppm(X)
         T_sol = thermo.T_solidus_Cu_O(O_ppm)
         melt_margin = (T_sol - su.T_margin) - T                                  # >0 is safe
@@ -379,7 +390,7 @@ class Slab:
             T=T, Tf=Tf, Tset=np.full(Tf.shape, Tset), b=bf, c=c, C_ppm=C_ppm, X=X, O_ppm=O_ppm, y=y,
             eps=eps, eps_open=eps_open, rho=rho_s, rho_m=rho_m, f_cl=f_cl, G_um=G * 1e6, p_g=p_g, e_dot=e_dot,
             dp_gas=dp_gas, sig_t=sig_t, Pi_gas=Pi_gas.max(axis=-1), Pi_gas_node=Pi_gas, Pi_th=Pi_th,
-            exo=exo, dT_int=dT_int, melt_margin=melt_margin.min(axis=-1), Pi_bloat=Pi_bloat.max(axis=-1),
+            exo=exo, exo_gen=exo_gen, dT_int=dT_int, melt_margin=melt_margin.min(axis=-1), Pi_bloat=Pi_bloat.max(axis=-1),
             w_b=w_b, a_net=a_net, xO2=xO2r, xH2=xH2r, xH2O=xH2Or, xCO=xCOr, xCO2=xCO2r,
             x_hc=np.maximum(S_HC, 0.0) / (Fin + np.maximum(S_tot, 0.0)),
             q=q, R_O2=R_O2, eta=eta, PL=PL, eps_rad=epsr, h_tot=h_tot,

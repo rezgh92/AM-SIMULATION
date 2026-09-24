@@ -193,6 +193,12 @@ _P = [
 
     # ------------------------------------------------------------------ limits
     Param("dT_exo_max", 20.0, "K", 5.0, 60.0, "limits", "GUESS", "Max self-heating above furnace", ""),
+    Param("debind_ramp_cap_Kmin", 1.0, "K/min", 0.05, 10.0, "limits", "GUESS", "Guard ramp while binder remains",
+          "Caps heating while >1 % of the binder remains, as a guard against failure modes the model does not "
+          "contain (viscous slumping of the softened green body, capillary migration of liquid decomposition "
+          "products, differential shrinkage). Once solvent evaporation has opened the pores the modelled gas "
+          "pressure is slack, so without this guard the optimiser would pyrolyse at the furnace maximum. Relax "
+          "it after a thickness-ladder debind shows parts survive faster ramps.", log=True),
     Param("sf_gas", 1.5, "-", 1.0, 4.0, "limits", "GUESS", "Safety factor on gas pressure", ""),
     Param("C_spec_ppm", 200.0, "ppm", 20.0, 2000.0, "limits", "GUESS", "Max carbon at pore closure", "", log=True),
     Param("O_spec_ppm", 300.0, "ppm", 30.0, 3000.0, "limits", "GUESS", "Max oxide oxygen at pore closure", "", log=True),

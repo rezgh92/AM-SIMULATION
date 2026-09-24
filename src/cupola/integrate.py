@@ -30,8 +30,12 @@ def fd_jacobian(f, t, y, f0, scale):
 
 
 def ode23s(f, t0, t1, y0, atol, rtol=1e-4, h0=None, scale=None, h_max=np.inf, callback=None,
-           max_steps=200_000):
+           max_steps=200_000, jac_every=1):
     """Integrate y' = f(t, y) from t0 to t1. f must accept batched y of shape (B, n).
+
+    ``jac_every``: refresh the Jacobian every k accepted steps (and always after a rejection).
+    The underlying Wolfbrandt formula is a W-method, so the second-order solution keeps its order
+    with an approximate Jacobian; k=1 reproduces the classic ode23s exactly.
 
     Returns (ts, ys, n_steps, n_rejected). ``callback(t, y)`` may return True to stop early.
     """
@@ -54,15 +58,20 @@ def ode23s(f, t0, t1, y0, atol, rtol=1e-4, h0=None, scale=None, h_max=np.inf, ca
     ts, ys = [t], [y.copy()]
     nstep = nrej = 0
     I = np.eye(n)
+    J = None
+    since_jac = 0
     while t < t1:
         if nstep > max_steps:
             raise StepFailure(f"too many steps at t={t:.1f}")
         h = min(h, h_max, t1 - t)
         if t + 1.01 * h >= t1:
             h = t1 - t
-        J = fd_jacobian(f, t, y, F0, scale)
-        dt_fd = 1e-7 * max(abs(t), 1.0)
-        Ft = (f(t + dt_fd, y) - F0) / dt_fd
+        if J is None or since_jac >= jac_every:
+            J = fd_jacobian(f, t, y, F0, scale)
+            dt_fd = 1e-7 * max(abs(t), 1.0)
+            Ft = (f(t + dt_fd, y) - F0) / dt_fd
+            since_jac = 0
+        fresh = since_jac == 0
         while True:
             W = I - h * D_ROS * J
             try:
@@ -83,6 +92,13 @@ def ode23s(f, t0, t1, y0, atol, rtol=1e-4, h0=None, scale=None, h_max=np.inf, ca
             if err <= 1.0:
                 break
             nrej += 1
+            if not fresh:                       # stale Jacobian: refresh before shrinking the step
+                J = fd_jacobian(f, t, y, F0, scale)
+                dt_fd = 1e-7 * max(abs(t), 1.0)
+                Ft = (f(t + dt_fd, y) - F0) / dt_fd
+                since_jac = 0
+                fresh = True
+                continue
             h = h * max(0.1, 0.8 * err ** (-1.0 / 3.0))
             # floor at floating-point resolution of t: fast gas transients after a segment switch
             # (ms time constants) must be resolvable even hundreds of hours into a cycle
@@ -92,6 +108,7 @@ def ode23s(f, t0, t1, y0, atol, rtol=1e-4, h0=None, scale=None, h_max=np.inf, ca
         y = ynew
         F0 = F2
         nstep += 1
+        since_jac += 1
         ts.append(t)
         ys.append(y.copy())
         if callback is not None and callback(t, y):

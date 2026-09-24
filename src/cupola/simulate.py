@@ -136,11 +136,12 @@ def postprocess(slab: Slab, cycle: Cycle, t: np.ndarray, Ys: np.ndarray):
     series = dict(
         Tset=col("Tset") - T0C, Tf=col("Tf") - T0C,
         T_center=col("T", "center") - T0C, T_surface=col("T", "surface") - T0C,
-        exo=col("exo"), dT_int=col("dT_int"),
+        exo=col("exo"), exo_gen=col("exo_gen"), dT_int=col("dT_int"),
         binder_left=binder_left, solvent_left=(b[:, 0, :] * slab.wt).sum(axis=-1) / max(su.b0[0] / su.mb0, 1e-12),
         C_ppm_center=col("C_ppm", "center"), C_ppm_mean=col("C_ppm", "mean"),
         O_ppm_center=col("O_ppm", "center"), O_ppm_mean=col("O_ppm", "mean"),
         rho_center=col("rho", "center"), rho_surface=col("rho", "surface"), rho_mean=col("rho", "mean"),
+        rho_m_mean=col("rho_m", "mean"),
         eps_open=col("eps_open", "mean"), f_cl_center=col("f_cl", "center"),
         G_um=col("G_um", "mean"), p_trap_bar=(col("p_g", "center")) / 1e5,
         y_center=col("y", "center"),
@@ -177,7 +178,7 @@ def postprocess(slab: Slab, cycle: Cycle, t: np.ndarray, Ys: np.ndarray):
         Pi_th_max=float(np.max(series["Pi_th"])),
         # self-heating only counts while the furnace is heating or holding; during cooling the
         # part simply lags (clean Cu has emissivity ~0.1), which is not an exotherm
-        exo_max_K=float(np.max(np.where(series["Tset"] >= series["Tf"] - 0.5, series["exo"], -np.inf))),
+        exo_max_K=float(max(0.0, np.max(np.where(series["Tset"] >= series["Tf"] - 0.5, series["exo_gen"], -np.inf)))),
         Pi_bloat_max=float(np.max(series["Pi_bloat"])),
         melt_margin_min_K=float(np.min(series["melt_margin"])),
         binder_left_final=float(binder_left[-1]),
@@ -187,6 +188,10 @@ def postprocess(slab: Slab, cycle: Cycle, t: np.ndarray, Ys: np.ndarray):
         C_peak_ppm=float(np.max(series["C_ppm_mean"])),
         iacs=float(su.iacs(rho_f)),
     )
+    # fastest setpoint ramp while >1 % binder remains (the guard constraint)
+    dTs = np.gradient(series["Tset"], t / 60.0) if len(t) > 2 else np.zeros_like(t)
+    busy = binder_left > 0.01
+    kpi["debind_ramp_max_Kmin"] = float(np.max(np.abs(dTs[busy]))) if np.any(busy) else 0.0
     kpi["verdict"] = verdict(kpi, su)
     return series, kpi
 
@@ -210,5 +215,7 @@ def verdict(k, su: Setup) -> Dict[str, dict]:
                         label="Margin below Cu-O solidus"),
         "bloating": item(max(k["Pi_bloat_max"], 0.0), 1.0, "-", label="Trapped-gas pressure / sintering stress"),
         "density": item(k["rho_final"], su.rho_target, "-", higher_is_bad=False, label="Final relative density"),
+        "debind_guard": item(k.get("debind_ramp_max_Kmin", 0.0), su.ramp_guard * 1.02, "K/min",
+                             label="Ramp while binder remains (guard)"),
     }
     return out
