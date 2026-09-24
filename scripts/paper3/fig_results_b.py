@@ -109,22 +109,25 @@ def fig_programme():
     m, ser = cofire_metrics(gc, cu, s0)
     runs.append(dict(label="baseline", m=m, ser=ser, gc=gc, cu=cu, cyc=base))
     runs.append(run_series(f"{D}/opt_main.json", "optimised"))
-    fig, axs = plt.subplots(4, 2, figsize=(fs.COL2, 0.95 * fs.COL2), sharex="col",
-                            gridspec_kw=dict(hspace=0.16, wspace=0.26, height_ratios=[1.2, 1, 1, 1]))
+    fig, axs = plt.subplots(5, 2, figsize=(fs.COL2, 1.05 * fs.COL2), sharex="col",
+                            gridspec_kw=dict(hspace=0.14, wspace=0.22, height_ratios=[1.15, 1, 1, 0.85, 0.7]))
     atm_col = {"A": "#D2DAE0", "B": "#BFE6D6", "C": "#C8DBF3", "D": "#E6E9EC"}
+    o = json.load(open(f"{D}/opt_main.json"))
+    xo = dict(zip(o["names"], o["x"]))
+    titles = ["(a) baseline: 3 µm Cu, burnout 780 °C / 4 h, peak 960 °C",
+              f"(b) optimised: {10 ** xo['log10_d50']:.1f} µm Cu + {100 * xo['filler']:.0f} % filler, "
+              f"burnout {xo['T_B']:.0f} °C, holds {xo['T_H']:.0f} / {xo['T_C']:.0f} °C"]
     for c, r in enumerate(runs):
         S, gc, cu, cyc = r["ser"], r["gc"], r["cu"], r["cyc"]
         t = S["t_h"]
         ax = axs[0, c]
-        # atmosphere band from the programme segments
         for (t0, t1, seg, Tf, kind) in cyc.boundaries():
             ax.axvspan(t0 / 3600, t1 / 3600, ymin=0, ymax=0.06, color=atm_col.get(seg.note[:1], "#EEE"), lw=0)
         ax.plot(gc.t_h, gc.series["Tset"], color=fs.INK2, lw=1.0, ls="--", label="set point")
         ax.plot(t, S["T_C"], color=fs.INK, lw=1.3, label="part")
         ax.set_ylim(0, 1100)
         ax.set_ylabel("T (°C)")
-        ax.set_title(("(a) baseline: 3 µm Cu, 780 °C steam, 960 °C" if c == 0 else
-                      "(b) optimised programme and paste"), fontsize=7, loc="left")
+        ax.set_title(titles[c], fontsize=6.8, loc="left")
         ax = axs[1, c]
         ax.plot(t, S["rho_gc"], color=fs.GC, lw=1.4, label="glass-ceramic")
         ax.plot(t, S["rho_cu"], color=fs.CU, lw=1.4, label="copper")
@@ -134,24 +137,36 @@ def fig_programme():
         ax = axs[2, c]
         ax.plot(t, 100 * S["eps_cu"], color=fs.CU, lw=1.4, label="copper")
         ax.plot(t, 100 * S["eps_gc"], color=fs.GC, lw=1.4, label="glass-ceramic")
-        ax.fill_between(t, 100 * S["eps_cu"], 100 * S["eps_gc"], color=fs.ORANGE, alpha=0.15, lw=0)
+        ax.fill_between(t, 100 * S["eps_cu"], 100 * S["eps_gc"], color=fs.ORANGE, alpha=0.15, lw=0,
+                        label="mismatch")
         ax.set_ylabel("Free strain (%)")
         ax = axs[3, c]
-        ax.plot(t, np.log10(np.maximum(S["C_gc"], 0.1)), color=fs.GC, lw=1.3, label="C in glass-ceramic")
-        ax.plot(t, S["Pi_line"] * 1.0, color=fs.ORANGE, lw=1.1, label="line damage index Π")
+        ax.plot(t, np.log10(np.maximum(S["C_gc"], 0.1)), color=fs.GC, lw=1.3, label="glass-ceramic")
+        ax.plot(t, np.log10(np.maximum(S["C_cu"], 0.1)), color=fs.CU, lw=1.1, label="copper")
+        ax.axhline(2.0, color=fs.MUTED, lw=0.7, ls="--")
+        ax.set_ylabel("log$_{10}$ C (ppm)")
+        ax.set_ylim(-1.2, 4.8)
+        ax = axs[4, c]
+        ax.plot(t, S["Pi_line"], color=fs.ORANGE, lw=1.2)
         ax.axhline(1.0, color=fs.CRIT, lw=0.7, ls="--")
-        ax.set_ylabel("log$_{10}$C (ppm) / Π")
+        ax.set_ylabel("Π$_{line}$")
+        ax.set_ylim(0, 1.9)
         ax.set_xlabel("Time (h)")
-        ax.set_ylim(-1, 4.6)
     for ax in axs[:, 0]:
         ax.yaxis.set_label_coords(-0.1, 0.5)
-    axs[0, 1].legend(loc="upper right", fontsize=6)
-    axs[1, 1].legend(loc="center right", fontsize=6)
-    axs[2, 1].legend(loc="upper right", fontsize=6)
-    axs[3, 1].legend(loc="upper right", fontsize=6)
+    for ax in axs[:, 1]:
+        ax.yaxis.set_label_coords(-0.1, 0.5)
+    axs[0, 0].legend(loc="upper left", fontsize=6)
+    axs[1, 0].legend(loc="upper left", fontsize=6)
+    axs[2, 0].legend(loc="lower left", fontsize=6)
+    axs[3, 0].legend(loc="upper left", fontsize=5.8, ncol=1, handlelength=1.2)
+    axs[3, 0].text(0.99, 2.12, "100 ppm", transform=axs[3, 0].get_yaxis_transform(), ha="right", va="bottom",
+                   fontsize=5.8, color=fs.MUTED)
+    axs[4, 0].text(0.99, 1.05, "Π = 1", transform=axs[4, 0].get_yaxis_transform(), ha="right", va="bottom",
+                   fontsize=5.8, color=fs.CRIT)
     fs.save(fig, "fig07_programme", O)
     json.dump({r["label"]: r["m"] for r in runs}, open(f"{D}/programme_metrics.json", "w"), indent=1)
-    keep = ("t_h", "T_C", "eps_gc", "eps_cu", "rho_gc", "rho_cu", "X_gc", "C_gc", "Pi_line", "kappa")
+    keep = ("t_h", "T_C", "eps_gc", "eps_cu", "rho_gc", "rho_cu", "X_gc", "C_gc", "C_cu", "Pi_line", "kappa")
     json.dump({r["label"]: {k: np.asarray(r["ser"][k]).tolist() for k in keep} for r in runs},
               open(f"{D}/programme_series.json", "w"))
 

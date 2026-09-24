@@ -121,7 +121,9 @@ class CoSinter3D(Sinter3D):
             C = [float(np.interp(t, t_s, c)) for c in C_ppm]
             v, edot = self.solve(T, C)
             rate = max(np.max(np.abs(edot)), 1e-12)
-            rel = max(np.max(np.abs(edot) * (1.0 - self.theta) / np.maximum(self.theta, 1e-4)), 1e-12)
+            # limit the relative change of porosity per step, but not below 1 % porosity: a fully dense
+            # glass voxel still carries a finite rate and would otherwise stall the whole run
+            rel = max(np.max(np.abs(edot) * (1.0 - self.theta) / np.maximum(self.theta, 1e-2)), 1e-12)
             dt = min(max_strain / rate, 0.05 / rel, 1800.0, t_end - t)
             dTdt = abs(float(np.interp(t + 60.0, t_s, T_K)) - T) / 60.0
             if dTdt > 0:
