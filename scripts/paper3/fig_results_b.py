@@ -202,17 +202,33 @@ def draw_body(ax, p, conn, theta, mat, view, title, zscale=1.0, cmap_gc=fs.SEQ_B
     ax.set_title(title, fontsize=6.8, pad=0)
 
 
+def top_relief(r):
+    """Height of the top surface relative to its mean (µm) on the node grid, and the grid in mm."""
+    p0 = np.array(r["p0"]); p = np.array(r["p"])
+    top = np.isclose(p0[:, 2], p0[:, 2].max())
+    x0, y0 = p0[top, 0], p0[top, 1]
+    xs, ys = np.unique(np.round(x0, 9)), np.unique(np.round(y0, 9))
+    Z = np.full((len(ys), len(xs)), np.nan)
+    ix = np.searchsorted(xs, np.round(x0, 9)); iy = np.searchsorted(ys, np.round(y0, 9))
+    Z[iy, ix] = p[top, 2]
+    Z = (Z - np.nanmean(Z)) * 1e6
+    X = np.zeros_like(Z); Y = np.zeros_like(Z)
+    X[iy, ix] = p[top, 0] * 1e3; Y[iy, ix] = p[top, 1] * 1e3
+    return X - np.nanmean(X), Y - np.nanmean(Y), Z
+
+
 def fig_package():
     names = {"baseline": "baseline", "optimised": "nominal optimum", "robust": "robust design"}
     runs = [json.load(open(f"{D}/package_{k}.json")) for k in names if os.path.exists(f"{D}/package_{k}.json")]
     nr = len(runs)
     fig = plt.figure(figsize=(fs.COL2, 0.27 * nr * fs.COL2))
     L = "abcdefghi"
-    bows = []
+    reliefs = [top_relief(r) for r in runs]
+    lim = max(np.nanmax(np.abs(z)) for _, _, z in reliefs)
     for k, r in enumerate(runs):
         mat = np.array(r["mat"]); theta = np.array(r["theta"]); conn = np.array(r["t_conn"]); p = np.array(r["p"])
         cen = p[conn].mean(axis=1)
-        keep = cen[:, 1] <= np.median(cen[:, 1])          # cut-away so the buried copper is visible
+        keep = cen[:, 1] >= np.median(cen[:, 1])          # cut-away facing the viewer: buried copper visible
         ax = fig.add_subplot(nr, 3, 3 * k + 1, projection="3d")
         draw_body(ax, p, conn[keep], theta[keep], mat[keep], (24, -60),
                   f"({L[3 * k]}) {names[r['label']]}: sectioned part", zscale=2.0)
@@ -222,20 +238,13 @@ def fig_package():
         draw_body(ax, p, conn[cu], theta[cu], mat[cu], (32, -60),
                   f"({L[3 * k + 1]}) copper, mean ρ = {rho_cu.mean():.3f}", zscale=2.0)
         ax = fig.add_subplot(nr, 3, 3 * k + 3)
-        p0 = np.array(r["p0"]) * 1e3
-        bot = np.isclose(p0[:, 2], p0[:, 2].min())
-        yc = np.isclose(p0[:, 1], p0[bot, 1][np.argmin(abs(p0[bot, 1] - np.median(p0[bot, 1])))])
-        sel = bot & yc
-        x = p[sel, 0] * 1e3; z = p[sel, 2] * 1e3
-        o = np.argsort(x)
-        ax.plot(x[o] - x.mean(), (z[o] - z.min()) * 1e3, color=fs.INK, lw=1.3)
-        ax.set_xlabel("x (mm)"); ax.set_ylabel("lift of bottom surface (µm)")
-        ax.set_title(f"({L[3 * k + 2]}) bow {r['bow_bottom_um']:.0f} µm, shrinkage {r['shrink_xy_pct']:.1f} %",
-                     fontsize=6.6, loc="left")
-        bows.append(ax)
-    top = max(a.get_ylim()[1] for a in bows)
-    for a in bows:
-        a.set_ylim(0, top)
+        X, Y, Z = reliefs[k]
+        pc = ax.pcolormesh(X, Y, Z, cmap=fs.DIVERGE, vmin=-lim, vmax=lim, shading="gouraud")
+        ax.set_aspect("equal")
+        ax.set_xlabel("x (mm)"); ax.set_ylabel("y (mm)")
+        ax.set_title(f"({L[3 * k + 2]}) top surface, range {np.nanmax(Z) - np.nanmin(Z):.0f} µm", fontsize=6.6, loc="left")
+        cb = fig.colorbar(pc, ax=ax, fraction=0.046, pad=0.03)
+        cb.set_label("height − mean (µm)", fontsize=6.2); cb.ax.tick_params(labelsize=5.8)
     fs.save(fig, "fig08_package", O)
 
 
