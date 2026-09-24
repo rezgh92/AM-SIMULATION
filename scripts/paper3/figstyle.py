@@ -29,6 +29,8 @@ def apply():
         "mathtext.rm": "Liberation Sans",
         "mathtext.it": "Liberation Sans:italic",
         "mathtext.bf": "Liberation Sans:bold",
+        "mathtext.cal": "Liberation Sans:italic",
+        "mathtext.sf": "Liberation Sans",
         "font.size": 7.5,
         "axes.titlesize": 7.5,
         "axes.labelsize": 7.5,

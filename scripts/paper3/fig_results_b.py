@@ -187,8 +187,8 @@ LABELS = {"gc_Tg_C": "glass T$_g$", "gc_fragility": "glass fragility m", "gc_Tp_
 
 def fig_sens():
     d = json.load(open(f"{D}/morris.json"))
-    outs = [("gc_C_close_ppm", "Carbon at glass closure"), ("gc_rho", "Glass-ceramic density"),
-            ("cu_rho", "Copper density"), ("kappa_final", "Final camber"), ("line_Pi_max", "Line damage index")]
+    outs = [("log10_gc_C", "log$_{10}$ C at glass closure"), ("gc_rho", "Glass-ceramic density"),
+            ("cu_rho", "Copper density"), ("mismatch_max_pct", "Peak shrinkage mismatch"), ("line_Pi_max", "Line damage index")]
     fig, axs = plt.subplots(1, len(outs), figsize=(fs.COL2, 0.42 * fs.COL2), sharey=True, gridspec_kw=dict(wspace=0.1))
     keys = [f["key"] for f in d["factors"]]
     # order factors by their summed normalised importance

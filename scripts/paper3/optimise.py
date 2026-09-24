@@ -4,12 +4,13 @@ Decision variables (bounds below): copper D50 (log), filler fraction, copper sol
 temperature, time and steam fraction; matching-hold temperature and time; heating rate to the peak;
 peak temperature and hold.
 
-Objective (epsilon-constraint form): minimise the final free camber |kappa| of the reference Cu/GC
-bilayer, subject to hard constraints on chemistry, density and damage, and to a cycle-time budget.
+Objective (epsilon-constraint form): minimise the largest free-strain mismatch between copper and
+glass-ceramic (optionally, the final free camber of the reference Cu/GC bilayer), subject to hard
+constraints on chemistry, density and damage, and to a cycle-time budget.
 Constraint violations enter as a large smooth penalty, so differential evolution always has a
 gradient back towards feasibility.
 
-    python scripts/paper3/optimise.py <out.json> <time_budget_h> [maxiter] [popsize]
+    python scripts/paper3/optimise.py <out.json> <time_budget_h> [maxiter] [popsize] [mismatch|camber] [workers]
 """
 import json, math, sys, time
 import numpy as np
@@ -22,7 +23,9 @@ from cupola.cofire.metrics import cofire_metrics
 NAMES = ["log10_d50", "filler", "phi_cu", "T_B", "log10_tB", "x_B", "T_H", "log10_tH", "r_C", "T_C", "t_C"]
 BOUNDS = [(0.0, 1.3), (0.0, 0.40), (0.40, 0.60), (650.0, 850.0), (-0.6, 1.3), (0.05, 0.90),
           (820.0, 960.0), (-1.0, 0.7), (1.0, 10.0), (900.0, 1060.0), (0.0, 4.0)]
-SPEC = dict(gc_C=100.0, cu_C=200.0, gc_rho=0.97, gc_X=0.80, cu_rho=0.92, Pi_line=1.0, bloat=1.0, melt=0.0)
+SPEC = dict(gc_C=100.0, cu_C=200.0, gc_rho=0.97, gc_X=0.80, cu_rho=0.92, Pi_line=1.0, bloat=1.2, melt=0.0)
+# bloat: closed-pore gas pressure over sintering stress. It settles at 1.04 when pores reach pressure
+# equilibrium (saturated back-pressure law), so only values clearly above that mean swelling.
 
 
 def design(x):

@@ -17,16 +17,17 @@ for c in d["cases"]:
 from cupola.cofire import props
 T = np.linspace(25, d["T_sf"], 50)
 a.plot(T, props.cu_yield(T) / 1e6, color=fs.INK2, lw=0.8, ls="--")
-a.text(420, props.cu_yield(420) / 1e6 + 30, "yield stress of annealed Cu", fontsize=5.8, color=fs.INK2, rotation=-4)
 a.set_xlim(d["T_sf"], 25)
 a.set_yscale("symlog", linthresh=100)
 a.set_ylim(0, 2500)
 a.set_xlabel("Temperature on cooling (°C)")
 a.set_ylabel("Mean stress in the copper layer (MPa)")
 from matplotlib.lines import Line2D
-h = [Line2D([], [], color=cols[k], lw=1.3, label=f"{k:g} µm Cu on 1 mm") for k in cols]
-h += [Line2D([], [], color=fs.MUTED, lw=1.3, label="elastic–plastic"), Line2D([], [], color=fs.MUTED, lw=1.3, ls=":", label="elastic only")]
-a.legend(handles=h, loc="upper left", fontsize=6)
+h = [Line2D([], [], color=cols[k], lw=1.3, label=f"{k:g} µm Cu") for k in cols]
+h += [Line2D([], [], color=fs.MUTED, lw=1.3, label="elastic–plastic Cu"), Line2D([], [], color=fs.MUTED, lw=1.3, ls=":", label="elastic Cu"),
+      Line2D([], [], color=fs.INK2, lw=0.8, ls="--", label="yield stress")]
+a.legend(handles=h, loc="upper right", bbox_to_anchor=(1.0, 0.64), fontsize=6, ncol=2, columnspacing=1.0,
+         title="on 1 mm glass-ceramic", title_fontsize=6)
 fs.panel(a, "a")
 hs = sorted({c["h_cu_um"] for c in d["cases"]})
 pl = [next(c["bow_um_20mm"][-1] for c in d["cases"] if c["h_cu_um"] == x and c["model"] == "plastic") for x in hs]

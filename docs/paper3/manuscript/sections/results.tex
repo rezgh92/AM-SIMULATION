@@ -1,0 +1,99 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Verification}
+
+The model was checked against closed-form solutions before it was used for design (\ref{app:verification}). Isothermal densification of the glass-ceramic follows the Skorohod--Olevsky solution to within $1.3\times10^{-4}$ in porosity for 4 to 16 cells (Fig.~\ref{fig:verification}a), and the three-dimensional curvature rate of a free copper/glass-ceramic plate converges to the viscous Timoshenko value at second order, with an error of 0.05\% at 0.15~mm voxels (Fig.~\ref{fig:verification}b). The analytical camber of Eq.~\eqref{eq:camber} and the finite-element model therefore describe the same mechanics, and the analytical form can be used inside the design search.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig02_verification}
+\caption{Verification. (a) Isothermal densification of the glass-ceramic slab at 810, 830 and 850~$^\circ$C (lines, 8 cells) against the closed-form solution integrated along the simulated part temperature (circles); crystallisation and char were switched off. (b) Error of the three-dimensional curvature rate of a free $12\times12$~mm plate (0.6~mm copper on 1.8~mm glass-ceramic, 900~$^\circ$C) against the viscous Timoshenko solution, Eq.~\eqref{eq:camber}, as the voxel size is refined.}
+\label{fig:verification}
+\end{figure*}
+
+\subsection{Atmosphere window for burnout}
+\label{sec:res_atm}
+
+Fig.~\ref{fig:atm} places the burnout atmosphere in the plane of temperature and $p_{\mathrm{H_2O}}/p_{\mathrm{H_2}}$. Copper remains metallic below the orange line, which falls from $10^{6.2}$ at 500~$^\circ$C to $10^{4.8}$ at 780~$^\circ$C and $10^{4.1}$ at 1000~$^\circ$C. Carbon gasification by steam is thermodynamically possible above the dashed line, which lies eight or more decades lower. The two constraints therefore leave a wide band of permissible atmospheres, and the choice within it is kinetic. At 780~$^\circ$C, 30\% steam with hydrogen at 20\% of the copper limit ($p_{\mathrm{H_2O}}/p_{\mathrm{H_2}} = 1.2\times10^{4}$) gives a char half-life of 0.43~h. Forming gas (4\% H$_2$) humidified through a bubbler at 20~$^\circ$C, a common choice for copper, contains 2.3\% water; its half-life at the same temperature is 3.1~h, seven times longer, because the steam partial pressure is low and hydrogen inhibits the reaction.
+
+The operating point of the IBM process, H$_2$/H$_2$O $= 10^{-4}$ at $785\pm10$~$^\circ$C \cite{herron1980method}, lies at 17\% of the copper limit and almost coincides with the steam point in Fig.~\ref{fig:atm}. The rule used here, hydrogen tied to steam so that the water-to-hydrogen ratio sits at a fixed fraction of the copper limit, therefore reproduces the atmosphere that was found empirically for tape-cast substrates. It also says how the ratio should change if the burnout temperature changes: by a factor of about 2.5 per 100~K, following $K_{\mathrm{Cu}}(T)$.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\columnwidth]{fig03_atmosphere}
+\caption{Burnout atmosphere window. Colour: half-life of char in 30\% steam at the given $p_{\mathrm{H_2O}}/p_{\mathrm{H_2}}$ (reference kinetics of Table~\ref{tab:params}). Copper oxidises above the orange line; carbon cannot be gasified to the left of the dashed line ($p_{\mathrm{CO}} = 10^{-4}$~atm). Circle: steam burnout used in this work. Diamond: operating point of the IBM process \cite{herron1980method}. The white line marks the temperature above which a 2~h hold seals the pores of the calibrated glass.}
+\label{fig:atm}
+\end{figure}
+
+\subsection{Removing carbon before the glass seals}
+
+The char has to leave the glass before its pores close, and the glass carries far more of it than the copper does. After pyrolysis in nitrogen the glass-ceramic contains 22\,500~ppm carbon relative to its solids, the copper 5\,300~ppm. The difference follows from the densities: both slurries hold a similar volume of binder, but a unit volume of glass-ceramic solids weighs a third as much as the same volume of copper. Carbon on the glass is also the more harmful, since whatever is sealed in reacts with the water released during crystallisation and bloats the part \cite{herron1980method}.
+
+Fig.~\ref{fig:race} maps the carbon left in the glass-ceramic at the moment its pores close, as a function of burnout temperature and hold time. In steam (Fig.~\ref{fig:race}a) the 100~ppm contour runs from 16~h at 710~$^\circ$C to 1.1~h at 830~$^\circ$C, and the window closes abruptly at 850~$^\circ$C, where the glass seals during the hold. The IBM hold of 6~h at 785~$^\circ$C falls in the region with less than 10~ppm. In humidified forming gas (Fig.~\ref{fig:race}b) only the longest hold, 16~h at 790~$^\circ$C, brings the carbon down to 350~ppm; every other combination leaves more than 1000~ppm. Residual carbon also slows the densification of the glass. Acting as rigid inclusions, the 0.3--2\% of carbon retained in forming gas lowers the final density from 0.99 to 0.96--0.99. Steam is therefore not an option for this material pair but a requirement.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig04_race}
+\caption{Carbon remaining in the glass-ceramic when its pores close, for burnout holds of temperature $T_{\mathrm{B}}$ and duration $t_{\mathrm{B}}$ within the baseline programme. (a) 30\% steam with hydrogen at 20\% of the Cu/Cu$_2$O limit; (b) 4\% H$_2$ humidified at 20~$^\circ$C. Orange: 100~ppm contour. Crosses: the glass sealed during the hold. Diamond: the IBM burnout hold \cite{herron1980method}.}
+\label{fig:race}
+\end{figure*}
+
+\subsection{Two densification ranges}
+
+Fig.~\ref{fig:ladder} compares the free sintering of the two materials after binder removal at 5~K\,min$^{-1}$ in dry hydrogen. The glass-ceramic shrinks by 23\% between 850 and 933~$^\circ$C (5 and 95\% of its shrinkage) and then stops, because it crystallises: 93\% of the glass has crystallised at 1060~$^\circ$C. Fine copper densifies much earlier, and over a much wider range. A 3~$\mu$m powder shrinks between 454 and 702~$^\circ$C; a 1~$\mu$m powder between 323 and 463~$^\circ$C. Only for powders of 12~$\mu$m or coarser does the midpoint of densification fall inside the range of the glass, and these powders do not reach high density before 1060~$^\circ$C: 83\% for 12~$\mu$m and 60\% for 20~$\mu$m.
+
+The two curves also differ in shape. The glass densifies over a range of about 80~K, as a Newtonian melt whose viscosity falls steeply with temperature. Copper densifies over 140--350~K, because diffusional creep has a lower activation energy and grain growth slows it as it proceeds. Adding an inert filler to the paste delays and stretches the copper curve (Fig.~\ref{fig:ladder}b): 40\% filler shifts the midpoint of 3~$\mu$m copper from 573 to 657~$^\circ$C and widens the 5--95\% range from 248 to 367~K. Neither particle size nor filler, on its own, gives copper a shrinkage curve that is as late and as steep as that of the glass. The matching has to come partly from the furnace programme.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig05_ladder}
+\caption{Free sintering of the two materials at 5~K\,min$^{-1}$ in dry 4\% H$_2$ after binder removal. (a) Linear shrinkage of the glass-ceramic and of copper of different median particle size, and crystallised fraction of the glass. (b) Temperature range between 5 and 95\% of the final shrinkage, with the midpoint marked, for copper with and without 40~vol\% inert filler; the shaded band is the range of the glass-ceramic. Bars that reach 1060~$^\circ$C had not finished densifying.}
+\label{fig:ladder}
+\end{figure*}
+
+\subsection{Co-firing with an unmatched paste}
+\label{sec:res_baseline}
+
+The baseline design combines a 3~$\mu$m copper paste without filler with a programme that follows the IBM pattern: pyrolysis in nitrogen to 460~$^\circ$C, a 4~h burnout at 780~$^\circ$C in 30\% steam, and sintering at 960~$^\circ$C for 1~h in dry 4\% H$_2$ (Fig.~\ref{fig:programme}a). Chemically, the design works. The glass-ceramic retains 33~ppm of carbon when its pores close and reaches 99.1\% density and full crystallinity; the copper is 97.6\% dense, retains 81~ppm of carbon and conducts at 96\% IACS.
+
+Mechanically, it fails. As soon as steam begins to remove the char, the copper starts to sinter, while the glass is still rigid. At the end of the burnout hold the logarithmic shrinkage of the copper is 21\% and that of the glass 7\%; the free-strain mismatch peaks at 15.6\%, and a free bilayer of 0.1~mm copper on 1~mm glass-ceramic would reach a curvature of 58~m$^{-1}$, concave towards the copper. The damage index of an embedded line reaches $\Pi_{\mathrm{Cu}} = 1.6$ at 680~$^\circ$C, during the ramp to the burnout temperature, when the line is pulled in tension by the rigid body around it while its own necks are still weak. The glass then catches up. Its shrinkage overtakes that of the copper at 889~$^\circ$C, the bilayer bends the other way and reaches $-259$~m$^{-1}$ (a radius of 3.9~mm) at 930~$^\circ$C, and the final shrinkages differ by 4\%: 26.3\% for the glass-ceramic against 22.3\% for the copper, both as logarithmic strains. For this material pair the difficulty lies less in the final shrinkage than in the order in which the two materials shrink.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig07_programme}
+\caption{Co-firing histories. (a) Baseline: 3~$\mu$m copper without filler, 4~h steam burnout at 780~$^\circ$C, 1~h at 960~$^\circ$C. (b) Optimised paste and programme (Table~\ref{tab:opt}). From top: furnace set point and part temperature, with the atmosphere of each segment shown by the band at the bottom (grey, N$_2$; green, steam; blue, dry H$_2$/N$_2$); relative densities and crystallised fraction of the glass; free logarithmic shrinkage of each material, the shaded area being the mismatch; carbon in the glass-ceramic and damage index of an embedded copper line.}
+\label{fig:programme}
+\end{figure*}
+
+\subsection{Copper paste design maps}
+\label{sec:res_design}
+
+%% DESIGN_MAP
+
+\subsection{A matched paste and programme}
+\label{sec:res_opt}
+
+%% OPTIMISED
+
+\subsection{The printed test vehicle}
+\label{sec:res_3d}
+
+%% PACKAGE
+
+\subsection{Cooling from the stress-free temperature}
+\label{sec:res_cool}
+
+Below about 690~$^\circ$C, the strain point of the calibrated glass, mismatch stresses no longer relax, and the expansion mismatch between copper (16.5--22~ppm\,K$^{-1}$ over this range) and the glass-ceramic (3~ppm\,K$^{-1}$) is carried elastically. Fig.~\ref{fig:cooling} shows the consequences for a copper plane on 1~mm of glass-ceramic. If copper remained elastic, its mean stress would exceed 900~MPa at room temperature and a 20~mm stack with 100~$\mu$m of copper would bow by 250~$\mu$m. Annealed copper cannot carry that stress. It yields within the first 10~K of cooling and then follows its yield stress, which rises from about 25~MPa at 690~$^\circ$C to 69~MPa at room temperature. The bow falls accordingly, to 13~$\mu$m for 100~$\mu$m of copper and to 6~$\mu$m for 50~$\mu$m, and the glass-ceramic stays in mild compression ($-7$~MPa for 100~$\mu$m of copper). Plastic accommodation makes the thermal-expansion mismatch a secondary problem compared with the sintering mismatch, provided the copper is dense and ductile. The price is cyclic plasticity in the conductor, which matters for thermal cycling in service but is outside the scope of this study.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig09_cooling}
+\caption{Cooling of a copper plane on 1~mm of glass-ceramic from the stress-free temperature (690~$^\circ$C). (a) Mean stress in the copper layer for elastic and elastic--perfectly plastic copper; the plastic curves coincide with the temperature-dependent yield stress. (b) Bow over a 20~mm span at room temperature.}
+\label{fig:cooling}
+\end{figure*}
+
+\subsection{Which inputs decide the outcome}
+\label{sec:res_sens}
+
+%% SENSITIVITY

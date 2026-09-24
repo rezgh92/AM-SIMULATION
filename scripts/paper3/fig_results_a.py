@@ -30,18 +30,26 @@ def fig_verification():
     h1.append(Line2D([], [], color=fs.MUTED, marker="o", ms=3.2, mfc="white", lw=0, label="closed form"))
     a.legend(handles=h1, loc="lower right")
     errs = [max(c["max_abs_err"] for c in vg["cases"] if c["T"] == T) for T in cols]
-    a.text(0.03, 0.97, "max |Δθ| ≤ %.1e" % max(errs), transform=a.transAxes, va="top", fontsize=6.6, color=fs.INK2)
+    mant, ex = ("%.1e" % max(errs)).split("e")
+    a.text(0.97, 0.47, "largest |Δθ|, 4–16 cells:\n%s × 10$^{%d}$" % (mant, int(ex)), transform=a.transAxes,
+           ha="right", va="bottom", fontsize=6.4, color=fs.INK2, linespacing=1.3)
     fs.panel(a, "a")
     h = np.array([r["h"] for r in vb]); e = np.abs([r["rel_err"] for r in vb]) * 100
     b.loglog(h, e, "o-", color=fs.BLUE, ms=4, lw=1.3, label="3-D FEM vs viscous Timoshenko")
     hh = np.array([0.13, 0.7])
     b.loglog(hh, e[-1] * (hh / h[-1]) ** 2, "--", color=fs.MUTED, lw=0.9, label="slope 2")
     for hi, ei, r in zip(h, e, vb):
-        b.annotate(f"{r['n_el']/1000:.1f}k el.", (hi, ei), textcoords="offset points", xytext=(5, 3), fontsize=6, color=fs.INK2)
+        right = hi < 0.16
+        b.annotate(f"{r['n_el']/1000:.1f}k elements", (hi, ei), textcoords="offset points",
+                   xytext=(7, -2) if right else (-6, 3), ha="left" if right else "right", va="top" if right else "baseline",
+                   fontsize=6, color=fs.INK2)
     b.set_xlabel("Voxel size (mm)")
     b.set_ylabel("Error in curvature rate (%)")
     b.set_xlim(0.12, 0.8)
-    b.legend(loc="upper left")
+    b.set_xticks([0.15, 0.2, 0.3, 0.4, 0.6])
+    b.set_xticks([], minor=True)
+    b.set_xticklabels(["0.15", "0.2", "0.3", "0.4", "0.6"])
+    b.legend(loc="lower right")
     fs.panel(b, "b")
     fs.save(fig, "fig02_verification", O)
 
@@ -68,14 +76,21 @@ def fig_atmosphere():
     ax.plot([400, 900], [np.log10(p["forming_gas_bubbler"]["ratio"])] * 2, color=fs.INK2, lw=0.9)
     ax.text(405, np.log10(p["forming_gas_bubbler"]["ratio"]) + 0.15, "4 % H$_2$ through a +20 °C bubbler", fontsize=5.8, color=fs.INK)
     TB = 780.0; rB = 0.2 * d["ratio_cu"][int(np.argmin(abs(T - TB)))]
-    ax.plot(TB, np.log10(rB), "o", ms=5, color=fs.ORANGE, mec="white", mew=0.8, zorder=5)
-    ax.annotate("steam burnout\nat 20 % of the Cu limit", (TB, np.log10(rB)), xytext=(560, 5.2), fontsize=5.8,
-                arrowprops=dict(arrowstyle="-", color=fs.INK2, lw=0.6), color=fs.INK)
-    ax.axvline(875, color="white", lw=1.0, ls=(0, (3, 2)))
-    ax.text(882, 1.2, "glass pores\nclose above\n~875 °C", fontsize=5.8, color="white")
+    # published operating point of the IBM steam co-sintering process: H2/H2O = 1e-4 at 785 +/- 10 C
+    ax.errorbar(785.0, 4.0, xerr=10.0, fmt="D", ms=6.5, mfc="white", mec=fs.INK, mew=0.8, ecolor=fs.INK,
+                elinewidth=0.8, capsize=1.8, zorder=6)
+    ax.plot(TB, np.log10(rB), "o", ms=3.2, color=fs.ORANGE, mec=fs.ORANGE, mew=0.0, zorder=7)
+    hd = [Line2D([], [], marker="o", ms=3.2, color=fs.ORANGE, lw=0,
+                 label="steam burnout, 780 °C,\nH$_2$ at 20 % of the Cu limit"),
+          Line2D([], [], marker="D", ms=5.0, mfc="white", mec=fs.INK, mew=0.8, lw=0,
+                 label="IBM process: H$_2$/H$_2$O = 10$^{-4}$,\n785 ± 10 °C")]
+    ax.legend(handles=hd, loc="upper left", bbox_to_anchor=(0.0, 0.63), fontsize=5.6, handletextpad=0.4,
+              labelspacing=0.8, borderaxespad=0.3)
+    ax.axvline(830, color="white", lw=1.0, ls=(0, (3, 2)))
+    ax.text(838, 1.3, "glass pores\nseal within 2 h\nabove ≈830 °C", fontsize=5.8, color="white", linespacing=1.3)
     ax.set_xlim(400, 1000); ax.set_ylim(-2, 8)
     ax.set_xlabel("Temperature (°C)")
-    ax.set_ylabel("log$_{10}$(p$_{H_2O}$/p$_{H_2}$)")
+    ax.set_ylabel("log$_{10}$(p$_{\\mathrm{H_2O}}$/p$_{\\mathrm{H_2}}$)")
     cb = fig.colorbar(cs, ax=ax, pad=0.02, fraction=0.05)
     cb.set_label("log$_{10}$ char half-life (h), 30 % steam", fontsize=6.4)
     cb.ax.tick_params(labelsize=6)
@@ -104,7 +119,11 @@ def fig_race():
         ax.set_yticks(np.log10([0.25, 0.5, 1, 2, 4, 8, 16])); ax.set_yticklabels(["0.25", "0.5", "1", "2", "4", "8", "16"])
         fs.panel(ax, L, x=-0.1 if L == "b" else -0.16)
     axs[0].set_ylabel("Burnout hold t$_B$ (h)")
-    axs[0].text(760, np.log10(2.6), "100 ppm C", color=fs.ORANGE, fontsize=6.4, rotation=-38)
+    axs[0].text(741, np.log10(11.5), "C = 100 ppm", color=fs.ORANGE, fontsize=6.4, fontweight="bold")
+    # published IBM hold (785 C, about 6 h in steam); IBM rejects 750 C (too slow) and 830 C (pores seal)
+    axs[0].plot(785.0, np.log10(6.0), "D", ms=4.2, mfc="white", mec=fs.INK, mew=0.8, zorder=6)
+    axs[0].annotate("IBM hold\n785 °C, 6 h", (785.0, np.log10(6.0)), xytext=(6, -4), textcoords="offset points",
+                    fontsize=5.8, color=fs.INK, va="center", linespacing=1.2)
     axs[1].plot([], [], "x", color=fs.CRIT, label="glass closed during hold")
     axs[1].legend(loc="upper right", fontsize=6)
     cb = fig.colorbar(cs, ax=axs, pad=0.015, fraction=0.03)
@@ -130,9 +149,10 @@ def fig_ladder():
     for k, dd in enumerate(ds):
         c = d["cu"][f"d{dd:g}_f0"]
         a.plot(c["T"], c["shrink"], color=cmap(0.25 + 0.75 * k / (len(ds) - 1)), lw=1.2, label=f"Cu {dd:g} µm")
-    a.set_xlim(250, 1060); a.set_ylim(0, 25)
+    a.set_xlim(250, 1060); a.set_ylim(0, 30)
+    a.set_yticks([0, 5, 10, 15, 20, 25])
     a.set_ylabel("Free linear shrinkage (%)")
-    a.legend(loc="upper left", ncol=2, bbox_to_anchor=(0.0, 1.0), columnspacing=1.0)
+    a.legend(loc="upper left", ncol=3, bbox_to_anchor=(0.0, 1.02), columnspacing=0.9, handlelength=1.3, fontsize=6.2)
     fs.panel(a, "a")
     rows = []
     for dd in [1.0, 2.0, 3.0, 6.0, 12.0, 20.0]:
