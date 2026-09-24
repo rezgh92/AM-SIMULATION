@@ -1097,7 +1097,9 @@ function renderSens() {
     const sw = Math.max(Math.abs((a ?? base) - base) || 0, Math.abs((b ?? base) - base) || 0);
     return { ...r, a, b, sw };
   }).sort((x, y) => y.sw - x.sw);
-  const show = rows.slice(0, 14);
+  const maxSw = rows.length ? rows[0].sw : 0;
+  const show = rows.filter((r) => r.sw > 0.01 * maxSw).slice(0, 14);
+  const flat = rows.length - rows.filter((r) => r.sw > 0.01 * maxSw).length;
   let lo = base, hi = base;
   for (const r of show) for (const v of [r.a, r.b]) if (Number.isFinite(v)) { lo = Math.min(lo, v); hi = Math.max(hi, v); }
   if (hi - lo < 1e-12) { hi = base + 1; lo = base - 1; }
@@ -1121,7 +1123,8 @@ function renderSens() {
       rb,
       el("div", { class: "rv" }, `${Number.isFinite(r.a) ? f(r.a) : "–"} → ${Number.isFinite(r.b) ? f(r.b) : "–"}`)));
   }
-  $("#sensNote").textContent = `Current value ${f(base)} (vertical line). Top ${show.length} of ${rows.length} ${state.sensAll ? "inputs" : "material unknowns"} by swing. ` +
+  $("#sensNote").textContent = `Current value ${f(base)} (vertical line). ${show.length} of ${rows.length} ${state.sensAll ? "inputs" : "material unknowns"} shown by swing` +
+    (flat ? `; the other ${flat} barely move this outcome. ` : ". ") +
     (sd.at ? "Recomputed " + new Date(sd.at).toLocaleString() + "." : "Computed for the default inputs and the default optimised cycle.");
   renderMeasure(rows);
 }
@@ -1174,9 +1177,9 @@ function renderPowders() {
     tb.append(el("tr", null,
       el("td", null, (PRESET_LABEL[r.preset] || [r.preset, ""])[1] || r.preset),
       el("td", { class: "num" }, r.d50_um + " µm"), el("td", { class: "num" }, r.span.toFixed(1)), el("td", { class: "num" }, r.native_oxide_nm + " nm"),
-      el("td", null, s ? el("span", { class: "status", title: s.passes === false ? "Best effort: " + (s.fails || []).join("; ") : "Passes all 10 checks" },
-        el("span", { class: "st-" + (s.passes === false ? "warn" : "good"), html: ICON[s.passes === false ? "warn" : "good"] }),
-        el("span", { class: "num" }, s.duration_h.toFixed(1) + " h"), s.passes === false ? "best effort" : "") : "–"),
+      el("td", null, s ? el("span", { class: "status", title: s.n_fail ? "Best effort, fails: " + (s.fails || []).join("; ") : "Passes all 10 checks" },
+        el("span", { class: "st-" + (s.n_fail ? "warn" : "good"), html: ICON[s.n_fail ? "warn" : "good"] }),
+        el("span", { class: "num" }, s.duration_h.toFixed(1) + " h"), s.n_fail ? "best effort" : "") : "–"),
       el("td", { class: "num" }, s ? s.T_peak_C.toFixed(0) + " °C" : "–"),
       el("td", { class: "num" }, s ? (100 * s.rho_final).toFixed(1) + " %" : "–"),
       el("td", { class: "num" }, s ? s.shrink_xy_pct.toFixed(1) + " %" : "–"),
@@ -1189,8 +1192,8 @@ function renderPowders() {
   }
   if (!rows.length) return;
   const d50 = rows.map((r) => r.d50_um);
-  const hollow = rows.map((r) => !!(r.synth && r.synth.passes === false));
-  pointChart("ch-pow-h", "Own optimised cycle", "hours; open markers pass everything except the density target", d50,
+  const hollow = rows.map((r) => !!(r.synth && r.synth.n_fail));
+  pointChart("ch-pow-h", "Own optimised cycle", "hours; open markers are best efforts that miss the density target", d50,
     [{ label: "Cycle time", color: col(1), y: rows.map((r) => (r.synth ? r.synth.duration_h : NaN)), hollow }], (v) => v.toFixed(1) + " h", { min: 0 });
   pointChart("ch-pow-rho", "Final density", "% of theoretical", d50,
     [{ label: "Own optimised cycle", color: col(1), y: rows.map((r) => (r.synth ? 100 * r.synth.rho_final : NaN)), hollow },
