@@ -3,7 +3,7 @@
 
 \subsection{Structure of the model}
 
-\begin{figure*}[t]
+\begin{figure*}[!tp]
 \centering
 \includegraphics[width=\textwidth]{fig01_overview}
 \caption{(a) Test vehicle: a $12\times12\times2.4$~mm glass-ceramic body with a buried copper ground plane, a square spiral and a via to a top pad, printed as one part. (b) Structure of the model. Each material is followed by its own slab model under a shared furnace programme; the two histories are coupled mechanically, analytically and in three dimensions, and the programme and paste are searched against constraints.}
@@ -25,10 +25,12 @@ k_i(T) = \frac{E_i\beta_{\mathrm{ref}}}{R T_{\mathrm{p},i}^2}\exp\!\left[-\frac{
 \end{equation}
 where $T_{\mathrm{p},i}$ is the temperature of the corresponding peak in a thermogravimetric trace at $\beta_{\mathrm{ref}} = 10$~K\,min$^{-1}$. Writing the rate constant in terms of the peak temperature keeps the two fitted quantities nearly independent and lets them be read directly from a single thermogravimetric curve. A fraction $\chi$ of the network and backbone mass remains as char. In a steam-bearing atmosphere the char is gasified by $\mathrm{C} + \mathrm{H_2O} \rightarrow \mathrm{CO} + \mathrm{H_2}$ at the rate
 \begin{equation}
-r_{\mathrm{g}} = a(\varepsilon_{\mathrm{o}})\,\bigl(1-f_{\mathrm{cl}}\bigr)\,k_{\mathrm{g}}(T)\,\frac{c}{M_{\mathrm{C}}}
-\left(\frac{x_{\mathrm{H_2O}}}{x_{\mathrm{ref}}}\right)^{1/2}
-\frac{1+K_{\mathrm{H}}\,x_{\mathrm{H_2}}^{\mathrm{ref}}}{1+K_{\mathrm{H}}\,x_{\mathrm{H_2}}}
+\begin{split}
+r_{\mathrm{g}} ={}& a(\varepsilon_{\mathrm{o}})\,\bigl(1-f_{\mathrm{cl}}\bigr)\,k_{\mathrm{g}}(T)\,\frac{c}{M_{\mathrm{C}}}
+\left(\frac{x_{\mathrm{H_2O}}}{x_{\mathrm{ref}}}\right)^{1/2}\\
+&\times\frac{1+K_{\mathrm{H}}\,x_{\mathrm{H_2}}^{\mathrm{ref}}}{1+K_{\mathrm{H}}\,x_{\mathrm{H_2}}}
 \left(1-\frac{Q}{K_{\mathrm{st}}(T)}\right)_{+},
+\end{split}
 \label{eq:gasif}
 \end{equation}
 in which $c$ is the char concentration, $a(\varepsilon_{\mathrm{o}})$ the fraction of pore surface reachable through open porosity $\varepsilon_{\mathrm{o}}$, $f_{\mathrm{cl}}$ the closed-pore fraction, $K_{\mathrm{H}}$ an inhibition constant for hydrogen adsorption, $Q = x_{\mathrm{CO}}x_{\mathrm{H_2}}/x_{\mathrm{H_2O}}$ the reaction quotient and $K_{\mathrm{st}}$ the equilibrium constant from NIST-JANAF data \cite{chase1998janaf}. Char in closed pores is not gasified: once the pores seal, whatever carbon remains stays in the part. The rate constant $k_{\mathrm{g}}$ is parameterised by a half-life at 800~$^\circ$C in the reference atmosphere and an activation energy; no measured value exists for char on either material, so both enter the sensitivity analysis. A Thiele-modulus estimate ($k_{\mathrm{g}}L^2/D_{\mathrm{eff}} \sim 10^{-4}$ for $L = 2$~mm) shows that gasification is kinetically controlled, so steam access is represented by the open-pore accessibility $a(\varepsilon_{\mathrm{o}})$ rather than by a diffusion equation.
@@ -47,7 +49,10 @@ with $\varphi = (1-\theta)^2$, $\psi = \tfrac{2}{3}(1-\theta)^3/\theta$ and sint
 
 \paragraph{Glass-ceramic} The residual melt is Newtonian. Its viscosity follows the MYEGA equation \cite{mauro2009viscosity},
 \begin{equation}
-\log_{10}\eta_{\mathrm{g}} = \log_{10}\eta_\infty + \left(12-\log_{10}\eta_\infty\right)\frac{T_{\mathrm{g}}}{T}\exp\!\left[\left(\frac{m}{12-\log_{10}\eta_\infty}-1\right)\left(\frac{T_{\mathrm{g}}}{T}-1\right)\right],
+\begin{split}
+\log_{10}\eta_{\mathrm{g}} ={}& \log_{10}\eta_\infty + \left(12-\log_{10}\eta_\infty\right)\frac{T_{\mathrm{g}}}{T}\\
+&\times\exp\!\left[\left(\frac{m}{12-\log_{10}\eta_\infty}-1\right)\left(\frac{T_{\mathrm{g}}}{T}-1\right)\right],
+\end{split}
 \label{eq:myega}
 \end{equation}
 with $\log_{10}\eta_\infty = -3$ (Pa\,s), glass transition $T_{\mathrm{g}}$ (defined at $10^{12}$~Pa\,s) and fragility index $m$. Crystallisation during firing follows non-isothermal Johnson--Mehl--Avrami--Kolmogorov kinetics \cite{avrami1939kinetics} written in terms of the extended-volume integral,
@@ -91,10 +96,10 @@ During the burnout segment the inlet hydrogen is therefore tied to the steam con
 
 \paragraph{Camber} By the elastic--viscous correspondence principle, a bilayer of two linear viscous layers bends at a curvature rate given by Timoshenko's bimetal solution \cite{timoshenko1925analysis}, with elastic moduli replaced by biaxial viscosities and thermal strain by the difference in free sintering rates \cite{cai1997constrainedII,jean1997cofiring,olevsky2013sintering}:
 \begin{equation}
-\dot{\kappa} = \frac{6\,(1+\lambda)^2\,\left(\dot{\varepsilon}_{\mathrm{f},2}-\dot{\varepsilon}_{\mathrm{f},1}\right)}{h\left[3(1+\lambda)^2+(1+\lambda\mu)\left(\lambda^2+\dfrac{1}{\lambda\mu}\right)\right]},\qquad \lambda = \frac{h_1}{h_2},\quad \mu = \frac{B_1}{B_2}.
+\dot{\kappa} = \frac{6\,(1+\lambda)^2\,\left(\dot{\varepsilon}_{\mathrm{f},2}-\dot{\varepsilon}_{\mathrm{f},1}\right)}{h\left[3(1+\lambda)^2+(1+\lambda\mu)\left(\lambda^2+1/(\lambda\mu)\right)\right]},
 \label{eq:camber}
 \end{equation}
-Layer 1 is copper and layer 2 the glass-ceramic; positive curvature is concave towards the copper. Eq.~\eqref{eq:camber} is integrated over the firing with the layer thicknesses updated by their own shrinkage. The reference stack is a 0.1~mm copper plane on 1~mm of glass-ceramic.
+with $\lambda = h_1/h_2$, $\mu = B_1/B_2$ and $h = h_1 + h_2$. Layer 1 is copper and layer 2 the glass-ceramic; positive curvature is concave towards the copper. Eq.~\eqref{eq:camber} is integrated over the firing with the layer thicknesses updated by their own shrinkage. The reference stack is a 0.1~mm copper plane on 1~mm of glass-ceramic.
 
 \paragraph{Embedded conductors} A conductor line buried in the body cannot curl; its misfit is taken up by stress. We represent line and surrounding body as two Maxwell elements in series, each with a porous elastic modulus and a biaxial viscosity:
 \begin{equation}
@@ -109,7 +114,7 @@ A compliant line follows the body and carries $B_{\mathrm{Cu}}$ times the misfit
 \end{equation}
 where the strengths $\sigma_{\mathrm{s}}$ grow from the binder-carried green strength through the neck-controlled brown strength. The series coupling carries an Eshelby factor of order unity \cite{eshelby1957determination} that we do not resolve, so the indices are used comparatively. The same coupling is resolved exactly in three dimensions below.
 
-\paragraph{Three-dimensional co-sintering} The printed part is meshed voxel by voxel with trilinear hexahedra, so the mesh is the printed pixel grid. Each element carries its material, porosity and microstructural state. The velocity field satisfies $\nabla\cdot\boldsymbol{\sigma} + \rho_{\mathrm{b}}\mathbf{g} = \mathbf{0}$ with Eq.~\eqref{eq:sovs}, gravity, and a setter plate beneath the part: zero normal velocity and regularised Coulomb friction ($\mu = 0.6$) iterated to convergence at each step. Volumetric terms use one-point quadrature, which avoids locking as $\theta \to 0$. The problem is assembled with scikit-fem \cite{gustafsson2020scikit} and solved by conjugate gradients preconditioned with smoothed-aggregation algebraic multigrid carrying the six rigid-body modes \cite{bell2022pyamg}. Porosity is advanced with the exact mass-conserving update $1-\theta^{n+1} = (1-\theta^{n})\exp(-\mathrm{tr}\,\dot{\boldsymbol{\varepsilon}}\,\Delta t)$. The temperature and carbon histories are taken from the two slab simulations.
+\paragraph{Three-dimensional co-sintering} The printed part is meshed voxel by voxel with trilinear hexahedra, so the mesh is the printed pixel grid. Each element carries its material, porosity and microstructural state. The velocity field satisfies $\nabla\cdot\boldsymbol{\sigma} + \rho_{\mathrm{b}}\mathbf{g} = \mathbf{0}$ with Eq.~\eqref{eq:sovs}, gravity, and a setter plate beneath the part: zero normal velocity and regularised Coulomb friction ($\mu = 0.6$) iterated to convergence at each step. Volumetric terms use one-point quadrature, which avoids locking as $\theta \to 0$. The problem is assembled with scikit-fem \cite{gustafsson2020scikit} and solved by conjugate gradients preconditioned with smoothed-aggregation algebraic multigrid carrying the six rigid-body modes \cite{bell2022pyamg}. Porosity is advanced with the exact mass-conserving update $1-\theta^{n+1} = (1-\theta^{n})\exp(-\mathrm{tr}\,\dot{\boldsymbol{\varepsilon}}\,\Delta t)$. The temperature and carbon histories are taken from the two slab simulations. Below 0.3\% porosity the constitutive law is evaluated at 0.3\%, since the bulk viscosity otherwise grows without bound and the remaining densification no longer affects the shape. The simulation ends when the glass-ceramic is 90\% crystallised, after which the body is rigid.
 
 \paragraph{Cooling} Below a stress-free temperature $T_{\mathrm{sf}}$, where the residual glass stops relaxing, the thermal-expansion mismatch is carried elastically by the glass-ceramic and elastoplastically by the copper. The copper layer is treated as elastic--perfectly plastic with a temperature-dependent yield stress; its mean stress is capped at yield by a uniform plastic strain, and the curvature follows from Timoshenko's elastic solution for the remaining elastic misfit.
 

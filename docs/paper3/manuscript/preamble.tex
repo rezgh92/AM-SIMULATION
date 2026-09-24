@@ -20,3 +20,13 @@
 \crefname{table}{Table}{Tables}
 \crefname{section}{Section}{Sections}
 \crefname{appendix}{Appendix}{Appendices}
+% float placement: let full-width figures and tables sit near their first mention
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.75}
+\renewcommand{\dbltopfraction}{0.95}
+\renewcommand{\dblfloatpagefraction}{0.75}
+\setcounter{topnumber}{3}
+\setcounter{dbltopnumber}{3}
+\setcounter{totalnumber}{5}
