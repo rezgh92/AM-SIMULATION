@@ -16,6 +16,8 @@ fs.apply()
 def fig_design():
     d = json.load(open(f"{D}/design_map.json"))
     d50 = np.array(d["d50"]); fl = np.array(d["filler"])
+    Tg = np.array(d["Tg"]); Tp = np.array(d["Tp"])
+
     def grid(key, src="paste", xs=None, ys=None, kx="d50_um", ky="cu_filler"):
         xs = d50 if xs is None else xs; ys = fl if ys is None else ys
         Z = np.full((len(ys), len(xs)), np.nan)
@@ -25,30 +27,61 @@ def fig_design():
             i = int(np.argmin(abs(ys - r["over"][ky]))); j = int(np.argmin(abs(xs - r["over"][kx])))
             Z[i, j] = r[key]
         return Z
-    fig, axs = plt.subplots(1, 4, figsize=(fs.COL2, 0.30 * fs.COL2), sharey=True, gridspec_kw=dict(wspace=0.12))
-    specs = [("mismatch_max_pct", "Largest free-strain\nmismatch (%)", fs.SEQ_BLUE, None, None),
-             ("kappa_final", "Final free camber |κ| (m$^{-1}$)", fs.SEQ_BLUE, "abs_log", None),
-             ("line_Pi_max", "Embedded-line damage\nindex Π", fs.SEQ_BLUE, "log", 1.0),
-             ("cu_iacs", "Copper conductivity\n(% IACS)", fs.SEQ_COPPER, None, None)]
+
+    def tf(Z, mode):
+        if mode == "log":
+            return np.log10(np.maximum(Z, 1e-3))
+        return Z
+
+    fig, axs = plt.subplots(2, 4, figsize=(fs.COL2, 0.62 * fs.COL2),
+                            gridspec_kw=dict(wspace=0.16, hspace=0.78))
+    # row 1: copper paste at the baseline programme
+    specs = [("mismatch_max_pct", "Peak free-strain mismatch (%)", fs.SEQ_BLUE, None),
+             ("line_Pi_max", "Line damage index Π (log$_{10}$)", fs.SEQ_BLUE, "log"),
+             ("cu_rho", "Copper relative density", fs.SEQ_COPPER, None),
+             ("cu_iacs", "Copper conductivity (% IACS)", fs.SEQ_COPPER, None)]
     X, Y = np.meshgrid(np.log10(d50), fl * 100)
-    for ax, (key, lab, cmap, mode, contour) in zip(axs, specs, "abcd"[:0] or [None] * 4):
-        pass
-    for k, (ax, (key, lab, cmap, mode, contour)) in enumerate(zip(axs, specs)):
-        Z = grid(key)
-        if mode == "abs_log":
-            Z = np.log10(np.abs(Z) + 1e-3)
-        elif mode == "log":
-            Z = np.log10(np.maximum(Z, 1e-3))
+    rho = grid("cu_rho")
+    for k, (key, lab, cmap, mode) in enumerate(specs):
+        ax = axs[0, k]
+        Z = tf(grid(key), mode)
         pc = ax.pcolormesh(X, Y, Z, cmap=cmap, shading="nearest")
-        if contour is not None:
-            ax.contour(X, Y, Z, levels=[np.log10(contour)], colors=[fs.ORANGE], linewidths=1.2)
-        cb = fig.colorbar(pc, ax=ax, orientation="horizontal", pad=0.28, fraction=0.06, aspect=18)
-        cb.ax.tick_params(labelsize=5.8)
-        cb.set_label(lab + (" (log$_{10}$)" if mode else ""), fontsize=6.2)
+        if key == "line_Pi_max":
+            ax.contour(X, Y, Z, levels=[0.0], colors=[fs.ORANGE], linewidths=1.3)
+        cs = ax.contour(X, Y, rho, levels=[0.92], colors=[fs.INK], linewidths=0.9, linestyles="--")
+        ax.plot(np.log10(3.0), 0.0, marker="o", ms=4.5, mfc="white", mec=fs.INK, mew=0.9, clip_on=False, zorder=6)
+        cb = fig.colorbar(pc, ax=ax, orientation="horizontal", pad=0.30, fraction=0.07, aspect=16)
+        cb.ax.tick_params(labelsize=5.8); cb.set_label(lab, fontsize=6.2)
         ax.set_xticks(np.log10([1, 2, 3, 6, 12, 18])); ax.set_xticklabels(["1", "2", "3", "6", "12", "18"])
         ax.set_xlabel("Cu D50 (µm)")
-        fs.panel(ax, "abcd"[k], x=-0.12 if k else -0.3)
-    axs[0].set_ylabel("Filler in Cu paste (vol%)")
+        if k:
+            ax.set_yticklabels([])
+        fs.panel(ax, "abcd"[k], x=-0.04, y=1.05)
+    axs[0, 0].set_ylabel("Filler in Cu paste (vol%)")
+    # row 2: glass (T_g x crystallisation peak) with the baseline paste and programme
+    gspecs = [("gc_C_close_ppm", "C at glass pore closure (ppm, log$_{10}$)", fs.SEQ_BLUE, "log"),
+              ("gc_rho", "Glass-ceramic relative density", fs.SEQ_BLUE, None),
+              ("gc_X", "Crystallised fraction", fs.SEQ_BLUE, None),
+              ("mismatch_max_pct", "Peak free-strain mismatch (%)", fs.SEQ_BLUE, None)]
+    XG, YG = np.meshgrid(Tg, Tp)
+    for k, (key, lab, cmap, mode) in enumerate(gspecs):
+        ax = axs[1, k]
+        Z = tf(grid(key, "glass", Tg, Tp, "gc_Tg_C", "gc_Tp_cryst_C"), mode)
+        pc = ax.pcolormesh(XG, YG, Z, cmap=cmap, shading="nearest")
+        if key == "gc_C_close_ppm":
+            ax.contour(XG, YG, Z, levels=[2.0], colors=[fs.ORANGE], linewidths=1.3)
+        if key == "gc_rho":
+            ax.contour(XG, YG, Z, levels=[0.97], colors=[fs.ORANGE], linewidths=1.3)
+        if key == "gc_X":
+            ax.contour(XG, YG, Z, levels=[0.8], colors=[fs.ORANGE], linewidths=1.3)
+        ax.plot(734.0, 1040.0, marker="D", ms=4.2, mfc="white", mec=fs.INK, mew=0.9, clip_on=False, zorder=6)
+        cb = fig.colorbar(pc, ax=ax, orientation="horizontal", pad=0.30, fraction=0.07, aspect=16)
+        cb.ax.tick_params(labelsize=5.8); cb.set_label(lab, fontsize=6.2)
+        ax.set_xlabel("Glass T$_g$ (°C)")
+        if k:
+            ax.set_yticklabels([])
+        fs.panel(ax, "efgh"[k], x=-0.04, y=1.05)
+    axs[1, 0].set_ylabel("Crystallisation peak (°C)")
     fs.save(fig, "fig06_design", O)
 
 

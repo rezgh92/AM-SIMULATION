@@ -27,8 +27,8 @@ if __name__ == "__main__":
     d50s = [1.0, 1.5, 2.0, 3.0, 4.5, 6.0, 9.0, 12.0, 18.0]
     fills = [0.0, 0.1, 0.2, 0.3, 0.4]
     jobs = [(dict(d50_um=d, cu_filler=f), cyc) for d in d50s for f in fills]
-    Tgs = [700.0, 730.0, 760.0, 790.0, 820.0, 850.0]
-    Tps = [880.0, 920.0, 960.0, 1000.0, 1040.0]
+    Tgs = [680.0, 700.0, 720.0, 740.0, 760.0, 780.0, 800.0, 820.0]
+    Tps = [900.0, 940.0, 980.0, 1020.0, 1060.0, 1100.0]
     jobs2 = [(dict(gc_Tg_C=a, gc_Tp_cryst_C=b), cyc) for a in Tgs for b in Tps]
     t0 = time.time()
     with ProcessPoolExecutor(4) as ex:
