@@ -36,7 +36,7 @@ def draw_vehicle(ax):
     ax.view_init(elev=28, azim=-58)
     ax.set_axis_off()
     ax.text2D(0.02, 0.93, "glass-ceramic body\n12 × 12 × 2.4 mm", transform=ax.transAxes, color=fs.GC, fontsize=6.6)
-    ax.text2D(0.62, 0.12, "copper: spiral, via,\nburied ground plane", transform=ax.transAxes, color=fs.CU, fontsize=6.6)
+    ax.text2D(0.02, 0.03, "copper: spiral, via,\nburied ground plane", transform=ax.transAxes, color=fs.CU, fontsize=6.6)
 
 
 def box(ax, x, y, w, h, title, body, fc="#F4F6F8", ec=fs.RULE, tc=fs.INK):
@@ -52,11 +52,11 @@ def arrow(ax, a, b, color=fs.MUTED):
 
 
 def draw_flow(ax):
-    ax.set_xlim(-0.012, 1.012)
+    ax.set_xlim(-0.012, 1.02)
     ax.set_ylim(0, 1)
     ax.set_axis_off()
     box(ax, 0.00, 0.72, 0.30, 0.26, "Inputs with provenance",
-        "powders, loadings, binder\nglass viscosity, crystallisation\ncopper diffusion data\nfurnace and gas limits\neach tagged by provenance")
+        "powders, loadings, binder\nglass viscosity, crystallisation\ncopper diffusion data\nfurnace and gas limits\nliterature, analogue or calibrated")
     box(ax, 0.35, 0.80, 0.30, 0.18, "Glass-ceramic slab",
         "binder, char, steam gasification\nMYEGA melt + JMAK crystals\nSkorohod-Olevsky sintering", fc="#EEF4FC", ec="#9CC0E8")
     box(ax, 0.35, 0.57, 0.30, 0.18, "Copper slab",
@@ -68,10 +68,10 @@ def draw_flow(ax):
     box(ax, 0.35, 0.30, 0.30, 0.22, "3-D co-sintering FEM",
         "voxel mesh = printed pixels\ntwo materials, gravity,\nsetter friction")
     box(ax, 0.70, 0.30, 0.30, 0.22, "Constraints",
-        "C at glass closure, Cu metallic\ndensities, crystallinity\ndamage indices, camber\nmelting margin")
+        "C at glass closure, Cu metallic\ndensities, crystallinity\ndamage indices, conductivity\nmelting margin, cycle time")
     box(ax, 0.18, 0.06, 0.64, 0.16, "Design outputs",
         "atmosphere and burnout window  ·  copper paste (D50, filler, loading)\n"
-        "matched co-firing schedule  ·  sensitivity: what to measure first", fc="#F1F7F4", ec="#9FD4BD")
+        "nominal and robust programmes  ·  sensitivity: what to measure first", fc="#F1F7F4", ec="#9FD4BD")
     arrow(ax, (0.30, 0.86), (0.35, 0.89))
     arrow(ax, (0.30, 0.78), (0.35, 0.66))
     arrow(ax, (0.70, 0.88), (0.65, 0.89))
