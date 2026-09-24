@@ -1,0 +1,78 @@
+{
+ "name": "WGS (pyrolyse in N2, gasify in wet H2) | T_B 1000 C",
+ "T_start_C": 25,
+ "segments": [
+  {
+   "T_end_C": 460,
+   "ramp_Kmin": 1,
+   "hold_h": 0,
+   "O2": 0,
+   "H2": 0,
+   "dp_C": -60,
+   "note": "A debind [guard]"
+  },
+  {
+   "T_end_C": 490,
+   "ramp_Kmin": 2,
+   "hold_h": 0,
+   "O2": 0,
+   "H2": 0,
+   "dp_C": -60,
+   "note": "A debind [guard]"
+  },
+  {
+   "T_end_C": 940,
+   "ramp_Kmin": 10,
+   "hold_h": 0,
+   "O2": 0,
+   "H2": 0.04,
+   "dp_C": 20,
+   "note": "B chemistry [ramp_max]"
+  },
+  {
+   "T_end_C": 1000,
+   "ramp_Kmin": 4,
+   "hold_h": 0.5,
+   "O2": 0,
+   "H2": 0.04,
+   "dp_C": 20,
+   "note": "B chemistry [ramp_max] + hold [C/O removal]"
+  },
+  {
+   "T_end_C": 1062.5,
+   "ramp_Kmin": 4.1646,
+   "hold_h": 1.5,
+   "O2": 0,
+   "H2": 0.04,
+   "dp_C": -60,
+   "note": "C densify [ramp_max] + hold [densification]"
+  },
+  {
+   "T_end_C": 612.5,
+   "ramp_Kmin": 10,
+   "hold_h": 0,
+   "O2": 0,
+   "H2": 0.04,
+   "dp_C": -60,
+   "note": "D cool [ramp_max]"
+  },
+  {
+   "T_end_C": 600,
+   "ramp_Kmin": 0.8312,
+   "hold_h": 0,
+   "O2": 0,
+   "H2": 0.04,
+   "dp_C": -60,
+   "note": "D cool [ramp_max]"
+  },
+  {
+   "T_end_C": 25,
+   "ramp_Kmin": 9.5833,
+   "hold_h": 0,
+   "O2": 0,
+   "H2": 0,
+   "dp_C": -60,
+   "note": "D cool [ramp_max]"
+  }
+ ]
+}

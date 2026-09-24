@@ -110,7 +110,7 @@ class Runner:
         except StepFailure:
             return None
         if ts[-1] < self.t + dt - 1e-6:          # aborted: report the violation, do not commit
-            return dict(Pi_gas=0.0, Pi_th=0.0, exo=np.inf, melt=np.inf, state=None)
+            return dict(Pi_gas=0.0, Pi_th=0.0, exo=np.inf, melt=np.inf, bloat=0.0, state=None)
         ys = np.array(ys)
         _, d = self.slab.evaluate(ts[-1], ys, ctl, diag=True)
         heating = np.asarray(d["Tset"]) >= np.asarray(d["Tf"]) - 0.5
@@ -119,6 +119,7 @@ class Runner:
             Pi_th=float(np.max(d["Pi_th"])),
             exo=float(np.max(np.where(heating, d["exo_gen"], -np.inf))) if np.any(heating) else -np.inf,
             melt=float(np.min(d["melt_margin"])),
+            bloat=float(np.max(d["Pi_bloat"])),
             state=d,
         )
         self.h = min(max(ts[-1] - ts[-2], 1.0), 600.0) if len(ts) > 1 else None
@@ -149,6 +150,8 @@ def _ok(diag, su: Setup, margin):
         return False, "exo"
     if diag["melt"] < -0.5:
         return False, "melt"
+    if diag.get("bloat", 0.0) > margin:
+        return False, "bloat"
     return True, ""
 
 
@@ -292,7 +295,9 @@ def phase_densify(run: Runner, margin: float, max_hold_h=8.0):
         if last_rho is not None and (rho - last_rho) < 1e-3 * DT_HOLD / 3600.0:   # < 0.1 %/h: stalled
             break
         last_rho = rho
-        _step(run, T_peak + T0C, [atm], "C densify", margin, ramps=[0.0], hold_reason="densification", dt=DT_HOLD)
+        d_ = _step(run, T_peak + T0C, [atm], "C densify", margin, ramps=[0.0], hold_reason="densification", dt=DT_HOLD)
+        if run.log[-1].limit.startswith("INFEASIBLE"):
+            break
     return run
 
 

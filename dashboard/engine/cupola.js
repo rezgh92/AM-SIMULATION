@@ -244,6 +244,10 @@
     this.Vb0 = su.mb0 / su.rho_b;
     this.b_net0 = (su.b0[1] + su.b0[2]) / su.mb0;
     this.theta0 = 1 - su.phi;
+    // pores within ~1-3 particle diameters of the free surface vent to it and cannot trap gas
+    this.trapDepth = new Float64Array(n);
+    { let xc = 0; for (let i = 0; i < n; i++) { const c = xc + 0.5 * w[i]; xc += w[i];
+        this.trapDepth[i] = smoothstep(((su.L0 - c) - su.d50) / (2 * su.d50)); } }
     const scN = [300, 1, 1, 1, 1, 0.01, 0.01, 0.01, 10, 1], scG = [300, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01];
     const atN = [1e-3, 1e-7, 1e-7, 1e-7, 1e-6, 1e-8, 1e-9, 1e-8, 1e-5, 1e-7];
     const atG = [1e-3, 1e-9, 1e-9, 1e-9, 1e-9, 1e-9, 1e-8];
@@ -397,8 +401,9 @@
       const drho = -rho_m * dlnVdt;
       const uc = clip(u_cl, 0, 1);
       const dfcl = 6 * uc * (1 - uc) / 0.06 * drho;
-      const trap = (P_ATM / (R * T)) * x_insol * eps * V * pos(dfcl, 1e-12);
-      const gen_cl = n_red_closed + f_cl * r_cth;
+      const dep = this.trapDepth[i];
+      const trap = dep * (P_ATM / (R * T)) * x_insol * eps * V * pos(dfcl, 1e-12);
+      const gen_cl = dep * (n_red_closed + f_cl * r_cth);
       const release = ntr * pos(-dfcl, 1e-12) / max(f_cl, 1e-3) + ntr * (1 - smoothstep(f_cl / 0.01)) * 1e-3;
       const dntr = trap + gen_cl - release;
       const dez_node = -PL * aN * (th / this.theta0) * (2 / 3) / (2 * eta * phi_s);
@@ -525,7 +530,7 @@
       Pi_th = max(Pi_th, sig_th / sig_t);
       const Oppm = su.O_ppm(W.Xn[i]);
       melt = min(melt, (thermo.T_solidus_Cu_O(Oppm) - su.T_margin) - T);
-      const pb = W.fcl[i] > 0.05 ? W.fcl[i] * (W.pg[i] - P_ATM) / W.PL[i] : 0;
+      const pb = W.fcl[i] >= 0.5 ? (W.pg[i] - P_ATM) / W.PL[i] : 0;
       Pi_bloat = max(Pi_bloat, pb);
     }
     const S_totp = max(S_tot, 0);
@@ -877,11 +882,11 @@
         r = ode23s((t, y, o) => sl.evaluate(t, y, ctl, o, false), this.t, this.t + dt, this.Y, sl.atol, this.rtol,
                    { scale: sl.scale, h0: this.h, hmax: 600, callback: cb });
       } catch (e) { return null; }
-      if (r.ts[r.ts.length - 1] < this.t + dt - 1e-6) return { Pi_gas: 0, Pi_th: 0, exo: Infinity, melt: Infinity };
-      let Pg = -Infinity, Pth = -Infinity, exo = -Infinity, melt = Infinity;
+      if (r.ts[r.ts.length - 1] < this.t + dt - 1e-6) return { Pi_gas: 0, Pi_th: 0, exo: Infinity, melt: Infinity, bloat: 0 };
+      let Pg = -Infinity, Pth = -Infinity, exo = -Infinity, melt = Infinity, bloat = -Infinity;
       for (let k = 0; k < r.ys.length; k++) {
         const d = sl.evaluate(r.ts[k], r.ys[k], ctl, this.out, true);
-        Pg = max(Pg, d.Pi_gas); Pth = max(Pth, d.Pi_th); melt = min(melt, d.melt);
+        Pg = max(Pg, d.Pi_gas); Pth = max(Pth, d.Pi_th); melt = min(melt, d.melt); bloat = max(bloat, d.Pi_bloat);
         if (ctl.Tset(r.ts[r.ts.length - 1]) >= d.Tf - 0.5) exo = max(exo, d.exo_gen);
       }
       const L = r.ts.length;
@@ -889,7 +894,7 @@
       this.t += dt;
       this.Tset = Tend;
       this.Y = r.ys[L - 1];
-      return { Pi_gas: Pg, Pi_th: Pth, exo, melt };
+      return { Pi_gas: Pg, Pi_th: Pth, exo, melt, bloat };
     }
     centre() {
       return this.slab.evaluate(this.t, this.Y, new Controls(this.t, this.t, this.Tset, this.Tset, 0, 0, 0), this.out, true);
@@ -908,6 +913,7 @@
     if (d.Pi_th > margin) return [false, "thermal"];
     if (d.exo > margin * su.dT_exo) return [false, "exo"];
     if (d.melt < -0.5) return [false, "melt"];
+    if ((d.bloat || 0) > margin) return [false, "bloat"];
     return [true, ""];
   }
 
@@ -1007,6 +1013,7 @@
       if (lastRho != null && rho - lastRho < 1e-3 * DT_HOLD / 3600) break;
       lastRho = rho;
       stepCtl(run, Tpeak + T0C, [atm], "C densify", margin, DT_HOLD, [0.0], "densification");
+      if (run.log[run.log.length - 1].limit.indexOf("INFEASIBLE") === 0) break;
       if (prog) { prog(run); await tick(); }
     }
   }

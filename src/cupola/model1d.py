@@ -85,6 +85,9 @@ class Slab:
         self.dface = 0.5 * (self.w[:-1] + self.w[1:])
         self.wt = self.w / setup.L0                # volume weights for averages
         self.xc = np.cumsum(self.w) - 0.5 * self.w # cell-centre positions from the mid-plane
+        # pores within ~1-3 particle diameters of the free surface vent to it and cannot trap gas
+        depth = setup.L0 - self.xc
+        self.trap_depth = smoothstep((depth - setup.d50) / (2.0 * setup.d50))
         self.Vb0 = setup.mb0 / setup.rho_b
         self.b_net0 = float(setup.b0[1] + setup.b0[2]) / setup.mb0
         self.theta0 = 1.0 - setup.phi
@@ -298,8 +301,9 @@ class Slab:
         uc = np.clip(u_cl, 0.0, 1.0)
         dfcl = 6.0 * uc * (1.0 - uc) / 0.06 * drho
         x_insol = 1.0 - ex(xH2r)
-        trap = (P_ATM / (R * T)) * x_insol * eps * V * pos(dfcl, 1e-12)
-        gen_cl = n_red_closed + f_cl * r_cth                                   # insoluble gas made inside closed pores
+        dep = self.trap_depth
+        trap = dep * (P_ATM / (R * T)) * x_insol * eps * V * pos(dfcl, 1e-12)
+        gen_cl = dep * (n_red_closed + f_cl * r_cth)                           # insoluble gas made inside closed pores
         release = ntr * pos(-dfcl, 1e-12) / np.maximum(f_cl, 1e-3) \
             + ntr * (1.0 - smoothstep(f_cl / 0.01)) * 1e-3
         dntr = trap + gen_cl - release
@@ -385,7 +389,8 @@ class Slab:
         O_ppm = su.O_ppm(X)
         T_sol = thermo.T_solidus_Cu_O(O_ppm)
         melt_margin = (T_sol - su.T_margin) - T                                  # >0 is safe
-        Pi_bloat = np.where(f_cl > 0.05, f_cl * (p_g - P_ATM) / PL, 0.0)
+        # only where closed pores dominate is "gas pressure vs sintering stress" meaningful
+        Pi_bloat = np.where(f_cl >= 0.5, (p_g - P_ATM) / PL, 0.0)
         d = dict(
             T=T, Tf=Tf, Tset=np.full(Tf.shape, Tset), b=bf, c=c, C_ppm=C_ppm, X=X, O_ppm=O_ppm, y=y,
             eps=eps, eps_open=eps_open, rho=rho_s, rho_m=rho_m, f_cl=f_cl, G_um=G * 1e6, p_g=p_g, e_dot=e_dot,
