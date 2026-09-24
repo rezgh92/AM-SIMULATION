@@ -142,4 +142,11 @@ Below about 690~$^\circ$C, the strain point of the calibrated glass, mismatch st
 \subsection{Which inputs decide the outcome}
 \label{sec:res_sens}
 
-%% SENSITIVITY
+Fig.~\ref{fig:sens} ranks the fourteen uncertain inputs by their elementary effects around the nominal optimum. Elementary effects are expressed per full range of each factor. One input dominates. Across its range of 0.5--8~h, the half-life of char gasification changes the peak mismatch by 16 percentage points on average and the carbon at glass closure by several orders of magnitude, from well below 1~ppm to above the 100~ppm limit. It also comes second for copper density, because char that is not removed keeps the copper from sintering. The carbon trapped in the glass depends next on the fragility and transition temperature of the glass, an order of magnitude less strongly. The density of the glass-ceramic is governed by its own properties: the transition temperature, the particle size and the crystallisation kinetics. The density and conductivity of the copper depend on the viscosity factor $f_\eta$ and on the filler. The peak mismatch, the quantity that the design sought to minimise, responds to almost every input after the gasification rate: $f_\eta$, the glass transition, the char yield, and the particle size and solids loading of the glass. For every output that matters, $\sigma$ is of the same order as $\mu^*$. The effects are therefore strongly non-linear and interact, which is what a design based on the coincidence of two processes should be expected to show. The tolerances on the copper paste itself (particle size $\pm$30\%, filler $\pm$5~vol\%) matter mainly for the damage index of a buried line, together with $f_\eta$ and the char yield. The Avrami exponent and the activation energy of crystallisation matter only for the density of the glass-ceramic, and the crystallised fraction (not shown) remained complete in every run.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig10_sensitivity}
+\caption{Morris screening of the fourteen uncertain inputs around the nominal optimum (16 trajectories, 240 co-firing evaluations). Bars: mean absolute elementary effect $\mu^*$; dots: standard deviation $\sigma$ of the elementary effects, both normalised by the largest $\mu^*$ of each output. Factors are ordered by their summed normalised importance. Ranges as in Table~\ref{tab:params}; the copper particle size and filler fraction are varied as manufacturing tolerances around the design.}
+\label{fig:sens}
+\end{figure*}

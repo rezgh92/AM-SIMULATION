@@ -233,13 +233,13 @@ LABELS = {"gc_Tg_C": "glass T$_g$", "gc_fragility": "glass fragility m", "gc_Tp_
           "gc_E_cryst": "crystallisation E", "gc_n_avrami": "Avrami n", "gc_gamma": "glass surface energy",
           "gc_d50_um": "glass D50", "gc_phi": "glass solids loading", "t_half_gasif_h": "char gasification half-life",
           "E_gasif": "gasification E", "char_yield": "char yield", "f_eta": "Cu viscosity factor f$_η$",
-          "d50_um": "Cu D50", "cu_filler": "filler fraction"}
+          "d50_um": "Cu D50 tolerance", "cu_filler": "filler tolerance"}
 
 
 def fig_sens():
     d = json.load(open(f"{D}/morris.json"))
-    outs = [("log10_gc_C", "log$_{10}$ C at glass closure"), ("gc_rho", "Glass-ceramic density"),
-            ("cu_rho", "Copper density"), ("mismatch_max_pct", "Peak shrinkage mismatch"), ("line_Pi_max", "Line damage index")]
+    outs = [("log10_gc_C", "log$_{10}$ C at closure"), ("gc_rho", "Glass-ceramic density"),
+            ("cu_rho", "Copper density"), ("mismatch_max_pct", "Peak mismatch"), ("line_Pi_max", "Line damage index")]
     fig, axs = plt.subplots(1, len(outs), figsize=(fs.COL2, 0.42 * fs.COL2), sharey=True, gridspec_kw=dict(wspace=0.1))
     keys = [f["key"] for f in d["factors"]]
     # order factors by their summed normalised importance
@@ -254,13 +254,13 @@ def fig_sens():
         sg = np.array([x["sigma"] for x in d["result"][o]])[order]
         mx = max(np.nanmax(mu), 1e-12)
         ax.barh(y, mu / mx, color=fs.BLUE, height=0.62)
-        ax.errorbar(mu / mx, y, xerr=np.zeros_like(mu), fmt="none")
         ax.plot(sg / mx, y, "o", ms=2.6, color=fs.ORANGE)
-        ax.set_title(lab, fontsize=6.6)
+        ax.set_title(f"({'abcde'[k]}) {lab}", fontsize=6.6, loc="left")
         ax.set_xlim(0, 1.25)
-        ax.set_xlabel("μ*/max (bars), σ/max (dots)", fontsize=5.8)
-        fs.panel(ax, "abcde"[k], x=-0.05 if k else -1.0)
+        ax.set_xticks([0, 0.5, 1.0])
     axs[0].set_yticks(y); axs[0].set_yticklabels([LABELS.get(keys[i], keys[i]) for i in order], fontsize=6.2)
+    fig.text(0.56, -0.02, "Normalised mean absolute elementary effect μ* (bars) and standard deviation σ (dots)",
+             ha="center", fontsize=6.6, color=fs.INK)
     fs.save(fig, "fig10_sensitivity", O)
 
 
