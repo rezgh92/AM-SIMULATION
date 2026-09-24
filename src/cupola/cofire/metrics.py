@@ -41,7 +41,7 @@ def biaxial_viscosity_series(r, su, t):
     return B, T
 
 
-GC_E_DENSE = 100e9          # Pa, dense glass-ceramic (updated from the materials dossier)
+from .props import GC_E as GC_E_DENSE, CU_E as CU_E_DENSE
 
 
 def elastic_modulus(su, r, t, E_dense):
@@ -84,7 +84,7 @@ def cofire_metrics(r_gc, r_cu, s: dict, geo: Geometry = Geometry()) -> Dict[str,
     # and carries B_cu x misfit; a stiff line forces the body to flow round it and the stress is set
     # by B_gc. Positive = copper in tension (it wants to shrink more than the body lets it).
     rate_mis = np.gradient(eps_gc - eps_cu, t)
-    E_cu = elastic_modulus(su_cu, r_cu, t, 120e9)
+    E_cu = elastic_modulus(su_cu, r_cu, t, CU_E_DENSE)
     E_gc = elastic_modulus(su_gc, r_gc, t, GC_E_DENSE)
     sig_line = maxwell_series(t, rate_mis, E_cu, B_cu, E_gc, B_gc)
     rho_cu = _interp(r_cu, "rho_mean", t)

@@ -32,24 +32,35 @@ THETA_UNUSED = 0.0
 # ----------------------------------------------------------------------------- parameters
 GC_PARAMS = [
     Param("gc_d50_um", 3.0, "um", 0.8, 12.0, "gc_powder", "ANALOGUE", "Glass powder D50",
-          "Glass-ceramic tapes and LCM ceramic slurries use 1-5 um powders; sets the sintering stress "
-          "(1/r) and the green permeability (d^2)."),
+          "IBM cordierite-type glass powders: 2-7 um (US 4,301,324). Sets the sintering stress (1/r) and the "
+          "green permeability (d^2)."),
     Param("gc_span", 1.5, "-", 0.6, 3.0, "gc_powder", "GUESS", "Glass PSD span", ""),
     Param("gc_phi", 0.45, "-", 0.35, 0.60, "gc_powder", "ANALOGUE", "Glass solids loading (vol)",
           "LCM ceramic slurries hold 39-49 vol% solids."),
-    Param("gc_rho", 2600.0, "kg/m3", 2400.0, 2800.0, "gc_glass", "ANALOGUE", "Glass density", ""),
-    Param("gc_Tg_C", 780.0, "C", 650.0, 880.0, "gc_glass", "ANALOGUE", "Glass transition (1e12 Pa s)", ""),
-    Param("gc_fragility", 45.0, "-", 25.0, 80.0, "gc_glass", "ANALOGUE", "Fragility index m", ""),
-    Param("gc_gamma", 0.30, "J/m2", 0.2, 0.45, "gc_glass", "ANALOGUE", "Glass surface energy", ""),
-    Param("gc_Tp_cryst_C", 960.0, "C", 850.0, 1100.0, "gc_glass", "ANALOGUE",
-          "Crystallisation DSC peak (10 K/min)", ""),
-    Param("gc_E_cryst", 450.0, "kJ/mol", 250.0, 700.0, "gc_glass", "ANALOGUE", "Crystallisation E (Kissinger)", ""),
-    Param("gc_n_avrami", 2.0, "-", 1.0, 4.0, "gc_glass", "ANALOGUE", "Avrami exponent", ""),
+    Param("gc_rho", 2600.0, "kg/m3", 2400.0, 2800.0, "gc_glass", "ANALOGUE", "Glass density",
+          "Dense alpha-cordierite glass-ceramic 2.62 g/cm3 (Yu et al. 2022)."),
+    Param("gc_Tg_C", 734.0, "C", 680.0, 820.0, "gc_glass", "DERIVED", "Glass transition (1e12 Pa s)",
+          "MYEGA fitted to two IBM statements for the Cu-compatible cordierite glass (US 4,234,367; "
+          "US 5,130,067): 6 h at 780 C gives ~40 % of the fired shrinkage with open pores, and an 830 C hold "
+          "closes the pores within ~2 h. Checks: 43 K per decade at 800-860 C (Giess 1984: ~40 K); annealing "
+          "point below 785 C (patent bound)."),
+    Param("gc_fragility", 32.4, "-", 25.0, 60.0, "gc_glass", "DERIVED", "Fragility index m", "Fitted with gc_Tg_C."),
+    Param("gc_gamma", 0.36, "J/m2", 0.2, 0.45, "gc_glass", "ANALOGUE", "Glass surface energy",
+          "0.36 N/m calculated for the IBM cordierite-type glass (Giess et al. 1984)."),
+    Param("gc_Tp_cryst_C", 1040.0, "C", 950.0, 1100.0, "gc_glass", "DERIVED",
+          "Crystallisation DSC peak (10 K/min)",
+          "Set so that crystallisation begins (5 %) at ~900 C in the IBM firing schedule (US 4,340,436). "
+          "Check: the exotherm then spans 978-1066 C, i.e. ~90 K (patent: 80-100 C)."),
+    Param("gc_E_cryst", 303.0, "kJ/mol", 250.0, 470.0, "gc_glass", "ANALOGUE", "Crystallisation E",
+          "303.5 kJ/mol for IBM-type high-cordierite glass (Watanabe & Giess 1994)."),
+    Param("gc_n_avrami", 2.0, "-", 1.0, 3.7, "gc_glass", "GUESS", "Avrami exponent",
+          "Not reported for the IBM glass (surface nucleation); 2.8-3.7 for other MAS glasses."),
     Param("gc_X_max", 0.64, "-", 0.45, 0.80, "gc_glass", "ANALOGUE", "Crystal fraction that arrests flow",
           "Maximum packing in the Krieger-Dougherty suspension law."),
     Param("gc_f_eta", 1.0, "-", 0.1, 10.0, "gc_glass", "GUESS", "Glass viscosity factor", "", log=True),
-    Param("gc_k", 2.5, "W/m/K", 1.0, 5.0, "gc_glass", "ANALOGUE", "Dense glass-ceramic conductivity", ""),
-    Param("gc_sigma_green_MPa", 15.0, "MPa", 5.0, 40.0, "gc_powder", "ANALOGUE", "GC green strength (RT)", ""),
+    Param("gc_k", 2.8, "W/m/K", 1.0, 5.0, "gc_glass", "ANALOGUE", "Dense glass-ceramic conductivity",
+          "Cu-co-fired LTCC (Kyocera GL570): 2.8 W/m K."),
+    Param("gc_sigma_green_MPa", 15.0, "MPa", 5.0, 40.0, "gc_powder", "GUESS", "GC green strength (RT)", ""),
     Param("gc_half_thickness_mm", 2.0, "mm", 0.25, 10.0, "gc_part", "GUESS", "GC critical half-thickness", ""),
     Param("gc_rho_close", 0.92, "-", 0.88, 0.95, "gc_glass", "ANALOGUE", "GC pore closure density", ""),
 ]
