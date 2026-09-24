@@ -105,9 +105,11 @@ if __name__ == "__main__":
             print(f"  t={tc/3600:6.2f} h T={Tc-T0C:6.0f} C  rho_gc={np.mean(1-obj.theta[mat==0]):.3f} "
                   f"rho_cu={np.mean(1-obj.theta[mat==1]):.3f} ({time.time()-t_wall:.0f} s)", flush=True)
 
-    # stop once the glass-ceramic is 90 % crystallised: the body is then rigid and its shape frozen
+    # stop once the glass-ceramic is 98 % dense or 90 % crystallised: the remaining linear shrinkage of the
+    # body is then a few tenths of a per cent and its shape is essentially frozen
     X_gc = np.asarray(su_gc.crystal_fraction(r_gc.series["G_um"]))
-    i_x = int(np.argmax(X_gc >= 0.9)) if np.any(X_gc >= 0.9) else len(t) - 1
+    done = (X_gc >= 0.9) | (r_gc.series["rho_mean"] >= 0.98)
+    i_x = int(np.argmax(done)) if np.any(done) else len(t) - 1
     t_stop = float(t[max(i_x, i0 + 1)] - t[i0])
     frames = s3.run(tt, T[i0:], [C_gc[i0:], C_cu[i0:]], n_frames=30, progress=prog, t_stop=t_stop)
     # export
