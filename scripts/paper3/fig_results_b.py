@@ -175,28 +175,41 @@ def fig_programme():
 
 
 # ----------------------------------------------------------------------------- 3-D test vehicle
-def draw_body(ax, p, conn, theta, mat, view, title, zscale=1.0, cmap_gc=fs.SEQ_BLUE, cmap_cu=fs.SEQ_COPPER):
-    p = np.asarray(p) * 1e3
+def draw_body(ax, p, conn, theta, mat, view, title, zscale=1.0, cmap_gc=fs.SEQ_BLUE, cmap_cu=fs.SEQ_COPPER, cut_y=None):
+    """Render the outer surface of a voxel sub-mesh, faces coloured by material and density and shaded by
+    orientation; faces on the plane y = cut_y are darkened to mark the section."""
+    from skfem import MeshHex
+    p = np.asarray(p)
     conn = np.asarray(conn)
-    # boundary faces of the hex mesh: faces shared by one element only
-    faces = [(0, 1, 2, 3), (4, 5, 6, 7), (0, 1, 5, 4), (1, 2, 6, 5), (2, 3, 7, 6), (3, 0, 4, 7)]
-    # skfem MeshHex local node ordering differs; use sorted-node keys to count sharing
-    from collections import Counter
-    keys = []
-    for e, el in enumerate(conn):
-        for f in faces:
-            keys.append((tuple(sorted(el[list(f)])), e, f))
-    cnt = Counter(k for k, _, _ in keys)
+    used = np.unique(conn)
+    remap = -np.ones(len(p), int); remap[used] = np.arange(len(used))
+    m = MeshHex(p[used].T.copy(), remap[conn].T.copy())
+    bf = m.boundary_facets()
+    owner = m.f2t[0, bf]
+    light = np.array([-0.35, -0.55, 0.76]); light /= np.linalg.norm(light)
+    P = m.p.T * 1e3
+    ycut = cut_y * 1e3 if cut_y is not None else None
     polys, cols = [], []
-    for k, e, f in keys:
-        if cnt[k] == 1:
-            polys.append(p[conn[e][list(f)]])
-            rho = 1 - theta[e]
-            cols.append(cmap_cu(np.clip((rho - 0.5) / 0.5, 0, 1)) if mat[e] == 1 else cmap_gc(np.clip((rho - 0.4) / 0.6, 0, 1) * 0.55 + 0.05))
-    pc = Poly3DCollection(polys, facecolors=cols, edgecolors=(0, 0, 0, 0.08), linewidths=0.1)
+    for f, e in zip(bf, owner):
+        q = P[m.facets[:, f]]
+        ax_n = int(np.argmin(np.ptp(q, axis=0)))
+        u, v = [a for a in range(3) if a != ax_n]
+        cq = q.mean(axis=0)
+        q = q[np.argsort(np.arctan2(q[:, v] - cq[v], q[:, u] - cq[u]))]
+        polys.append(q)
+        rho = 1 - theta[e]
+        c = np.array(cmap_cu(np.clip((rho - 0.5) / 0.5, 0, 1)) if mat[e] == 1 else
+                     cmap_gc(np.clip((rho - 0.4) / 0.6, 0, 1) * 0.55 + 0.05))
+        nrm = np.zeros(3); nrm[ax_n] = 1.0
+        shade = 0.62 + 0.38 * abs(float(nrm @ light))
+        if ycut is not None and np.all(np.abs(q[:, 1] - ycut) < 1e-3):
+            shade *= 0.85
+        c[:3] = np.clip(c[:3] * shade, 0, 1)
+        cols.append(c)
+    pc = Poly3DCollection(polys, facecolors=cols, edgecolors=(0, 0, 0, 0.05), linewidths=0.08)
     ax.add_collection3d(pc)
-    ax.set_xlim(p[:, 0].min(), p[:, 0].max()); ax.set_ylim(p[:, 1].min(), p[:, 1].max()); ax.set_zlim(p[:, 2].min(), p[:, 2].max())
-    ax.set_box_aspect((np.ptp(p[:, 0]), np.ptp(p[:, 1]), np.ptp(p[:, 2]) * zscale))
+    ax.set_xlim(P[:, 0].min(), P[:, 0].max()); ax.set_ylim(P[:, 1].min(), P[:, 1].max()); ax.set_zlim(P[:, 2].min(), P[:, 2].max())
+    ax.set_box_aspect((np.ptp(P[:, 0]), np.ptp(P[:, 1]), np.ptp(P[:, 2]) * zscale))
     ax.view_init(*view)
     ax.set_axis_off()
     ax.set_title(title, fontsize=6.8, pad=0)
@@ -229,23 +242,21 @@ def fig_package():
     runs = [json.load(open(f"{D}/package_{k}.json")) for k in names if os.path.exists(f"{D}/package_{k}.json")]
     nr = len(runs)
     fig = plt.figure(figsize=(fs.COL2, 0.30 * nr * fs.COL2))
-    fig.subplots_adjust(hspace=0.42, wspace=0.08, left=0.0, right=0.94, top=0.96, bottom=0.06)
-    L = "abcdefghi"
+    gs = fig.add_gridspec(nr, 2, width_ratios=[1.45, 1], hspace=0.38, wspace=0.02,
+                          left=0.0, right=0.93, top=0.96, bottom=0.07)
     reliefs = [upper_deviation(r) for r in runs]
     lim = max(np.nanmax(np.abs(z)) for _, _, z, _ in reliefs)
     for k, r in enumerate(runs):
         mat = np.array(r["mat"]); theta = np.array(r["theta"]); conn = np.array(r["t_conn"]); p = np.array(r["p"])
         cen = p[conn].mean(axis=1)
         keep = cen[:, 1] >= np.median(cen[:, 1])          # cut-away facing the viewer: buried copper visible
-        ax = fig.add_subplot(nr, 3, 3 * k + 1, projection="3d")
-        draw_body(ax, p, conn[keep], theta[keep], mat[keep], (24, -60),
-                  f"({L[3 * k]}) {names[r['label']]}: sectioned part", zscale=2.0)
-        ax = fig.add_subplot(nr, 3, 3 * k + 2, projection="3d")
-        cu = mat == 1
-        rho_cu = 1 - theta[cu]
-        draw_body(ax, p, conn[cu], theta[cu], mat[cu], (32, -60),
-                  f"({L[3 * k + 1]}) copper, mean ρ = {rho_cu.mean():.3f}", zscale=2.0)
-        ax = fig.add_subplot(nr, 3, 3 * k + 3)
+        cut_y = p[conn[keep]][:, :, 1].min()
+        rho_cu = 1 - theta[mat == 1]
+        ax = fig.add_subplot(gs[k, 0], projection="3d")
+        draw_body(ax, p, conn[keep], theta[keep], mat[keep], (30, -62),
+                  f"({'abc'[k]}) {names[r['label']]}: part sectioned at y = 0 "
+                  f"(mean copper density {rho_cu.mean():.3f})", zscale=2.0, cut_y=cut_y)
+        ax = fig.add_subplot(gs[k, 1])
         X, Y, Z, frame = reliefs[k]
         pc = ax.pcolormesh(X, Y, Z, cmap=fs.DIVERGE, vmin=-lim, vmax=lim, shading="gouraud")
         ax.contour(X, Y, frame.astype(float), levels=[0.5], colors=[fs.INK2], linewidths=0.6)
@@ -253,7 +264,7 @@ def fig_package():
         ax.set_ylabel("y (mm)")
         if k == nr - 1:
             ax.set_xlabel("x (mm)")
-        ax.set_title(f"({L[3 * k + 2]}) upper surfaces, range {np.nanmax(Z) - np.nanmin(Z):.0f} µm", fontsize=6.6, loc="left")
+        ax.set_title(f"({'def'[k]}) upper surfaces, range {np.nanmax(Z) - np.nanmin(Z):.0f} µm", fontsize=6.6, loc="left")
         cb = fig.colorbar(pc, ax=ax, fraction=0.046, pad=0.03)
         cb.set_label("out-of-plane distortion (µm)", fontsize=6.2); cb.ax.tick_params(labelsize=5.8)
     fs.save(fig, "fig08_package", O)
