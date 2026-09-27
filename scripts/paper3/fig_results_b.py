@@ -202,19 +202,26 @@ def draw_body(ax, p, conn, theta, mat, view, title, zscale=1.0, cmap_gc=fs.SEQ_B
     ax.set_title(title, fontsize=6.8, pad=0)
 
 
-def top_relief(r):
-    """Height of the top surface relative to its mean (µm) on the node grid, and the grid in mm."""
+def upper_deviation(r):
+    """Out-of-plane distortion of the upper surfaces (top face and cavity floor), in µm, relative to a
+    uniformly shrunk part: z - s z0 with s fitted by least squares over those surfaces."""
     p0 = np.array(r["p0"]); p = np.array(r["p"])
-    top = np.isclose(p0[:, 2], p0[:, 2].max())
-    x0, y0 = p0[top, 0], p0[top, 1]
-    xs, ys = np.unique(np.round(x0, 9)), np.unique(np.round(y0, 9))
-    Z = np.full((len(ys), len(xs)), np.nan)
-    ix = np.searchsorted(xs, np.round(x0, 9)); iy = np.searchsorted(ys, np.round(y0, 9))
-    Z[iy, ix] = p[top, 2]
-    Z = (Z - np.nanmean(Z)) * 1e6
-    X = np.zeros_like(Z); Y = np.zeros_like(Z)
-    X[iy, ix] = p[top, 0] * 1e3; Y[iy, ix] = p[top, 1] * 1e3
-    return X - np.nanmean(X), Y - np.nanmean(Y), Z
+    h = r["h_mm"] * 1e-3
+    ix = np.round((p0[:, 0] - p0[:, 0].min()) / h).astype(int)
+    iy = np.round((p0[:, 1] - p0[:, 1].min()) / h).astype(int)
+    nx, ny = ix.max() + 1, iy.max() + 1
+    top = np.full((nx, ny), -1)
+    zbest = np.full((nx, ny), -np.inf)
+    for k in range(len(p0)):
+        if p0[k, 2] > zbest[ix[k], iy[k]]:
+            zbest[ix[k], iy[k]] = p0[k, 2]; top[ix[k], iy[k]] = k
+    idx = top.ravel()
+    z0, z = p0[idx, 2], p[idx, 2]
+    s = float(np.sum(z * z0) / np.sum(z0 * z0))
+    dev = ((z - s * z0) * 1e6).reshape(nx, ny)
+    X = (p[idx, 0] * 1e3).reshape(nx, ny); Y = (p[idx, 1] * 1e3).reshape(nx, ny)
+    frame = (z0 >= p0[:, 2].max() - 1e-9).reshape(nx, ny)
+    return X - X.mean(), Y - Y.mean(), dev - np.mean(dev), frame
 
 
 def fig_package():
@@ -224,8 +231,8 @@ def fig_package():
     fig = plt.figure(figsize=(fs.COL2, 0.30 * nr * fs.COL2))
     fig.subplots_adjust(hspace=0.42, wspace=0.08, left=0.0, right=0.94, top=0.96, bottom=0.06)
     L = "abcdefghi"
-    reliefs = [top_relief(r) for r in runs]
-    lim = max(np.nanmax(np.abs(z)) for _, _, z in reliefs)
+    reliefs = [upper_deviation(r) for r in runs]
+    lim = max(np.nanmax(np.abs(z)) for _, _, z, _ in reliefs)
     for k, r in enumerate(runs):
         mat = np.array(r["mat"]); theta = np.array(r["theta"]); conn = np.array(r["t_conn"]); p = np.array(r["p"])
         cen = p[conn].mean(axis=1)
@@ -239,15 +246,16 @@ def fig_package():
         draw_body(ax, p, conn[cu], theta[cu], mat[cu], (32, -60),
                   f"({L[3 * k + 1]}) copper, mean ρ = {rho_cu.mean():.3f}", zscale=2.0)
         ax = fig.add_subplot(nr, 3, 3 * k + 3)
-        X, Y, Z = reliefs[k]
+        X, Y, Z, frame = reliefs[k]
         pc = ax.pcolormesh(X, Y, Z, cmap=fs.DIVERGE, vmin=-lim, vmax=lim, shading="gouraud")
+        ax.contour(X, Y, frame.astype(float), levels=[0.5], colors=[fs.INK2], linewidths=0.6)
         ax.set_aspect("equal")
         ax.set_ylabel("y (mm)")
         if k == nr - 1:
             ax.set_xlabel("x (mm)")
-        ax.set_title(f"({L[3 * k + 2]}) top surface, range {np.nanmax(Z) - np.nanmin(Z):.0f} µm", fontsize=6.6, loc="left")
+        ax.set_title(f"({L[3 * k + 2]}) upper surfaces, range {np.nanmax(Z) - np.nanmin(Z):.0f} µm", fontsize=6.6, loc="left")
         cb = fig.colorbar(pc, ax=ax, fraction=0.046, pad=0.03)
-        cb.set_label("height − mean (µm)", fontsize=6.2); cb.ax.tick_params(labelsize=5.8)
+        cb.set_label("out-of-plane distortion (µm)", fontsize=6.2); cb.ax.tick_params(labelsize=5.8)
     fs.save(fig, "fig08_package", O)
 
 

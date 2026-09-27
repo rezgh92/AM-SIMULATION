@@ -15,28 +15,35 @@ spec.loader.exec_module(pk)
 
 
 def draw_vehicle(ax):
-    m = pk.package_mask(0.3)
+    h = 0.25
+    m = pk.package_mask(h)
     cu = m == 1
-    gc_shell = np.zeros_like(cu)
-    gc_shell[:, :, :] = True
-    # glass-ceramic as a translucent box; copper voxels solid
     colors = np.empty(m.shape, dtype=object)
     colors[cu] = fs.CU
     ax.voxels(cu, facecolors=colors, edgecolor=(0.35, 0.18, 0.06, 0.25), linewidth=0.1, shade=True)
     n, _, nz = m.shape
-    # translucent body outline
+    # glass-ceramic body: outline, translucent faces and the open die cavity
     for z in (0, nz):
-        ax.plot([0, n, n, 0, 0], [0, 0, n, n, 0], [z, z, z, z, z], color=fs.GC, lw=0.6, alpha=0.8)
+        ax.plot([0, n, n, 0, 0], [0, 0, n, n, 0], [z] * 5, color=fs.GC, lw=0.6, alpha=0.9)
     for x, y in ((0, 0), (n, 0), (n, n), (0, n)):
-        ax.plot([x, x], [y, y], [0, nz], color=fs.GC, lw=0.6, alpha=0.8)
+        ax.plot([x, x], [y, y], [0, nz], color=fs.GC, lw=0.6, alpha=0.9)
     xx, yy = np.meshgrid([0, n], [0, n])
-    ax.plot_surface(xx, yy, np.full_like(xx, nz, dtype=float), color=fs.GC, alpha=0.10, linewidth=0)
     ax.plot_surface(xx, yy, np.zeros_like(xx, dtype=float), color=fs.GC, alpha=0.06, linewidth=0)
+    void = np.argwhere(m == -1)
+    a0, a1 = void[:, 0].min(), void[:, 0].max() + 1
+    zf = void[:, 2].min()
+    for z, ls in ((nz, "-"), (zf, ":")):
+        ax.plot([a0, a1, a1, a0, a0], [a0, a0, a1, a1, a0], [z] * 5, color=fs.GC, lw=0.7, ls=ls)
+    for x, y in ((a0, a0), (a1, a0), (a1, a1), (a0, a1)):
+        ax.plot([x, x], [y, y], [zf, nz], color=fs.GC, lw=0.6, ls=":")
+    ax.text((a0 + a1) / 2, a1, nz + 0.4, "die cavity", color=fs.GC, fontsize=6.0, ha="center", va="bottom")
     ax.set_box_aspect((n, n, nz * 2.2))
     ax.view_init(elev=28, azim=-58)
     ax.set_axis_off()
-    ax.text2D(0.02, 0.93, "glass-ceramic body\n12 × 12 × 2.4 mm", transform=ax.transAxes, color=fs.GC, fontsize=6.6)
-    ax.text2D(0.02, 0.03, "copper: spiral, via,\nburied ground plane", transform=ax.transAxes, color=fs.CU, fontsize=6.6)
+    ax.text2D(0.02, 0.93, "glass-ceramic package\n10 × 10 × 2.5 mm, open die cavity", transform=ax.transAxes,
+              color=fs.GC, fontsize=6.4)
+    ax.text2D(0.02, 0.02, "copper: die pad and thermal vias, meshed ground,\nsolenoid, shielded stripline, bond pad",
+              transform=ax.transAxes, color=fs.CU, fontsize=6.4)
 
 
 def box(ax, x, y, w, h, title, body, fc="#F4F6F8", ec=fs.RULE, tc=fs.INK):
@@ -66,7 +73,7 @@ def draw_flow(ax):
     box(ax, 0.00, 0.30, 0.30, 0.22, "Co-firing mechanics",
         "porous viscous moduli\nbilayer camber (Timoshenko)\nembedded-line stress (Maxwell)\ncooling with Cu plasticity")
     box(ax, 0.35, 0.30, 0.30, 0.22, "3-D co-sintering FEM",
-        "voxel mesh = printed pixels\ntwo materials, gravity,\nsetter friction")
+        "voxel mesh of the printed part\ntwo materials, gravity,\nsetter friction")
     box(ax, 0.70, 0.30, 0.30, 0.22, "Constraints",
         "C at glass closure, Cu metallic\ndensities, crystallinity\ndamage indices, conductivity\nmelting margin, cycle time")
     box(ax, 0.18, 0.06, 0.64, 0.16, "Design outputs",

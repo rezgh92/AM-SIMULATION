@@ -20,41 +20,77 @@ from cupola.fem3d.cosinter import CoSinter3D
 from cupola.fem3d.driver import surface, node_density
 
 
-def package_mask(h=0.3, L=12.0, H=2.4):
+def package_mask(h=0.25, L=10.0, H=2.5):
+    """Voxel layout of the printed RF system-in-package test vehicle: -1 void, 0 glass-ceramic, 1 copper.
+
+    Glass-ceramic body L x L x H mm with an open 4 x 4 mm die cavity, 0.75 mm deep, in the top centre.
+    Copper, all printed in the same build:
+      - die-attach pad on the cavity floor (3 x 3 mm) with a 3 x 3 array of thermal vias (0.5 mm square)
+        down to the ground plane;
+      - ground plane in the second layer: solid under the die, meshed elsewhere (0.5 mm lines at 1.25 mm
+        pitch, the usual rule for large planes in co-fired ceramics);
+      - a four-turn solenoid inductor wound about an axis parallel to the surface (0.5 mm wire, 1 mm
+        tall, 1 mm pitch) beside the cavity: a three-dimensional conductor that laminated tape cannot
+        build without stacks of vias;
+      - a buried stripline from the cavity wall to the edge, shielded by two rows of via fences, and a
+        via to a 1 mm bond pad on the top face.
+    """
     n = int(round(L / h))
     nz = int(round(H / h))
-    mat = np.zeros((n, n, nz), dtype=int)         # 0 glass-ceramic, 1 copper
+    mat = np.zeros((n, n, nz), dtype=int)
     c = (np.arange(n) + 0.5) * h - L / 2
     X, Y = np.meshgrid(c, c, indexing="ij")
-    # buried ground plane (layer 1), 1.5 mm margin
-    mat[:, :, 1][(np.abs(X) < L / 2 - 1.5) & (np.abs(Y) < L / 2 - 1.5)] = 1
-    # square spiral in layer nz-3: width 0.6 mm, pitch 1.5 mm, 3.5 turns
-    k = nz - 3
-    w, pitch = 0.6, 1.5
-    spiral = np.zeros((n, n), bool)
-    x0, y0, a = 0.0, 0.0, pitch / 2
-    pts = [(x0, y0)]
-    for turn in range(7):
-        dx, dy = [(1, 0), (0, 1), (-1, 0), (0, -1)][turn % 4]
-        ln = pitch * (turn // 2 + 1)
-        x1, y1 = pts[-1][0] + dx * ln, pts[-1][1] + dy * ln
-        pts.append((x1, y1))
-    for (xa, ya), (xb, yb) in zip(pts[:-1], pts[1:]):
-        xl, xh = min(xa, xb) - w / 2, max(xa, xb) + w / 2
-        yl, yh = min(ya, yb) - w / 2, max(ya, yb) + w / 2
-        spiral |= (X >= xl) & (X <= xh) & (Y >= yl) & (Y <= yh)
-    mat[:, :, k][spiral] = 1
-    # via from the spiral centre up to a 1.2 mm pad on the top surface
-    via = (np.abs(X) <= 0.3 + 1e-9) & (np.abs(Y) <= 0.3 + 1e-9)
-    mat[:, :, k:][via] = 1
-    pad = (np.abs(X) <= 0.6 + 1e-9) & (np.abs(Y) <= 0.6 + 1e-9)
-    mat[:, :, nz - 1][pad] = 1
+    zc = (np.arange(nz) + 0.5) * h
+    lay = lambda z: int(np.clip(np.floor(z / h), 0, nz - 1))
+    tol = 1e-9
+
+    def box(x0, x1, y0, y1, k0, k1, v=1):
+        sel = (X >= x0 - tol) & (X <= x1 + tol) & (Y >= y0 - tol) & (Y <= y1 + tol)
+        for k in range(k0, k1 + 1):
+            mat[:, :, k][sel] = v
+
+    k_gnd = lay(0.25 + 0.5 * h)                 # second layer from the bottom
+    k_floor = lay(H - 0.75 - 0.5 * h)           # cavity floor layer (top of it at H - 0.75 mm)
+    k_line = lay(1.0 + 0.5 * h)                 # stripline layer
+    # ground plane: meshed, solid under the die
+    mesh = np.zeros_like(X, bool)
+    for xc in np.arange(-3.75, 3.76, 1.25):
+        mesh |= (np.abs(X - xc) <= 0.25 + tol) & (np.abs(Y) <= 4.0 + tol)
+        mesh |= (np.abs(Y - xc) <= 0.25 + tol) & (np.abs(X) <= 4.0 + tol)
+    mesh |= (np.abs(X) <= 1.5 + tol) & (np.abs(Y) <= 1.5 + tol)
+    mat[:, :, k_gnd][mesh] = 1
+    # die-attach pad and thermal vias
+    box(-1.5, 1.5, -1.5, 1.5, k_floor, k_floor)
+    for xv in (-1.0, 0.0, 1.0):
+        for yv in (-1.0, 0.0, 1.0):
+            box(xv - 0.25, xv + 0.25, yv - 0.25, yv + 0.25, k_gnd, k_floor)
+    # solenoid beside the cavity (x in [-4.25, -2.75]), axis along y
+    kb, kt = lay(0.75 + 0.5 * h), lay(1.5 + 0.5 * h)
+    xl, xr, w, pitch = -4.25, -2.75, 0.5, 1.0
+    for i in range(4):
+        y0 = -2.0 + i * pitch
+        box(xl - w / 2, xl + w / 2, y0 - w / 2, y0 + w / 2, kb, kt)                    # left post
+        box(xl - w / 2, xr + w / 2, y0 - w / 2, y0 + w / 2, kt, kt)                    # top bar
+        box(xr - w / 2, xr + w / 2, y0 - w / 2, y0 + pitch / 2 + w / 2, kt, kt)        # jog along the axis
+        box(xr - w / 2, xr + w / 2, y0 + pitch / 2 - w / 2, y0 + pitch / 2 + w / 2, kb, kt)   # right post
+        box(xl - w / 2, xr + w / 2, y0 + pitch / 2 - w / 2, y0 + pitch / 2 + w / 2, kb, kb)   # bottom bar
+        if i < 3:
+            box(xl - w / 2, xl + w / 2, y0 + pitch / 2 - w / 2, y0 + pitch + w / 2, kb, kb)   # jog to next turn
+    # shielded stripline from the cavity wall to a via and top bond pad
+    box(2.25, 4.25, -0.25, 0.25, k_line, k_line)
+    for xv in (2.75, 3.5, 4.25):
+        for yv in (-1.25, 1.25):
+            box(xv - 0.25, xv + 0.25, yv - 0.25, yv + 0.25, k_gnd, nz - 2)
+    box(3.75, 4.25, -0.25, 0.25, k_line, nz - 1)
+    box(3.5, 4.5, -0.5, 0.5, nz - 1, nz - 1)
+    # open die cavity
+    box(-2.0, 2.0, -2.0, 2.0, k_floor + 1, nz - 1, v=-1)
     return mat
 
 
 def build(h):
     mat3 = package_mask(h)
-    mesh = mesh_from_mask(np.ones(mat3.shape, bool), h)
+    mesh = mesh_from_mask(mat3 >= 0, h)
     cen = mesh.p[:, mesh.t].mean(axis=1) / (h * 1e-3)
     ix, iy, iz = (np.floor(cen[i]).astype(int) for i in range(3))
     return mesh, mat3[ix, iy, iz]
@@ -70,7 +106,7 @@ def histories(r_gc, r_cu):
 
 if __name__ == "__main__":
     spec, out = sys.argv[1], sys.argv[2]
-    h = float(sys.argv[3]) if len(sys.argv) > 3 else 0.3
+    h = float(sys.argv[3]) if len(sys.argv) > 3 else 0.25
     if spec == "baseline":
         over = dict(d50_um=3.0, cu_filler=0.0, phi=0.50)
         cyc = Schedule(T_B=780.0, t_B=4.0, x_B=0.30, T_C=960.0, t_C=1.0).cycle()
