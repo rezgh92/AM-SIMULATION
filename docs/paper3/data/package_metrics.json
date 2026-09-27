@@ -1,4 +1,18 @@
 {
+ "baseline": {
+  "shrink_xy_pct": 15.64445407281454,
+  "shrink_z_pct": 16.282172621980074,
+  "frame_range_um": 515.6679789357233,
+  "upper_dev_range_um": 515.6679789357233,
+  "floor_minus_frame_um": 20.370373635430976,
+  "floor_range_um": 274.0337200291747,
+  "cavity_shrink_pct": 12.76475265261433,
+  "body_shrink_pct": 15.64445407281454,
+  "rho_gc": 0.9785827931010446,
+  "rho_cu": 0.9587177033339355,
+  "T_stop_C": 916.5655311423078,
+  "n_el": 15232
+ },
  "optimised": {
   "shrink_xy_pct": 21.486913354552296,
   "shrink_z_pct": 21.296658189227045,

@@ -175,7 +175,8 @@ def fig_programme():
 
 
 # ----------------------------------------------------------------------------- 3-D test vehicle
-def draw_body(ax, p, conn, theta, mat, view, title, zscale=1.0, cmap_gc=fs.SEQ_BLUE, cmap_cu=fs.SEQ_COPPER, cut_y=None):
+def draw_body(ax, p, conn, theta, mat, view, title, zscale=1.0, cmap_gc=fs.SEQ_BLUE, cmap_cu=fs.SEQ_COPPER, cut_y=None,
+              zoom=1.0):
     """Render the outer surface of a voxel sub-mesh, faces coloured by material and density and shaded by
     orientation; faces on the plane y = cut_y are darkened to mark the section."""
     from skfem import MeshHex
@@ -209,7 +210,7 @@ def draw_body(ax, p, conn, theta, mat, view, title, zscale=1.0, cmap_gc=fs.SEQ_B
     pc = Poly3DCollection(polys, facecolors=cols, edgecolors=(0, 0, 0, 0.05), linewidths=0.08)
     ax.add_collection3d(pc)
     ax.set_xlim(P[:, 0].min(), P[:, 0].max()); ax.set_ylim(P[:, 1].min(), P[:, 1].max()); ax.set_zlim(P[:, 2].min(), P[:, 2].max())
-    ax.set_box_aspect((np.ptp(P[:, 0]), np.ptp(P[:, 1]), np.ptp(P[:, 2]) * zscale))
+    ax.set_box_aspect((np.ptp(P[:, 0]), np.ptp(P[:, 1]), np.ptp(P[:, 2]) * zscale), zoom=zoom)
     ax.view_init(*view)
     ax.set_axis_off()
     ax.set_title(title, fontsize=6.8, pad=0)
@@ -241,8 +242,8 @@ def fig_package():
     names = {"baseline": "baseline", "optimised": "nominal optimum", "robust": "robust design"}
     runs = [json.load(open(f"{D}/package_{k}.json")) for k in names if os.path.exists(f"{D}/package_{k}.json")]
     nr = len(runs)
-    fig = plt.figure(figsize=(fs.COL2, 0.30 * nr * fs.COL2))
-    gs = fig.add_gridspec(nr, 2, width_ratios=[1.45, 1], hspace=0.38, wspace=0.02,
+    fig = plt.figure(figsize=(fs.COL2, 0.25 * nr * fs.COL2))
+    gs = fig.add_gridspec(nr, 2, width_ratios=[1.35, 1], hspace=0.30, wspace=0.0,
                           left=0.0, right=0.93, top=0.96, bottom=0.07)
     reliefs = [upper_deviation(r) for r in runs]
     lim = max(np.nanmax(np.abs(z)) for _, _, z, _ in reliefs)
@@ -255,7 +256,7 @@ def fig_package():
         ax = fig.add_subplot(gs[k, 0], projection="3d")
         draw_body(ax, p, conn[keep], theta[keep], mat[keep], (30, -62),
                   f"({'abc'[k]}) {names[r['label']]}: part sectioned at y = 0 "
-                  f"(mean copper density {rho_cu.mean():.3f})", zscale=2.0, cut_y=cut_y)
+                  f"(mean copper density {rho_cu.mean():.3f})", zscale=2.0, cut_y=cut_y, zoom=1.18)
         ax = fig.add_subplot(gs[k, 1])
         X, Y, Z, frame = reliefs[k]
         pc = ax.pcolormesh(X, Y, Z, cmap=fs.DIVERGE, vmin=-lim, vmax=lim, shading="gouraud")
