@@ -1,0 +1,30 @@
+{
+ "optimised": {
+  "shrink_xy_pct": 21.486913354552296,
+  "shrink_z_pct": 21.296658189227045,
+  "frame_range_um": 114.35054022938405,
+  "upper_dev_range_um": 114.35054022938405,
+  "floor_minus_frame_um": 1.8975086566335355,
+  "floor_range_um": 62.21168177967607,
+  "cavity_shrink_pct": 20.488598555435022,
+  "body_shrink_pct": 21.486913354552296,
+  "rho_gc": 0.9935487273199191,
+  "rho_cu": 0.9288179063652146,
+  "T_stop_C": 904.2340433735495,
+  "n_el": 15232
+ },
+ "robust": {
+  "shrink_xy_pct": 18.772848023936362,
+  "shrink_z_pct": 18.589323337223963,
+  "frame_range_um": 265.87999682025276,
+  "upper_dev_range_um": 265.87999682025276,
+  "floor_minus_frame_um": 22.740897103174476,
+  "floor_range_um": 166.56729200643147,
+  "cavity_shrink_pct": 16.593480771149295,
+  "body_shrink_pct": 18.772848023936362,
+  "rho_gc": 0.9841703372953194,
+  "rho_cu": 0.9272469248741593,
+  "T_stop_C": 903.3014278834324,
+  "n_el": 15232
+ }
+}
