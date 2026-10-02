@@ -1,0 +1,2503 @@
+{
+ "generated": "2026-10-02",
+ "N": 8,
+ "variants": [
+  "char_yield=0.03",
+  "char_yield=0.08",
+  "half_thickness_mm=1.0",
+  "half_thickness_mm=4.0"
+ ],
+ "debind": {
+  "N2": {
+   "name": "N2 only",
+   "gas": "N2",
+   "segments": [
+    {
+     "T_end_C": 470,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "binder pyrolysis, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 10.88888888888889
+  },
+  "AIR": {
+   "name": "Air only",
+   "gas": "air",
+   "segments": [
+    {
+     "T_end_C": 150,
+     "ramp_Kmin": 1.0,
+     "hold_h": 0.5,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "solvent out, air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 380,
+     "ramp_Kmin": 0.5,
+     "hold_h": 2.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "burnout, air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, air",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.222222222222221
+  },
+  "AIR-SLOW": {
+   "name": "Air only, slow (IFAM schedule)",
+   "gas": "air",
+   "segments": [
+    {
+     "T_end_C": 120,
+     "ramp_Kmin": 1.0,
+     "hold_h": 24.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 250,
+     "ramp_Kmin": 1.0,
+     "hold_h": 63.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "oxidative debind, air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, air",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 92.0
+  },
+  "D2": {
+   "name": "Recommended: N2, then 1 % O2",
+   "gas": "N2; 5 % air in N2",
+   "segments": [
+    {
+     "T_end_C": 470,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "binder pyrolysis, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 150,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.5,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool and settle, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 280.0,
+     "ramp_Kmin": 0.5,
+     "hold_h": 2.0,
+     "O2": 0.01,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "1 % O2 (5 % air in N2)",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 18.444444444444443
+  }
+ },
+ "sinter": {
+  "N2": {
+   "name": "N2 only",
+   "gas": "N2",
+   "segments": [
+    {
+     "T_end_C": 700,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "700 C hold, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "sinter, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.833333333333334
+  },
+  "H2": {
+   "name": "H2 only",
+   "gas": "100 % H2",
+   "segments": [
+    {
+     "T_end_C": 700,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 1.0,
+     "dp_C": -60.0,
+     "note": "700 C hold, 100 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 1.0,
+     "dp_C": -60.0,
+     "note": "sinter, 100 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 1.0,
+     "dp_C": -60.0,
+     "note": "cool, 100 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 1.0,
+     "dp_C": -60.0,
+     "note": "cool, 100 % H2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.833333333333334
+  },
+  "FG": {
+   "name": "Forming gas only",
+   "gas": "5 % H2 in N2 (premixed)",
+   "segments": [
+    {
+     "T_end_C": 700,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "700 C hold, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "sinter, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "cool, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "cool, 5 % H2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.833333333333334
+  },
+  "AIR": {
+   "name": "Air only",
+   "gas": "air",
+   "segments": [
+    {
+     "T_end_C": 700,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "700 C hold, air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "sinter, air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, air",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.833333333333334
+  },
+  "S1": {
+   "name": "Recommended S1: N2, 1 % H2, 5 % H2",
+   "gas": "N2; 1 % H2; 5 % H2",
+   "segments": [
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "Cu2O + C -> Cu + CO, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 1.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.01,
+     "dp_C": -60.0,
+     "note": "reduce the rest of the oxide, 1 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "sinter, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "cool, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.833333333333334
+  },
+  "S2": {
+   "name": "Recommended S2: N2, 1 % H2, 100 % H2",
+   "gas": "N2; 1 % H2; 100 % H2",
+   "segments": [
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "Cu2O + C -> Cu + CO, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 1.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.01,
+     "dp_C": -60.0,
+     "note": "reduce the rest of the oxide, 1 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 1.0,
+     "dp_C": -60.0,
+     "note": "sinter, 100 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 1.0,
+     "dp_C": -60.0,
+     "note": "cool, 100 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.833333333333334
+  }
+ },
+ "grid": [
+  {
+   "tag": [
+    "grid",
+    "D2",
+    "S2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 18.293095588684082,
+   "n_fail": 0,
+   "failed": [],
+   "kpi": {
+    "duration_h": 33.27777777777778,
+    "rho_final": 0.9679628828598653,
+    "rho_center_final": 0.9675559529402642,
+    "shrink_xy_pct": 15.769858108065593,
+    "shrink_z_pct": 19.911716786851162,
+    "C_final_ppm": 0.0004627566105334148,
+    "O_final_ppm": 9.57384878550831e-09,
+    "closed": true,
+    "t_close_h": 26.4729269147126,
+    "C_at_close_ppm": 0.0004654444097061519,
+    "O_at_close_ppm": 3.275825275015505e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.09901577171764366,
+    "exo_max_K": 18.65439104676193,
+    "Pi_bloat_max": 0.024913697332004374,
+    "melt_margin_min_K": 14.619971371605516,
+    "binder_left_final": -1.0130907218320888e-09,
+    "grain_final_um": 30.427697358641385,
+    "p_trap_final_bar": 0.3599523124982126,
+    "O_peak_ppm": 52079.13459793854,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 95.09046088042815,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "D2",
+   "sinter": "S2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": []
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": []
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": []
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 0,
+     "failed": []
+    }
+   },
+   "n_robust": 4,
+   "t_total_h": 33.27777777777778,
+   "rank": 1
+  },
+  {
+   "tag": [
+    "grid",
+    "D2",
+    "S1",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 18.247966766357422,
+   "n_fail": 0,
+   "failed": [],
+   "kpi": {
+    "duration_h": 33.27777777777778,
+    "rho_final": 0.9630015798832502,
+    "rho_center_final": 0.9628219560031396,
+    "shrink_xy_pct": 15.611424304755527,
+    "shrink_z_pct": 19.801079455203485,
+    "C_final_ppm": 0.00032653453232490975,
+    "O_final_ppm": 1.299883499290358e-08,
+    "closed": true,
+    "t_close_h": 26.495824776847357,
+    "C_at_close_ppm": 0.00034013496737973536,
+    "O_at_close_ppm": 4.264403220727297e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.09901577171764366,
+    "exo_max_K": 18.65439104676193,
+    "Pi_bloat_max": 0.4011886923982096,
+    "melt_margin_min_K": 14.619966251928872,
+    "binder_left_final": -1.016061191284467e-09,
+    "grain_final_um": 29.31159696531838,
+    "p_trap_final_bar": 0.8288922456635164,
+    "O_peak_ppm": 52079.13459793854,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 94.35191002509882,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "D2",
+   "sinter": "S1",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": []
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": []
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": []
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 0,
+     "failed": []
+    }
+   },
+   "n_robust": 4,
+   "t_total_h": 33.27777777777778,
+   "rank": 2
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR",
+    "S2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 30.788238525390625,
+   "n_fail": 1,
+   "failed": [
+    "self_heating"
+   ],
+   "kpi": {
+    "duration_h": 29.055555555555557,
+    "rho_final": 0.9644846116390711,
+    "rho_center_final": 0.9640586746060456,
+    "shrink_xy_pct": 15.644827857583143,
+    "shrink_z_pct": 19.860986901757315,
+    "C_final_ppm": 5.263429067902632e-07,
+    "O_final_ppm": 1.3417412666877168e-08,
+    "closed": true,
+    "t_close_h": 22.704903456253987,
+    "C_at_close_ppm": 6.939841363489814e-07,
+    "O_at_close_ppm": 2.6073350399317947e-08,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.2007636999066987,
+    "exo_max_K": 206.5133441622412,
+    "Pi_bloat_max": 0.037603000640395526,
+    "melt_margin_min_K": 14.619962207758817,
+    "binder_left_final": -1.7563899696397518e-10,
+    "grain_final_um": 28.62407172579275,
+    "p_trap_final_bar": 0.26490817639730196,
+    "O_peak_ppm": 101891.77885770306,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 94.57247863828799,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR",
+   "sinter": "S2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 29.055555555555557,
+   "rank": 3
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR-SLOW",
+    "S2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 35.869879722595215,
+   "n_fail": 1,
+   "failed": [
+    "self_heating"
+   ],
+   "kpi": {
+    "duration_h": 106.83333333333333,
+    "rho_final": 0.9666650749799327,
+    "rho_center_final": 0.966715109781894,
+    "shrink_xy_pct": 15.658548601688082,
+    "shrink_z_pct": 20.015740637878444,
+    "C_final_ppm": 1.801276266529985e-06,
+    "O_final_ppm": 1.3308935085662349e-08,
+    "closed": true,
+    "t_close_h": 100.13926588443321,
+    "C_at_close_ppm": 2.3524857737166397e-06,
+    "O_at_close_ppm": 2.9934434359911083e-08,
+    "Pi_gas_max": 0.24007176330641802,
+    "Pi_th_max": 0.009964529487789512,
+    "exo_max_K": 122.02120402268031,
+    "Pi_bloat_max": 0.05790556039866951,
+    "melt_margin_min_K": 14.619959153215632,
+    "binder_left_final": -1.6230991785209535e-10,
+    "grain_final_um": 29.794970757609676,
+    "p_trap_final_bar": 0.3271739069880482,
+    "O_peak_ppm": 78284.27438541954,
+    "C_peak_ppm": 367.5807976131284,
+    "iacs": 94.89708301438701,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR-SLOW",
+   "sinter": "S2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 106.83333333333333,
+   "rank": 4
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR",
+    "S1",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 32.44684815406799,
+   "n_fail": 1,
+   "failed": [
+    "self_heating"
+   ],
+   "kpi": {
+    "duration_h": 29.055555555555557,
+    "rho_final": 0.9603282189643428,
+    "rho_center_final": 0.9597220340135438,
+    "shrink_xy_pct": 15.51104637334394,
+    "shrink_z_pct": 19.768818787758104,
+    "C_final_ppm": 2.1493282347498215e-07,
+    "O_final_ppm": 1.1597193236445761e-08,
+    "closed": true,
+    "t_close_h": 22.75995793949918,
+    "C_at_close_ppm": 2.3094851011290116e-07,
+    "O_at_close_ppm": 2.232297320077045e-08,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.007794097077195845,
+    "exo_max_K": 122.1005013195554,
+    "Pi_bloat_max": 0.18395275810388628,
+    "melt_margin_min_K": 14.619978154210912,
+    "binder_left_final": -1.8030699076522885e-10,
+    "grain_final_um": 27.81006644752511,
+    "p_trap_final_bar": 0.6823970102229342,
+    "O_peak_ppm": 101891.77885770306,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 93.95473486877273,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR",
+   "sinter": "S1",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 29.055555555555557,
+   "rank": 5
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR-SLOW",
+    "S1",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 36.81109046936035,
+   "n_fail": 1,
+   "failed": [
+    "self_heating"
+   ],
+   "kpi": {
+    "duration_h": 106.83333333333333,
+    "rho_final": 0.9624020009281976,
+    "rho_center_final": 0.9622011076766764,
+    "shrink_xy_pct": 15.521418134802357,
+    "shrink_z_pct": 19.922020107365444,
+    "C_final_ppm": 8.776521079501721e-07,
+    "O_final_ppm": 9.64511296660891e-09,
+    "closed": true,
+    "t_close_h": 100.18253240651681,
+    "C_at_close_ppm": 1.1272760866799951e-06,
+    "O_at_close_ppm": 2.8098126736030423e-08,
+    "Pi_gas_max": 0.24007176330641802,
+    "Pi_th_max": 0.005013271535613769,
+    "exo_max_K": 95.34219333768169,
+    "Pi_bloat_max": 0.3951390037908743,
+    "melt_margin_min_K": 14.619979756669863,
+    "binder_left_final": -1.752259693607063e-10,
+    "grain_final_um": 28.85175132630829,
+    "p_trap_final_bar": 0.7658503434648203,
+    "O_peak_ppm": 78284.27438541954,
+    "C_peak_ppm": 367.5807976131284,
+    "iacs": 94.26278392535359,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR-SLOW",
+   "sinter": "S1",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 106.83333333333333,
+   "rank": 6
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR",
+    "H2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 32.575780391693115,
+   "n_fail": 2,
+   "failed": [
+    "thermal_stress",
+    "self_heating"
+   ],
+   "kpi": {
+    "duration_h": 29.055555555555557,
+    "rho_final": 0.9668348109214627,
+    "rho_center_final": 0.9657270969984649,
+    "shrink_xy_pct": 15.75199523242442,
+    "shrink_z_pct": 19.852203545685544,
+    "C_final_ppm": 47.11203539998756,
+    "O_final_ppm": 3.784920856387798e-09,
+    "closed": true,
+    "t_close_h": 22.28730424209828,
+    "C_at_close_ppm": 63.89730757335012,
+    "O_at_close_ppm": 3.372549261628043e-09,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 9.84139551469648,
+    "exo_max_K": 754.0824309155591,
+    "Pi_bloat_max": 0.07993790917188831,
+    "melt_margin_min_K": 14.619992720763321,
+    "binder_left_final": -1.5925242110735412e-10,
+    "grain_final_um": 30.105933713062765,
+    "p_trap_final_bar": 0.05472566131708608,
+    "O_peak_ppm": 101889.07417660407,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 94.92236688295145,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR",
+   "sinter": "H2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "thermal_stress",
+      "self_heating"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "thermal_stress",
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "thermal_stress",
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "thermal_stress",
+      "self_heating",
+      "melting"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 29.055555555555557,
+   "rank": 7
+  },
+  {
+   "tag": [
+    "grid",
+    "D2",
+    "N2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 16.46990418434143,
+   "n_fail": 2,
+   "failed": [
+    "oxygen_at_closure",
+    "melting"
+   ],
+   "kpi": {
+    "duration_h": 33.27777777777778,
+    "rho_final": 0.9665811079077409,
+    "rho_center_final": 0.9665123328309666,
+    "shrink_xy_pct": 9.386088457659769,
+    "shrink_z_pct": 12.240354659593622,
+    "C_final_ppm": 2.7152476130655483e-09,
+    "O_final_ppm": 46908.27243180486,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.09901577171764366,
+    "exo_max_K": 18.65439104676193,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": -3.800412255548963,
+    "binder_left_final": -9.867853100768838e-10,
+    "grain_final_um": 30.38342306494321,
+    "p_trap_final_bar": 4.23972531929763e-06,
+    "O_peak_ppm": 52079.13459793854,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 94.88457609859206,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "D2",
+   "sinter": "N2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "oxygen_at_closure",
+      "melting"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 33.27777777777778,
+   "rank": 8
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR",
+    "FG",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 31.33963894844055,
+   "n_fail": 2,
+   "failed": [
+    "self_heating",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 29.055555555555557,
+    "rho_final": 0.9304779103029694,
+    "rho_center_final": 0.9085336664077889,
+    "shrink_xy_pct": 14.760609572933625,
+    "shrink_z_pct": 18.62476823457404,
+    "C_final_ppm": 103.36065802324885,
+    "O_final_ppm": 0.005431784842901813,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.4710818667092012,
+    "exo_max_K": 122.1005013195554,
+    "Pi_bloat_max": 0.40594667057546047,
+    "melt_margin_min_K": 14.632405517821098,
+    "binder_left_final": -1.594824747449365e-10,
+    "grain_final_um": 21.885074604782545,
+    "p_trap_final_bar": 0.3192766797112915,
+    "O_peak_ppm": 101889.07417660556,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 89.55764388833875,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR",
+   "sinter": "FG",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "self_heating",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 29.055555555555557,
+   "rank": 9
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR-SLOW",
+    "FG",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 36.50587058067322,
+   "n_fail": 2,
+   "failed": [
+    "self_heating",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 106.83333333333333,
+    "rho_final": 0.8976528328236903,
+    "rho_center_final": 0.8654106388622168,
+    "shrink_xy_pct": 13.813843213468358,
+    "shrink_z_pct": 17.45639651876234,
+    "C_final_ppm": 173.9854872407306,
+    "O_final_ppm": 0.0160079775357907,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.24007176330641802,
+    "Pi_th_max": 0.5776222655267479,
+    "exo_max_K": 95.34219333768169,
+    "Pi_bloat_max": 0.3881236156214938,
+    "melt_margin_min_K": 14.633185763341999,
+    "binder_left_final": -1.4798305782575222e-10,
+    "grain_final_um": 18.453767035870882,
+    "p_trap_final_bar": 4.025248266848744e-06,
+    "O_peak_ppm": 78280.05210711941,
+    "C_peak_ppm": 398.99590391571417,
+    "iacs": 84.80318401406066,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR-SLOW",
+   "sinter": "FG",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "self_heating",
+      "density"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "thermal_stress",
+      "self_heating",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 106.83333333333333,
+   "rank": 10
+  },
+  {
+   "tag": [
+    "grid",
+    "N2",
+    "S1",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 4.558215379714966,
+   "n_fail": 2,
+   "failed": [
+    "carbon_at_closure",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 25.72222222222222,
+    "rho_final": 0.5613599626875492,
+    "rho_center_final": 0.5596211997345225,
+    "shrink_xy_pct": 0.626053916043734,
+    "shrink_z_pct": 0.7587193263088654,
+    "C_final_ppm": 3841.0077405899356,
+    "O_final_ppm": 27.344086965702214,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.14043566686236594,
+    "exo_max_K": 8.761592258210499,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.624147268377328,
+    "binder_left_final": -9.94610567186504e-10,
+    "grain_final_um": 9.593599263118588,
+    "p_trap_final_bar": 4.230245000460781e-06,
+    "O_peak_ppm": 243.6046864451783,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.384903916656334,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "N2",
+   "sinter": "S1",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 25.72222222222222,
+   "rank": 11
+  },
+  {
+   "tag": [
+    "grid",
+    "N2",
+    "S2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 4.754683971405029,
+   "n_fail": 2,
+   "failed": [
+    "carbon_at_closure",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 25.72222222222222,
+    "rho_final": 0.5612159497879835,
+    "rho_center_final": 0.5594998434012955,
+    "shrink_xy_pct": 0.6183044331395715,
+    "shrink_z_pct": 0.7493084156981022,
+    "C_final_ppm": 3899.9204856051415,
+    "O_final_ppm": 26.78289505584989,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.14043566686236594,
+    "exo_max_K": 8.761592258210499,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.62366872618054,
+    "binder_left_final": -9.936162124249966e-10,
+    "grain_final_um": 9.592688355324809,
+    "p_trap_final_bar": 4.228538907604231e-06,
+    "O_peak_ppm": 243.6046864451783,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.368558090005024,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "N2",
+   "sinter": "S2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 25.72222222222222,
+   "rank": 12
+  },
+  {
+   "tag": [
+    "grid",
+    "N2",
+    "FG",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 4.878143310546875,
+   "n_fail": 2,
+   "failed": [
+    "carbon_at_closure",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 25.72222222222222,
+    "rho_final": 0.5590986863632922,
+    "rho_center_final": 0.5590833157112486,
+    "shrink_xy_pct": 0.5091607243333685,
+    "shrink_z_pct": 0.6162859540618681,
+    "C_final_ppm": 4055.8919829633774,
+    "O_final_ppm": 3.0600202269942125,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.1448875007754772,
+    "exo_max_K": 8.680660922955667,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.624103415337459,
+    "binder_left_final": -9.887089550349856e-10,
+    "grain_final_um": 9.576413028343413,
+    "p_trap_final_bar": 4.0085802424881495e-06,
+    "O_peak_ppm": 229.13652466217974,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.12848555934444,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "N2",
+   "sinter": "FG",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 25.72222222222222,
+   "rank": 13
+  },
+  {
+   "tag": [
+    "grid",
+    "N2",
+    "H2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 4.055026531219482,
+   "n_fail": 2,
+   "failed": [
+    "carbon_at_closure",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 25.72222222222222,
+    "rho_final": 0.5589314397260561,
+    "rho_center_final": 0.5589228906575738,
+    "shrink_xy_pct": 0.5001791324386717,
+    "shrink_z_pct": 0.6054041460076043,
+    "C_final_ppm": 4126.973532035698,
+    "O_final_ppm": 1.3695800216281673,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.1445550366609936,
+    "exo_max_K": 5.970525056170629,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.623641244319515,
+    "binder_left_final": -9.799308615196812e-10,
+    "grain_final_um": 9.575403620196013,
+    "p_trap_final_bar": 1.5363003632500984e-11,
+    "O_peak_ppm": 227.23759140620766,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.109541118909526,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "N2",
+   "sinter": "H2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 25.72222222222222,
+   "rank": 14
+  },
+  {
+   "tag": [
+    "grid",
+    "N2",
+    "N2",
+    "nominal"
+   ],
+   "ok": false,
+   "wall_s": 686.1837668418884,
+   "n_fail": 2,
+   "failed": [
+    "carbon_at_closure",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 18.305555555555557,
+    "rho_final": 0.5519443900818718,
+    "rho_center_final": 0.5513401226596969,
+    "shrink_xy_pct": 0.10937034266812473,
+    "shrink_z_pct": 0.13239217721023877,
+    "C_final_ppm": 4091.119347184053,
+    "O_final_ppm": 0.0017466408334847238,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.14043566686236594,
+    "exo_max_K": 8.761592258210499,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 43.18056201164518,
+    "binder_left_final": -9.764682947594536e-10,
+    "grain_final_um": 5.618747080599719,
+    "p_trap_final_bar": 5.4416035116483676e-06,
+    "O_peak_ppm": 243.6046864451783,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 40.32063830172835,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "N2",
+   "sinter": "N2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "carbon_at_closure",
+      "bloating",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 25.72222222222222,
+   "rank": 15
+  },
+  {
+   "tag": [
+    "grid",
+    "N2",
+    "AIR",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 31.792317867279053,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "oxygen_at_closure",
+    "melting"
+   ],
+   "kpi": {
+    "duration_h": 25.72222222222222,
+    "rho_final": 0.980564274014284,
+    "rho_center_final": 0.9706926950971547,
+    "shrink_xy_pct": 1.4580221961963957,
+    "shrink_z_pct": 2.0255270579717655,
+    "C_final_ppm": 1.005806395872081e-09,
+    "O_final_ppm": 156525.8302743118,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.14570305046997237,
+    "exo_max_K": 259.2552623999347,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": -3.8874349722996158,
+    "binder_left_final": -1.0521952559288858e-09,
+    "grain_final_um": 38.50393042182241,
+    "p_trap_final_bar": 4.24003084000627e-06,
+    "O_peak_ppm": 156525.8302743118,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 96.9748413838157,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "N2",
+   "sinter": "AIR",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 25.72222222222222,
+   "rank": 16
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR",
+    "AIR",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 35.989943742752075,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "oxygen_at_closure",
+    "melting"
+   ],
+   "kpi": {
+    "duration_h": 29.055555555555557,
+    "rho_final": 0.9813976487150082,
+    "rho_center_final": 0.9847199227805874,
+    "shrink_xy_pct": 0.1767257791317145,
+    "shrink_z_pct": 0.4947786125996445,
+    "C_final_ppm": 1.0284609738536463e-09,
+    "O_final_ppm": 194089.5778947861,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.0038426556144910825,
+    "exo_max_K": 122.1005013195554,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": -3.9446597650037347,
+    "binder_left_final": -2.552748205481627e-10,
+    "grain_final_um": 39.25928716753698,
+    "p_trap_final_bar": 4.234450375086299e-06,
+    "O_peak_ppm": 194089.5778947861,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 97.09989124994483,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR",
+   "sinter": "AIR",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 29.055555555555557,
+   "rank": 17
+  },
+  {
+   "tag": [
+    "grid",
+    "D2",
+    "AIR",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 30.115440845489502,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "oxygen_at_closure",
+    "melting"
+   ],
+   "kpi": {
+    "duration_h": 33.27777777777778,
+    "rho_final": 0.9805649394530587,
+    "rho_center_final": 0.9707163775593404,
+    "shrink_xy_pct": 1.4395169389542661,
+    "shrink_z_pct": 2.0008899762019694,
+    "C_final_ppm": 1.001548662404877e-09,
+    "O_final_ppm": 156712.8423123593,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.09901577171764366,
+    "exo_max_K": 81.53421454965985,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": -3.887475218510417,
+    "binder_left_final": -1.0525487027416962e-09,
+    "grain_final_um": 38.50791114558838,
+    "p_trap_final_bar": 4.239913955753096e-06,
+    "O_peak_ppm": 156712.8423123593,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 96.97494121330348,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "D2",
+   "sinter": "AIR",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 33.27777777777778,
+   "rank": 18
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR-SLOW",
+    "AIR",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 42.469929218292236,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "oxygen_at_closure",
+    "melting"
+   ],
+   "kpi": {
+    "duration_h": 106.83333333333333,
+    "rho_final": 0.9802813035904447,
+    "rho_center_final": 0.9843938033501592,
+    "shrink_xy_pct": 0.0052888223982527904,
+    "shrink_z_pct": 0.3997167881035324,
+    "C_final_ppm": 8.572471428304115e-10,
+    "O_final_ppm": 199056.41648313843,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.24007176330641802,
+    "Pi_th_max": 0.005013271535613769,
+    "exo_max_K": 95.34219333768169,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": -3.992457793167887,
+    "binder_left_final": -2.6427100546809757e-10,
+    "grain_final_um": 38.3846184902207,
+    "p_trap_final_bar": 4.2347536758721935e-06,
+    "O_peak_ppm": 199056.41648313843,
+    "C_peak_ppm": 361.2291516707101,
+    "iacs": 96.93239307653856,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR-SLOW",
+   "sinter": "AIR",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 106.83333333333333,
+   "rank": 19
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR",
+    "N2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 30.120945692062378,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "oxygen_at_closure",
+    "melting"
+   ],
+   "kpi": {
+    "duration_h": 29.055555555555557,
+    "rho_final": 0.9689952679101282,
+    "rho_center_final": 0.9694484658868452,
+    "shrink_xy_pct": 2.535775736266266,
+    "shrink_z_pct": 3.657343311520367,
+    "C_final_ppm": 2.1389054974210864e-09,
+    "O_final_ppm": 101646.94015889554,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.0038426556144910825,
+    "exo_max_K": 122.1005013195554,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": -3.800246093193209,
+    "binder_left_final": -1.608025858601516e-10,
+    "grain_final_um": 32.127366102283645,
+    "p_trap_final_bar": 4.233710427110493e-06,
+    "O_peak_ppm": 101891.77885770306,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 95.24438244020173,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR",
+   "sinter": "N2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 29.055555555555557,
+   "rank": 20
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR-SLOW",
+    "N2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 35.668782472610474,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "oxygen_at_closure",
+    "melting"
+   ],
+   "kpi": {
+    "duration_h": 106.83333333333333,
+    "rho_final": 0.9670605466447488,
+    "rho_center_final": 0.9669824956038912,
+    "shrink_xy_pct": 5.364184631527669,
+    "shrink_z_pct": 7.457434038015021,
+    "C_final_ppm": 2.335328353272376e-09,
+    "O_final_ppm": 77909.26165953549,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.24007176330641802,
+    "Pi_th_max": 0.005013271535613769,
+    "exo_max_K": 95.34219333768169,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": -3.8003152931155455,
+    "binder_left_final": -1.5466100257846897e-10,
+    "grain_final_um": 30.82824406619074,
+    "p_trap_final_bar": 4.2360287928953935e-06,
+    "O_peak_ppm": 78284.27438541954,
+    "C_peak_ppm": 367.5807976131284,
+    "iacs": 94.95599591855176,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR-SLOW",
+   "sinter": "N2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "oxygen_at_closure",
+      "melting"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 106.83333333333333,
+   "rank": 21
+  },
+  {
+   "tag": [
+    "grid",
+    "D2",
+    "FG",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 17.834501266479492,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "carbon_at_closure",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 33.27777777777778,
+    "rho_final": 0.55910324609238,
+    "rho_center_final": 0.5590865913102228,
+    "shrink_xy_pct": 0.5094131186479833,
+    "shrink_z_pct": 0.6165918584998153,
+    "C_final_ppm": 4054.7994126645276,
+    "O_final_ppm": 3.060687506442154,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.20404835017178757,
+    "exo_max_K": 35.97963387491939,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.624103418112327,
+    "binder_left_final": -9.891555699938313e-10,
+    "grain_final_um": 9.576459685118795,
+    "p_trap_final_bar": 4.008580699540373e-06,
+    "O_peak_ppm": 52073.74750308433,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.129002090824116,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "D2",
+   "sinter": "FG",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 33.27777777777778,
+   "rank": 22
+  },
+  {
+   "tag": [
+    "grid",
+    "AIR-SLOW",
+    "H2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 36.011210203170776,
+   "n_fail": 4,
+   "failed": [
+    "thermal_stress",
+    "self_heating",
+    "carbon_at_closure",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 106.83333333333333,
+    "rho_final": 0.9200333944720764,
+    "rho_center_final": 0.8998267267113501,
+    "shrink_xy_pct": 14.460321804222199,
+    "shrink_z_pct": 18.272001948491546,
+    "C_final_ppm": 210.6523840305919,
+    "O_final_ppm": 2.4775021073454914e-08,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.4969466607034889,
+    "Pi_th_max": 10.270998435440415,
+    "exo_max_K": 750.6815443925072,
+    "Pi_bloat_max": 0.05325084060456792,
+    "melt_margin_min_K": 14.621772463667185,
+    "binder_left_final": -3.1867955753130255e-10,
+    "grain_final_um": 21.18937657346708,
+    "p_trap_final_bar": 0.0020048709527853504,
+    "O_peak_ppm": 78280.05210708544,
+    "C_peak_ppm": 396.34578183773124,
+    "iacs": 88.03558574741454,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "debind": "AIR-SLOW",
+   "sinter": "H2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "thermal_stress",
+      "self_heating"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 4,
+     "failed": [
+      "thermal_stress",
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 4,
+     "failed": [
+      "thermal_stress",
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "thermal_stress",
+      "self_heating"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 106.83333333333333,
+   "rank": 23
+  },
+  {
+   "tag": [
+    "grid",
+    "D2",
+    "H2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 16.621623992919922,
+   "n_fail": 4,
+   "failed": [
+    "thermal_stress",
+    "self_heating",
+    "carbon_at_closure",
+    "density"
+   ],
+   "kpi": {
+    "duration_h": 33.27777777777778,
+    "rho_final": 0.5589387987546227,
+    "rho_center_final": 0.5589300969580419,
+    "shrink_xy_pct": 0.50058687763882,
+    "shrink_z_pct": 0.6058982189729778,
+    "C_final_ppm": 4125.17064755399,
+    "O_final_ppm": 1.3694667375073606,
+    "closed": false,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 7.83936896986914,
+    "exo_max_K": 451.3545286120807,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.623640954674102,
+    "binder_left_final": -9.825852131598456e-10,
+    "grain_final_um": 9.575562593556917,
+    "p_trap_final_bar": 1.5362750923883248e-11,
+    "O_peak_ppm": 52073.74750308433,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.11037463467899,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "debind": "D2",
+   "sinter": "H2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 4,
+     "failed": [
+      "thermal_stress",
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "char_yield=0.08": {
+     "n_fail": 4,
+     "failed": [
+      "thermal_stress",
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 4,
+     "failed": [
+      "thermal_stress",
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ]
+    }
+   },
+   "n_robust": 0,
+   "t_total_h": 33.27777777777778,
+   "rank": 24
+  }
+ ],
+ "numerics": [
+  {
+   "debind": "D2",
+   "sinter": "S2",
+   "how": "N12",
+   "n_fail": 0,
+   "n_fail_ref": 0,
+   "rho": 0.9679258001298333,
+   "rho_ref": 0.9679628828598653,
+   "C": 0.00046390124195828806,
+   "C_ref": 0.0004627566105334148,
+   "exo": 18.71373922202463,
+   "exo_ref": 18.65439104676193
+  },
+  {
+   "debind": "D2",
+   "sinter": "S2",
+   "how": "rtol1e-5",
+   "n_fail": 0,
+   "n_fail_ref": 0,
+   "rho": 0.9680242435524375,
+   "rho_ref": 0.9679628828598653,
+   "C": 0.00046415189218299924,
+   "C_ref": 0.0004627566105334148,
+   "exo": 18.655201183395775,
+   "exo_ref": 18.65439104676193
+  },
+  {
+   "debind": "AIR",
+   "sinter": "S2",
+   "how": "N12",
+   "n_fail": 1,
+   "n_fail_ref": 1,
+   "rho": 0.9645318284384778,
+   "rho_ref": 0.9644846116390711,
+   "C": 5.430770723195019e-07,
+   "C_ref": 5.263429067902632e-07,
+   "exo": 206.144219729979,
+   "exo_ref": 206.5133441622412
+  },
+  {
+   "debind": "AIR",
+   "sinter": "S2",
+   "how": "rtol1e-5",
+   "n_fail": 1,
+   "n_fail_ref": 1,
+   "rho": 0.9644779672676359,
+   "rho_ref": 0.9644846116390711,
+   "C": 6.356356738806602e-07,
+   "C_ref": 5.263429067902632e-07,
+   "exo": 206.51354532872233,
+   "exo_ref": 206.5133441622412
+  },
+  {
+   "debind": "AIR-SLOW",
+   "sinter": "S2",
+   "how": "N12",
+   "n_fail": 1,
+   "n_fail_ref": 1,
+   "rho": 0.9666819508184814,
+   "rho_ref": 0.9666650749799327,
+   "C": 6.297048214086935e-06,
+   "C_ref": 1.801276266529985e-06,
+   "exo": 124.16476655105191,
+   "exo_ref": 122.02120402268031
+  },
+  {
+   "debind": "AIR-SLOW",
+   "sinter": "S2",
+   "how": "rtol1e-5",
+   "n_fail": 1,
+   "n_fail_ref": 1,
+   "rho": 0.966650331234454,
+   "rho_ref": 0.9666650749799327,
+   "C": 1.923213896984639e-06,
+   "C_ref": 1.801276266529985e-06,
+   "exo": 122.021412405187,
+   "exo_ref": 122.02120402268031
+  },
+  {
+   "debind": "N2",
+   "sinter": "S1",
+   "how": "N12",
+   "n_fail": 2,
+   "n_fail_ref": 2,
+   "rho": 0.563784070572652,
+   "rho_ref": 0.5613599626875492,
+   "C": 3873.5972125023677,
+   "C_ref": 3841.0077405899356,
+   "exo": 8.571331612825873,
+   "exo_ref": 8.761592258210499
+  },
+  {
+   "debind": "N2",
+   "sinter": "S1",
+   "how": "rtol1e-5",
+   "n_fail": 2,
+   "n_fail_ref": 2,
+   "rho": 0.5613580802267555,
+   "rho_ref": 0.5613599626875492,
+   "C": 3841.1159471144847,
+   "C_ref": 3841.0077405899356,
+   "exo": 9.273474866300603,
+   "exo_ref": 8.761592258210499
+  }
+ ],
+ "literature": [
+  {
+   "what": "Fraunhofer IFAM LMM copper: acetone, air 120 C / 24 h + 250 C / 63 h, 1050 C / 2 h H2",
+   "measured": "95.3 % density",
+   "lo": 0.953,
+   "hi": 0.953,
+   "metric": "rho_final",
+   "role": "independent",
+   "key": "ifam_solvent",
+   "predicted": 0.8514127350166012,
+   "exo": 476.2196415648849,
+   "C_final_ppm": 206.67500210700538,
+   "rho_final": 0.8514127350166012
+  },
+  {
+   "what": "Roumanie (CEA): 400 C / 4 h in argon",
+   "measured": "0.394 wt% carbon",
+   "lo": 3940,
+   "hi": 3940,
+   "metric": "C_final_ppm",
+   "role": "calibration point for the char yield",
+   "key": "roumanie_ar_char",
+   "predicted": 3568.6948494018734,
+   "exo": 0.001931857999920794,
+   "C_final_ppm": 3568.6948494018734,
+   "rho_final": 0.6005888136152613
+  },
+  {
+   "what": "CEA-LITEN DLP copper: 400 C / 4 h air, then 1050 C / 4 h H2",
+   "measured": "90-94 % density",
+   "lo": 0.9,
+   "hi": 0.94,
+   "metric": "rho_final",
+   "role": "calibration point for the sintering rate",
+   "key": "cea",
+   "predicted": 0.9199713079897889,
+   "exo": 656.0371634202207,
+   "C_final_ppm": 2.77101765237546,
+   "rho_final": 0.9199713079897889
+  },
+  {
+   "what": "Fraunhofer IFAM, same without the acetone step (air only, then H2 only)",
+   "measured": "about 92 % density",
+   "lo": 0.92,
+   "hi": 0.92,
+   "metric": "rho_final",
+   "role": "independent",
+   "key": "ifam_air_only",
+   "predicted": 0.8248783233228076,
+   "exo": 471.56037973666173,
+   "C_final_ppm": 242.63058728364027,
+   "rho_final": 0.8248783233228076
+  },
+  {
+   "key": "roumanie_ox_400",
+   "what": "Roumanie (CEA): Cu compact in air, 1 K/min to 400 C + 4 h",
+   "measured": "8.0 wt% mass gain",
+   "lo": 8.0,
+   "hi": 8.0,
+   "metric": "mass_gain_wt",
+   "role": "independent",
+   "predicted": 10.384307923518259
+  },
+  {
+   "key": "roumanie_ox_600",
+   "what": "Roumanie (CEA): Cu compact in air, 1 K/min to 600 C + 4 h",
+   "measured": "14.4 wt% mass gain",
+   "lo": 14.4,
+   "hi": 14.4,
+   "metric": "mass_gain_wt",
+   "role": "independent",
+   "predicted": 18.83776336105909
+  },
+  {
+   "key": "roumanie_ox_800",
+   "what": "Roumanie (CEA): Cu compact in air, 1 K/min to 800 C + 4 h",
+   "measured": "16.8 wt% mass gain",
+   "lo": 16.8,
+   "hi": 16.8,
+   "metric": "mass_gain_wt",
+   "role": "independent",
+   "predicted": 21.08942248258314
+  }
+ ],
+ "selfheat": [
+  {
+   "case": "CEA (published, intact parts)",
+   "debind_exo_K": 108.40752764311878,
+   "sinter_exo_K": 655.897150138921,
+   "O_after_debind_ppm": 96065.14779559536,
+   "rho_final": 0.9199551891616604
+  },
+  {
+   "case": "IFAM with acetone (published, intact parts)",
+   "debind_exo_K": 113.49881997816044,
+   "sinter_exo_K": 476.112302282374,
+   "O_after_debind_ppm": 70830.30583175659,
+   "rho_final": 0.8559522115259444
+  },
+  {
+   "case": "IFAM air only (published, intact parts)",
+   "debind_exo_K": 93.72190906365267,
+   "sinter_exo_K": 471.6170759046104,
+   "O_after_debind_ppm": 70730.79106875528,
+   "rho_final": 0.8070381832975649
+  },
+  {
+   "case": "Yours: air only (slow) + S1",
+   "debind_exo_K": 95.35298331727381,
+   "sinter_exo_K": 21.77092103477844,
+   "O_after_debind_ppm": 78280.05725703547,
+   "rho_final": 0.9625622458359147
+  },
+  {
+   "case": "Yours: air only (slow) + H2 only",
+   "debind_exo_K": 95.35298331727381,
+   "sinter_exo_K": 750.61555468348,
+   "O_after_debind_ppm": 78280.05725703547,
+   "rho_final": 0.9198404379037953
+  },
+  {
+   "case": "Yours: recommended D2 + S2",
+   "debind_exo_K": 18.65306227649984,
+   "sinter_exo_K": 7.2992992338053,
+   "O_after_debind_ppm": 52073.682966293345,
+   "rho_final": 0.9679445684781786
+  }
+ ]
+}

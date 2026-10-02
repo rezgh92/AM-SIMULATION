@@ -35,6 +35,9 @@ def main():
         geo[f.stem[3:]] = json.loads(f.read_text())
     plan_path = DASH / "data" / "two_furnace.json"
     plan = json.loads(plan_path.read_text()) if plan_path.exists() else None
+    sg_path = DASH / "data" / "single_gas.json"
+    if plan is not None and sg_path.exists():
+        plan["single"] = json.loads(sg_path.read_text())
     data = dict(params=params, pre=pre, geo3d=geo, plan=plan, built=dt.date.today().isoformat())
     for marker, text in (("/*@CSS@*/", css), ("/*@ENGINE@*/", engine),
                          ("/*@DATA@*/", "window.CUPOLA_DATA = " + js_json(data) + ";"), ("/*@APP@*/", app)):

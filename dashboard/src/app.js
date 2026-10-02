@@ -1451,6 +1451,8 @@ function renderLine() {
   $("#matrixNote").textContent = `Each cell is one debinding programme followed by one sintering programme, solved as a single run with the part cooled to 25 °C in between. ` +
     `Ranked by checks passed, then by how many of ${PLAN.variants.length} what-ifs also pass (char yield 3 % and 8 %, walls of 2 and 8 mm), then density, carbon and conductivity. Click a cell to load it.`;
 
+  renderSingle();
+
   // ranges
   const sw = $("#sweeps"); sw.innerHTML = "";
   const SW = {
@@ -1488,6 +1490,58 @@ function renderLine() {
   const as = $("#assume"); as.innerHTML = "";
   as.append(el("h3", null, "What this plan assumes"), el("ul", null,
     ...(PLAN.assumptions || []).map((x) => el("li", null, x))));
+}
+
+function renderSingle() {
+  const SG = PLAN.single;
+  const mx = $("#sgMatrix"), vb = $("#valid");
+  if (!SG) { mx.closest(".progwrap").hidden = true; vb.hidden = true; return; }
+  const dK = Object.keys(SG.debind), sK = Object.keys(SG.sinter);
+  const cell = (d, s) => SG.grid.find((r) => r.debind === d && r.sinter === s);
+  mx.innerHTML = "";
+  mx.append(el("thead", null, el("tr", null, el("th", null, "Debinding ↓ · sintering →"),
+    ...sK.map((s) => el("th", null, SG.sinter[s].name)))));
+  const tb = el("tbody");
+  for (const d of dK) {
+    const tr = el("tr", null, el("th", { scope: "row" }, SG.debind[d].name));
+    for (const s of sK) {
+      const r = cell(d, s); if (!r) { tr.append(el("td")); continue; }
+      const k = r.kpi, st = r.n_fail ? "crit" : r.n_robust < SG.variants.length ? "warn" : "good";
+      const segs = [...SG.debind[d].segments.map((g) => ({ ...g, note: "F1 · " + g.note })), ...SG.sinter[s].segments.map((g) => ({ ...g, note: "F2 · " + g.note }))];
+      const oxide = (k.O_final_ppm || 0) > 1e4;
+      tr.append(el("td", { class: "cell " + st + (r.rank === 1 ? " best" : "") },
+        el("button", { class: "cellbtn", onclick: () => loadLine(`${SG.debind[d].name} + ${SG.sinter[s].name}`, segs.map((g) => ({ T_end_C: g.T_end_C, ramp_Kmin: g.ramp_Kmin, hold_h: g.hold_h, O2: g.O2 || 0, H2: g.H2 || 0, dp_C: g.dp_C, note: g.note }))),
+          title: (r.n_fail ? "Fails: " + failText(r) : "Passes every check") + ` · rank ${r.rank} of ${SG.grid.length} · click to load` },
+          el("span", { class: "cr" }, el("span", { class: "st-" + (r.n_fail ? "crit" : "good"), html: ICON[r.n_fail ? "crit" : "good"] }), el("b", { class: "m" }, `${10 - r.n_fail}/10`), el("span", { class: "rn m" }, "#" + r.rank)),
+          el("span", { class: "cv m" }, oxide ? `${(k.O_final_ppm / 1e4).toFixed(1)} % O: oxide` : pct(k.rho_final) + " · " + ppm(k.C_final_ppm)),
+          el("span", { class: "cw" }, r.n_fail ? failText(r) : `${k.iacs.toFixed(0)} % IACS · ${r.n_robust}/${SG.variants.length} what-ifs`))));
+    }
+    tb.append(tr);
+  }
+  mx.append(tb);
+  $("#sgNote").textContent = "Single-gas sintering uses the same temperatures and times as S2 (700 °C for 4 h, 1050 °C for 4 h); only the gas differs. " +
+    "Without oxygen at some point the char stays, and without hydrogen the oxide stays. Click a cell to load it.";
+
+  vb.innerHTML = "";
+  const lit = el("table", { class: "data" }, el("thead", null, el("tr", null, ...["Published process", "Measured", "Model", "Use"].map((h) => el("th", null, h)))));
+  const lb = el("tbody");
+  const show = (L, v) => L.metric === "rho_final" ? pct(v) : L.metric === "C_final_ppm" ? (v / 1e4).toFixed(2) + " wt% C" : v.toFixed(1) + " wt%";
+  for (const L of SG.literature) lb.append(el("tr", null, el("td", { class: "wrap" }, L.what), el("td", null, L.measured), el("td", null, show(L, L.predicted)), el("td", { class: "wrap" }, L.role)));
+  lit.append(lb);
+  const nu = el("table", { class: "data" }, el("thead", null, el("tr", null, ...["Pairing", "Check", "Density", "Carbon", "Self-heating", "Verdict"].map((h) => el("th", null, h)))));
+  const nb = el("tbody");
+  const SD = { N2: "N₂ only", AIR: "air only", "AIR-SLOW": "air only, slow", D2: "D2" }, SS = { N2: "N₂ only", H2: "H₂ only", FG: "5 % H₂ only", AIR: "air only", S1: "S1", S2: "S2" };
+  for (const n of SG.numerics) nb.append(el("tr", null, el("td", null, `${SD[n.debind] || n.debind} + ${SS[n.sinter] || n.sinter}`), el("td", null, n.how === "N12" ? "12 nodes" : "rtol 1e-5"),
+    el("td", null, `${pct(n.rho_ref)} → ${pct(n.rho)}`), el("td", null, `${ppm(n.C_ref)} → ${ppm(n.C)}`), el("td", null, `${n.exo_ref.toFixed(1)} → ${n.exo.toFixed(1)} K`),
+    el("td", null, n.n_fail === n.n_fail_ref ? "same" : `${10 - n.n_fail_ref} → ${10 - n.n_fail}/10`)));
+  nu.append(nb);
+  const sh = el("table", { class: "data" }, el("thead", null, el("tr", null, ...["Process", "Debind furnace", "Sinter furnace", "Oxide after debind"].map((h) => el("th", null, h)))));
+  const shb = el("tbody");
+  for (const r of SG.selfheat || []) shb.append(el("tr", null, el("td", { class: "wrap" }, r.case), el("td", null, r.debind_exo_K.toFixed(0) + " K"), el("td", null, r.sinter_exo_K.toFixed(0) + " K"), el("td", null, (r.O_after_debind_ppm / 1e4).toFixed(1) + " % O")));
+  sh.append(shb);
+  if (SG.selfheat) vb.append(el("figure", { class: "chart wide" }, el("div", { class: "chart-head" }, el("h3", null, "Self-heating the model predicts"), el("span", { class: "cap" }, "Peak self-heating in each furnace. The model predicts large self-heating for the published air-then-H₂ processes, which made intact parts, so it overstates heat in air debinding and in pure-H₂ reduction of an oxidised part. Read the self-heating check on those routes as a warning, not a verdict. The recommended route stays clear of both regimes.")), el("div", { class: "tblwrap" }, sh)));
+  vb.append(el("figure", { class: "chart" }, el("div", { class: "chart-head" }, el("h3", null, "Against published copper"), el("span", { class: "cap" }, "The same model, run on the published process conditions.")), el("div", { class: "tblwrap" }, lit)),
+    el("figure", { class: "chart" }, el("div", { class: "chart-head" }, el("h3", null, "Numerical check"), el("span", { class: "cap" }, "Best pairing of each debinding family again on a finer mesh and with a tighter solver tolerance (reference: 8 nodes, rtol 1e-4).")), el("div", { class: "tblwrap" }, nu)));
 }
 
 // ============================================================ boot
