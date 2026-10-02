@@ -13,7 +13,7 @@
   </div>
   <button class="btn small railbtn" id="railBtn" aria-controls="rail" aria-expanded="false">Inputs</button>
   <nav class="secnav" aria-label="Sections">
-    <a href="#results">Results</a><a href="#program">Program</a><a href="#traces">Traces</a><a href="#optimiser">Optimiser</a>
+    <a href="#line">Your line</a><a href="#results">Results</a><a href="#program">Program</a><a href="#traces">Traces</a><a href="#optimiser">Optimiser</a>
     <a href="#shape">3-D</a><a href="#unknowns">Unknowns</a><a href="#powders">Powders</a><a href="#model">Model</a>
   </nav>
   <div class="runstate" id="runState" role="status" aria-live="polite"><span class="dot" id="runDot"></span><span id="runText">ready</span></div>
@@ -41,11 +41,29 @@
   </aside>
 
   <main>
+    <section id="line" aria-labelledby="h-line">
+      <div class="sechead"><h2 id="h-line">Your two-furnace line</h2>
+        <p class="lede">Debinding in one furnace with N₂ and air, sintering in another with N₂, H₂ and air, all gases dry. Four programmes for each furnace were run through both furnaces in every combination, then ranked by the part they predict.</p></div>
+      <div class="linemap" id="lineMap"></div>
+      <div class="ledger panel" id="ledger"></div>
+      <div class="eyebrow">Furnace 1 · debinding · ranked</div>
+      <div class="opts" id="optsD"></div>
+      <div class="eyebrow">Furnace 2 · sintering · ranked</div>
+      <div class="opts" id="optsS"></div>
+      <div class="eyebrow">Every pairing</div>
+      <div class="progwrap"><table class="matrix" id="matrix"></table></div>
+      <p class="note" id="matrixNote"></p>
+      <div class="eyebrow">Ranges around the best pairing</div>
+      <div class="grid3" id="sweeps"></div>
+      <div class="panel assume" id="assume"></div>
+    </section>
+
     <section id="results" aria-labelledby="h-results">
       <div class="sechead"><h2 id="h-results">Cycle result</h2>
         <p class="lede">A 1-D coupon through the critical wall of your part, solved on every change. Pick a cycle, move an input, read the verdict.</p></div>
       <div class="cyclebar">
         <div class="segctl" id="srcSeg" role="group" aria-label="Cycle">
+          <button data-src="line">Two-furnace</button>
           <button data-src="opt" aria-pressed="true">Optimised</button>
           <button data-src="v0">v0 envelope</button>
           <button data-src="ifam">IFAM route</button>

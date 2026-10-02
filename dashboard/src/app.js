@@ -9,6 +9,7 @@ const REG = PR.registry;
 const BYKEY = Object.fromEntries(REG.map((p) => [p.key, p]));
 const DEF = Object.fromEntries(REG.map((p) => [p.key, p.value]));
 const PRE = D.pre || {};
+const PLAN = D.plan || null;
 const STORE_KEY = "cupola.studio.v1";
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -62,7 +63,7 @@ const state = {
   values: { ...DEF },
   showAdvanced: false,
   source: "opt",
-  cycles: { opt: clone(PRE.default_cycle || C.baselineV0()), v0: C.baselineV0(), ifam: C.ifamReference(), cea: C.ceaReference(), custom: null },
+  cycles: { line: null, opt: clone(PRE.default_cycle || C.baselineV0()), v0: C.baselineV0(), ifam: C.ifamReference(), cea: C.ceaReference(), custom: null },
   N: 8,
   live: true,
   result: null,
@@ -79,10 +80,16 @@ function saveState() {
   try {
     localStorage.setItem(STORE_KEY, JSON.stringify({
       values: state.values, showAdvanced: state.showAdvanced, source: state.source, N: state.N, live: state.live,
-      custom: state.cycles.custom, opt: state.cycles.opt, synth: state.synth,
+      custom: state.cycles.custom, opt: state.cycles.opt, line: state.cycles.line, synth: state.synth,
     }));
   } catch (e) { /* storage unavailable: nothing to remember */ }
 }
+function planCycle(d, s) {
+  const pick = (g) => ({ T_end_C: g.T_end_C, ramp_Kmin: g.ramp_Kmin, hold_h: g.hold_h, O2: g.O2 || 0, H2: g.H2 || 0, dp_C: g.dp_C, note: g.note || "" });
+  const segs = [...PLAN.debind[d].segments.map((g) => pick({ ...g, note: "F1 · " + g.note })), ...PLAN.sinter[s].segments.map((g) => pick({ ...g, note: "F2 · " + g.note }))];
+  return { name: `Two-furnace ${d} + ${s}`, T_start_C: 25, segments: segs };
+}
+if (PLAN && PLAN.combos.length) state.cycles.line = planCycle(PLAN.combos[0].debind, PLAN.combos[0].sinter);
 function loadState() {
   let s = null;
   try { s = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch (e) { s = null; }
@@ -91,8 +98,9 @@ function loadState() {
   state.showAdvanced = !!s.showAdvanced;
   if (s.custom && Array.isArray(s.custom.segments)) state.cycles.custom = s.custom;
   if (s.opt && Array.isArray(s.opt.segments)) state.cycles.opt = s.opt;
+  if (s.line && Array.isArray(s.line.segments)) state.cycles.line = s.line;
   if (s.synth && Array.isArray(s.synth.candidates)) state.synth = s.synth;
-  if (["opt", "v0", "ifam", "cea", "custom"].includes(s.source) && state.cycles[s.source]) state.source = s.source;
+  if (["line", "opt", "v0", "ifam", "cea", "custom"].includes(s.source) && state.cycles[s.source]) state.source = s.source;
   if (s.N === 8 || s.N === 12) state.N = s.N;
   if (typeof s.live === "boolean") state.live = s.live;
 }
@@ -203,7 +211,7 @@ const PRESET_LABEL = {
   ultrafine_3um: ["3 µm", "ultrafine"], fine_6um: ["6 µm", "fine"], standard_12um: ["12 µm", "default"],
   ifam_16um: ["16 µm", "IFAM"], cea_22um: ["22 µm", "CEA"], coarse_30um: ["30 µm", "coarse"],
 };
-const FURNACE_LABEL = { basic_tube: "Basic tube", standard_retort: "Standard retort", advanced_h2: "Advanced H₂" };
+const FURNACE_LABEL = { basic_tube: "Basic tube", standard_retort: "Standard retort", advanced_h2: "Advanced H₂", two_furnace: "Your two furnaces" };
 const POWDER_DOC = {
   ultrafine_3um: "Finest powder a 35 µm pixel would ever see. Fast sintering, most native oxide per gram, tightest pores for pyrolysis gas.",
   fine_6um: "Fine gas-atomised Cu. Sinters well below the solidus; oxide and gas escape become the harder part.",
@@ -863,7 +871,7 @@ function cycleTsv() {
 function syncSource() {
   for (const b of $$("#srcSeg button")) {
     b.setAttribute("aria-pressed", b.dataset.src === state.source ? "true" : "false");
-    b.disabled = b.dataset.src === "custom" && !state.cycles.custom;
+    b.disabled = (b.dataset.src === "custom" || b.dataset.src === "line") && !state.cycles[b.dataset.src];
   }
 }
 function setSource(src) {
@@ -1261,6 +1269,227 @@ function pointChart(id, title, cap, xs, series, f, opt) {
   btn.addEventListener("click", () => { const o = tbl.hidden; tbl.hidden = !o; btn.setAttribute("aria-expanded", o ? "true" : "false"); });
 }
 
+
+// ============================================================ two-furnace line
+const ATM_PLAN = (g) => {
+  const pc = (x) => (x * 100 >= 1 ? (x * 100).toFixed(0) : (x * 100).toFixed(1)) + " %";
+  if ((g.O2 || 0) > 0) return { k: "ox", label: g.O2 >= 0.2 ? "air" : pc(g.O2) + " O₂ in N₂" };
+  if ((g.H2 || 0) > 0) return { k: "dry", label: g.H2 >= 0.999 ? "100 % H₂" : pc(g.H2) + " H₂ in N₂" };
+  return { k: "inert", label: "N₂" };
+};
+const segRows = (segs) => {
+  let T = 25, t = 0;
+  return segs.map((g, i) => {
+    const ramp = Math.abs(g.T_end_C - T) / Math.max(g.ramp_Kmin, 1e-9) / 60;
+    const r = { i, g, T0: T, t0: t, t1: t + ramp, t2: t + ramp + g.hold_h };
+    T = g.T_end_C; t = r.t2;
+    return r;
+  });
+};
+function loadLine(name, segs) {
+  state.cycles.line = { name, T_start_C: 25, segments: clone(segs) };
+  applyPresetQuiet(PR.furnace_presets[PLAN.preset]);
+  state.source = "line"; syncSource(); saveState(); renderProgram(); renderMeta(); runNow();
+  document.getElementById("results").scrollIntoView({ behavior: "smooth" });
+}
+const loadCombo = (d, s) => { const c = planCycle(d, s); loadLine(c.name, c.segments); };
+
+function profileSvg(segs, opt = {}) {
+  const rows = segRows(segs);
+  const tEnd = rows[rows.length - 1].t2;
+  const narrow = window.innerWidth < 640;
+  const W = narrow ? 380 : opt.w || 520, H = opt.h || (narrow ? 150 : 132), M = { l: 34, r: 8, t: 8, b: 30 };
+  const pw = W - M.l - M.r, ph = H - M.t - M.b - 12;
+  const Tmax = 1100;
+  const X = (t) => M.l + (t / tEnd) * pw, Y = (T) => M.t + ph * (1 - T / Tmax);
+  const svg = sv("svg", { viewBox: `0 0 ${W} ${H}`, height: H, role: "img", "aria-label": opt.label || "Furnace programme" });
+  for (const v of [0, 500, 1000]) {
+    svg.append(sv("line", { class: "gl", x1: M.l, x2: M.l + pw, y1: Y(v), y2: Y(v) }));
+    const t = sv("text", { x: M.l - 5, y: Y(v) + 3.5, "text-anchor": "end" }); t.textContent = v; svg.append(t);
+  }
+  const st = niceStep(tEnd, 5);
+  for (let v = 0; v <= tEnd + 1e-9; v += st) {
+    const t = sv("text", { x: X(v), y: H - 4, "text-anchor": "middle" }); t.textContent = v + (v === 0 ? "" : " h"); svg.append(t);
+  }
+  const bandY = M.t + ph + 4;
+  let d = `M${X(0).toFixed(1)} ${Y(25).toFixed(1)}`;
+  for (const r of rows) {
+    d += `L${X(r.t1).toFixed(1)} ${Y(r.g.T_end_C).toFixed(1)}L${X(r.t2).toFixed(1)} ${Y(r.g.T_end_C).toFixed(1)}`;
+    const a = ATM_PLAN(r.g);
+    svg.append(sv("rect", { class: "band-" + a.k, x: X(r.t0), y: bandY, width: Math.max(X(r.t2) - X(r.t0) - 1, 0.5), height: 8, rx: 1 }));
+  }
+  svg.append(sv("path", { d, style: "fill:none;stroke:var(--copper);stroke-width:2;stroke-linejoin:round;stroke-linecap:round" }));
+  const peak = rows.reduce((a, r) => (r.g.T_end_C > a.g.T_end_C ? r : a), rows[0]);
+  const pt = sv("text", { class: "dl", x: Math.min(X((peak.t1 + peak.t2) / 2), M.l + pw - 4), y: Y(peak.g.T_end_C) - 5, "text-anchor": "middle" });
+  pt.textContent = peak.g.T_end_C + " °C"; svg.append(pt);
+  const plot = el("div", { class: "plot" });
+  const tip = el("div", { class: "tip", hidden: true });
+  for (const r of rows) {
+    const hit = sv("rect", { x: X(r.t0), y: M.t, width: Math.max(X(r.t2) - X(r.t0), 2), height: ph + 14, fill: "transparent" });
+    hit.addEventListener("pointerenter", () => {
+      const a = ATM_PLAN(r.g);
+      const how = r.g.T_end_C === r.T0 ? "" : `${r.T0} → ${r.g.T_end_C} °C at ${fmt(r.g.ramp_Kmin, 2)} K/min`;
+      tip.innerHTML = `<div class="th">Row ${r.i + 1} · ${r.t0.toFixed(1)}–${r.t2.toFixed(1)} h</div><div>${esc(how)}${how && r.g.hold_h ? " · " : ""}${r.g.hold_h ? "hold " + fmt(r.g.hold_h, 2) + " h at " + r.g.T_end_C + " °C" : ""}</div><div class="tg"><i class="swatch sw-${a.k}"></i> ${esc(a.label)} · ${esc(r.g.note || "")}</div>`;
+      tip.hidden = false;
+      const sc = plot.clientWidth / W; let left = X(r.t2) * sc + 8;
+      if (left + tip.offsetWidth > plot.clientWidth) left = Math.max(0, X(r.t0) * sc - tip.offsetWidth - 8);
+      tip.style.left = left + "px"; tip.style.top = "0px";
+    });
+    hit.addEventListener("pointerleave", () => { tip.hidden = true; });
+    svg.append(hit);
+  }
+  plot.append(svg, tip);
+  return plot;
+}
+
+const pct = (x, d = 1) => (100 * x).toFixed(d) + " %";
+const ppm = (x) => (x == null ? "–" : x < 1 ? "< 1 ppm" : (x >= 1000 ? (x / 1000).toFixed(1) + "k" : x.toFixed(0)) + " ppm");
+const CHECK_LABEL = { gas_pressure: "debinding gas pressure", thermal_stress: "thermal stress", self_heating: "self-heating",
+  binder_removed: "binder left", carbon_at_closure: "carbon at closure", oxygen_at_closure: "oxide at closure", melting: "melting margin",
+  bloating: "trapped gas", density: "density", debind_guard: "ramp guard" };
+const failText = (r) => r.failed.map((k) => CHECK_LABEL[k] || k).join(", ");
+function passPill(r) {
+  const n = 10 - r.n_fail, s = r.n_fail ? "crit" : "good";
+  return el("span", { class: "pill " + s, title: r.n_fail ? "Fails: " + failText(r) : "Passes every check" }, el("span", { class: "st-" + s, html: ICON[s] }), `${n}/10`);
+}
+
+function renderLine() {
+  const sec = $("#line");
+  if (!PLAN) { sec.hidden = true; return; }
+  const combo = (d, s) => PLAN.combos.find((r) => r.debind === d && r.sinter === s);
+  const best = PLAN.combos[0];
+  const dOrder = Object.keys(PLAN.debind).sort((a, b) => PLAN.debind[a].rank - PLAN.debind[b].rank);
+  const sOrder = Object.keys(PLAN.sinter).sort((a, b) => PLAN.sinter[a].rank - PLAN.sinter[b].rank);
+
+  // furnaces and the recommended programmes
+  const map = $("#lineMap"); map.innerHTML = "";
+  const furnace = (n, title, gases, key, opt) => el("div", { class: "furnace panel" },
+    el("div", { class: "fhead" }, el("span", { class: "fno" }, "Furnace " + n), el("h3", null, title),
+      el("span", { class: "gases" }, ...gases.map((g) => el("span", { class: "gas" }, g)))),
+    el("div", { class: "frec" }, el("b", null, key + " · " + opt.name), el("span", { class: "m" }, opt.duration_h.toFixed(1) + " h")),
+    profileSvg(opt.segments, { label: `${key} programme`, w: 560 }));
+  const kd = best.debind, ks = best.sinter;
+  map.append(furnace(1, "Debinding", ["N₂", "air"], kd, PLAN.debind[kd]),
+    el("div", { class: "transfer", "aria-hidden": "true" }, el("span", null, "cool to 25 °C,"), el("span", null, "move the part"), el("i")),
+    furnace(2, "Sintering", ["N₂", "H₂", "air"], ks, PLAN.sinter[ks]));
+  const bk = best.kpi;
+  map.append(el("div", { class: "lineout" },
+    el("div", { class: "lo-head" }, el("span", { class: "eyebrow" }, "Predicted part · " + kd + " + " + ks), passPill(best),
+      el("button", { class: "btn primary small", onclick: () => loadCombo(kd, ks) }, "Load into simulator")),
+    el("div", { class: "lo-kpis" },
+      ...[["Density", pct(bk.rho_final)], ["Conductivity", bk.iacs.toFixed(0) + " % IACS"], ["Carbon left", ppm(bk.C_final_ppm)],
+        ["Self-heating", bk.exo_max_K.toFixed(0) + " K"], ["Shrinkage x-y", bk.shrink_xy_pct.toFixed(1) + " %"],
+        ["Furnace time", `${best.t_debind_h.toFixed(0)} + ${best.t_sinter_h.toFixed(0)} h`]]
+        .map(([k, v]) => el("div", null, el("span", { class: "k" }, k), el("b", null, v))))));
+
+  // where the carbon goes
+  const lg = $("#ledger"); lg.innerHTML = "";
+  const L = (PLAN.ledger || []).filter((r) => !/^cool/.test(r.note));
+  if (L.length) {
+    const cmax = Math.max(...L.map((r) => r.C));
+    lg.append(el("div", { class: "chart-head" }, el("h3", null, "Where the carbon goes"),
+      el("span", { class: "cap" }, `${kd} + ${ks}, mean through the wall at the end of each step. Dry H₂ alone cannot remove char; the oxide grown in furnace 1 takes it out as CO in furnace 2.`)));
+    const row = el("div", { class: "steps", style: `grid-template-columns:repeat(${L.length},minmax(84px,1fr))` });
+    L.forEach((r) => {
+      const h = Math.max(2, 64 * r.C / cmax);
+      row.append(el("div", { class: "step" + (r.furnace === 2 ? " f2" : "") },
+        el("span", { class: "sf m" }, "F" + r.furnace),
+        el("div", { class: "bar" }, el("i", { style: `height:${h.toFixed(1)}px` })),
+        el("b", { class: "m" }, r.C >= 1000 ? (r.C / 1000).toFixed(2) + "k" : r.C.toFixed(0)),
+        el("span", { class: "u" }, "ppm C"),
+        el("span", { class: "o m" }, (r.O / 1e4).toFixed(r.O >= 1e4 ? 1 : 2) + " % O"),
+        el("span", { class: "sn" }, r.note)));
+    });
+    lg.append(row);
+  }
+
+  // ranked options
+  const card = (key, o, isD) => {
+    const r = isD ? combo(key, o.best_partner) : combo(o.best_partner, key);
+    const k = r.kpi, top = o.rank === 1;
+    const tbl = el("table", { class: "data segs" }, el("thead", null, el("tr", null, ...["#", "Target", "Ramp", "Hold", "Gas", "Step"].map((h) => el("th", null, h)))));
+    const tb = el("tbody");
+    o.segments.forEach((g, i) => { const a = ATM_PLAN(g); tb.append(el("tr", null, el("td", null, String(i + 1)), el("td", null, g.T_end_C + " °C"), el("td", null, fmt(g.ramp_Kmin, 2) + " K/min"), el("td", null, g.hold_h ? fmt(g.hold_h, 2) + " h" : "–"), el("td", { class: "gcell" }, el("i", { class: "swatch sw-" + a.k }), a.label), el("td", { class: "ncell" }, g.note))); });
+    tbl.append(tb);
+    const pair = isD ? [key, o.best_partner] : [o.best_partner, key];
+    return el("article", { class: "opt panel" + (top ? " top" : "") },
+      el("div", { class: "ohead" }, el("span", { class: "rk m", title: "Rank" }, "#" + o.rank), el("span", { class: "okey m" }, key),
+        el("h3", null, o.name), top ? el("span", { class: "pill good rec" }, "Recommended") : null),
+      el("p", { class: "gasline" }, o.gas, " · ", el("span", { class: "m" }, o.duration_h.toFixed(1) + " h")),
+      el("p", { class: "idea" }, o.idea),
+      profileSvg(o.segments, { label: `${key} programme` }),
+      el("div", { class: "ores" }, el("span", { class: "with" }, "Best with " + o.best_partner), passPill(r),
+        el("span", null, "density ", el("b", null, pct(k.rho_final))), el("span", null, "C ", el("b", null, ppm(k.C_final_ppm))),
+        el("span", null, el("b", null, k.iacs.toFixed(0)), " % IACS"),
+        r.n_fail ? el("span", { class: "why" }, "fails " + failText(r)) : el("span", { class: "why" }, `passes in ${r.n_robust} of ${PLAN.variants.length} what-ifs`)),
+      el("div", { class: "pc" }, el("ul", { class: "pros" }, ...o.pros.map((x) => el("li", null, x))), el("ul", { class: "cons" }, ...o.cons.map((x) => el("li", null, x)))),
+      el("details", { class: "prog" }, el("summary", null, `Programme · ${o.segments.length} rows`), el("div", { class: "tblwrap" }, tbl)),
+      el("div", { class: "oact" }, el("button", { class: "btn small" + (top ? " primary" : ""), onclick: () => loadCombo(...pair) }, `Load ${pair[0]} + ${pair[1]} into simulator`)));
+  };
+  const od = $("#optsD"); od.innerHTML = ""; for (const k of dOrder) od.append(card(k, PLAN.debind[k], true));
+  const os = $("#optsS"); os.innerHTML = ""; for (const k of sOrder) os.append(card(k, PLAN.sinter[k], false));
+
+  // matrix
+  const mx = $("#matrix"); mx.innerHTML = "";
+  mx.append(el("thead", null, el("tr", null, el("th", null, "Debinding ↓ · sintering →"),
+    ...sOrder.map((s) => el("th", null, el("span", { class: "m" }, s), " ", PLAN.sinter[s].name)))));
+  const mb = el("tbody");
+  for (const d of dOrder) {
+    const tr = el("tr", null, el("th", { scope: "row" }, el("span", { class: "m" }, d), " ", PLAN.debind[d].name));
+    for (const s of sOrder) {
+      const r = combo(d, s), k = r.kpi, bestc = r.rank === 1;
+      const st = r.n_fail ? "crit" : r.n_robust < PLAN.variants.length ? "warn" : "good";
+      tr.append(el("td", { class: "cell " + st + (bestc ? " best" : "") },
+        el("button", { class: "cellbtn", onclick: () => loadCombo(d, s), title: (r.n_fail ? "Fails: " + failText(r) : "Passes every check") + ` · rank ${r.rank} of ${PLAN.combos.length} · click to load`, "aria-label": `${d} plus ${s}, rank ${r.rank}, load into simulator` },
+          el("span", { class: "cr" }, el("span", { class: "st-" + (r.n_fail ? "crit" : "good"), html: ICON[r.n_fail ? "crit" : "good"] }), el("b", { class: "m" }, `${10 - r.n_fail}/10`), el("span", { class: "rn m" }, "#" + r.rank)),
+          el("span", { class: "cv m" }, pct(k.rho_final) + " · " + ppm(k.C_final_ppm)),
+          el("span", { class: "cw" }, r.n_fail ? failText(r) : `${k.iacs.toFixed(0)} % IACS · ${r.n_robust}/${PLAN.variants.length} what-ifs`))));
+    }
+    mb.append(tr);
+  }
+  mx.append(mb);
+  $("#matrixNote").textContent = `Each cell is one debinding programme followed by one sintering programme, solved as a single run with the part cooled to 25 °C in between. ` +
+    `Ranked by checks passed, then by how many of ${PLAN.variants.length} what-ifs also pass (char yield 3 % and 8 %, walls of 2 and 8 mm), then density, carbon and conductivity. Click a cell to load it.`;
+
+  // ranges
+  const sw = $("#sweeps"); sw.innerHTML = "";
+  const SW = {
+    sinter: { label: "Density", f: (c) => pct(c.kpi.rho_final), v: (c) => c.kpi.rho_final, hi: true, sub: (c) => c.kpi.iacs.toFixed(0) + " % IACS" },
+    carbothermic: { label: "Carbon left", f: (c) => ppm(c.kpi.C_final_ppm), v: (c) => -Math.log10(Math.max(c.kpi.C_final_ppm, 1)), hi: true, sub: (c) => pct(c.kpi.rho_final) },
+    oxidation: { label: "Self-heating", f: (c) => c.kpi.exo_max_K.toFixed(0) + " K", v: (c) => -c.kpi.exo_max_K, hi: true, sub: (c) => ppm(c.kpi.C_final_ppm) },
+  };
+  for (const [name, s] of Object.entries(PLAN.sweeps)) {
+    const m = SW[name]; if (!m) continue;
+    const vals = s.cells.map(m.v), lo = Math.min(...vals), hi = Math.max(...vals);
+    const t = el("table", { class: "heat" });
+    const u = (v) => (v === "C" ? "°C" : v.replace("O2", "O₂"));
+    t.append(el("thead", null, el("tr", null, el("th", null, `${u(s.y)} ↓ · ${s.x} →`), ...s.xs.map((x) => el("th", null, x + " " + u(s.xu))))));
+    const b = el("tbody");
+    for (const y of s.ys) {
+      const tr = el("tr", null, el("th", { scope: "row" }, y + " " + u(s.yu)));
+      for (const x of s.xs) {
+        const c = s.cells.find((q) => q.x === x && q.y === y);
+        if (!c) { tr.append(el("td", null, "–")); continue; }
+        const f = hi > lo ? (m.v(c) - lo) / (hi - lo) : 1;
+        const mixp = Math.round(12 + 58 * f);
+        tr.append(el("td", { class: c.n_fail ? "bad" : "", style: c.n_fail ? null : `background:color-mix(in srgb, var(--accent) ${mixp}%, var(--surface))`, "data-dark": f > 0.6 ? "1" : null,
+          title: `${s.x} ${x}, ${s.y} ${y}: density ${pct(c.kpi.rho_final)}, C ${ppm(c.kpi.C_final_ppm)}, ${c.kpi.iacs.toFixed(0)} % IACS, self-heating ${c.kpi.exo_max_K.toFixed(0)} K, ${c.t_total_h.toFixed(1)} h` + (c.n_fail ? " · fails " + failText(c) : "") },
+          c.segments ? el("button", { class: "cellbtn", onclick: () => loadLine(`Two-furnace range: ${s.x} ${x}, ${s.y} ${y}`, c.segments) },
+            el("b", { class: "m" }, m.f(c)), el("span", { class: "m" }, c.n_fail ? "fails " + failText(c) : m.sub(c))) : el("b", { class: "m" }, m.f(c))));
+      }
+      b.append(tr);
+    }
+    t.append(b);
+    sw.append(el("figure", { class: "chart" }, el("div", { class: "chart-head" }, el("h3", null, s.title), el("span", { class: "cap" }, m.label + (m.label === "Density" ? ", darker is denser" : ", darker is better") + "; red cells fail a check. Click a cell to load it.")),
+      el("div", { class: "tblwrap heatwrap" }, t), s.note ? el("p", { class: "note" }, s.note) : null));
+  }
+
+  // assumptions
+  const as = $("#assume"); as.innerHTML = "";
+  as.append(el("h3", null, "What this plan assumes"), el("ul", null,
+    ...(PLAN.assumptions || []).map((x) => el("li", null, x))));
+}
+
 // ============================================================ boot
 function boot() {
   loadState();
@@ -1279,6 +1508,7 @@ function boot() {
   $("#copyJson").addEventListener("click", () => copyText(JSON.stringify(curCycle(), null, 1)));
   $("#optBtn").addEventListener("click", optimise);
   $("#optCancel").addEventListener("click", () => optJob.cancel());
+  renderLine();
   renderProgram();
   renderMeta();
   renderCands();

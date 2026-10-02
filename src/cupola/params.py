@@ -233,6 +233,8 @@ FURNACE_PRESETS = {
                             flow_slpm=2.0, retort_L=5.0),
     "advanced_h2": dict(h_conv=60.0, has_air_bleed=1.0, h2_max=1.0, dp_max_C=60.0, max_ramp_Kmin=15.0,
                         flow_slpm=5.0, retort_L=10.0),
+    "two_furnace": dict(h_conv=15.0, has_air_bleed=1.0, h2_max=1.0, dp_max_C=-40.0, max_ramp_Kmin=10.0,
+                        flow_slpm=2.0, retort_L=5.0),
 }
 
 PRESET_DOCS = {
@@ -240,6 +242,8 @@ PRESET_DOCS = {
     "standard_retort": "DEFAULT. Lab retort with N2, air-bleed MFC, 4 % forming gas (non-flammable, no H2 "
                        "safety case) and a room-temperature water bubbler (dew point up to +20 C).",
     "advanced_h2": "Pure-H2-rated retort, heated humidifier (dew point to +60 C), baffle for forced convection.",
+    "two_furnace": "Two furnaces: debinding in N2 or air, sintering in N2, H2 or air. Air and H2 can be blended "
+                   "into N2 with flowmeters. Dry gas only, no humidifier.",
 }
 
 

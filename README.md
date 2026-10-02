@@ -38,6 +38,22 @@ densify dry just under the Cu-O solidus. The char gasification rate, the powder 
 sintering viscosity factor are the unknowns that move the outcome most; each has a stated
 measurement in the dashboard.
 
+## Two-furnace line (debind in N₂/air, sinter in N₂/H₂/air, dry gas)
+
+`scripts/two_furnace.py` runs four debinding and four sintering programmes in all 16 pairings (part
+cooled to 25 °C between furnaces), each also with 3 % and 8 % char and 2 mm and 8 mm walls, plus
+ranges around the best pairing; the dashboard's **Your line** section shows the result. Without
+steam, the char can only leave through oxygen. The best route grows a controlled oxide in
+furnace 1 (N₂ pyrolysis at 1 K/min to 470 °C, then 1 % O₂ from 150 to 280 °C and 2 h at
+280 °C). It then lets that oxide take the char out as CO in furnace 2 (N₂ to 700 °C for 2 h)
+before any hydrogen is added (1 % H₂ for 2 h, then sinter at 1050 °C for 4 h). In 100 % H₂ this gives
+96.8 % density, < 1 ppm C and 95 % IACS; in 5 % H₂ it gives 96.3 %. Adding hydrogen before the N₂ hold, the
+conventional route, leaves ~0.4 % carbon and 56 % density.
+
+    PYTHONPATH=src python scripts/two_furnace.py dashboard/data/two_furnace.json 8 4
+    PYTHONPATH=src python scripts/two_furnace.py --finish dashboard/data/two_furnace.json
+    python scripts/build_dashboard.py
+
 ## Background
 
 - **[`docs/PROPOSAL.md`](docs/PROPOSAL.md)** — the architecture proposal, the baseline cycle

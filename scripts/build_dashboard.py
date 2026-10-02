@@ -3,7 +3,8 @@
     python scripts/build_dashboard.py [out.html]
 
 Inlines dashboard/src/{style.css,app.js}, the JavaScript engine, the parameter registry, the
-precomputed at-rest data (dashboard/build/precompute.mjs) and any 3-D results
+precomputed at-rest data (dashboard/build/precompute.mjs), the two-furnace plan
+(dashboard/data/two_furnace.json, from scripts/two_furnace.py) and any 3-D results
 (dashboard/data/3d_*.json, from scripts/run_3d.py) into dashboard/dist/cupola-studio.html.
 """
 import datetime as dt
@@ -32,7 +33,9 @@ def main():
     geo = {}
     for f in sorted((DASH / "data").glob("3d_*.json")):
         geo[f.stem[3:]] = json.loads(f.read_text())
-    data = dict(params=params, pre=pre, geo3d=geo, built=dt.date.today().isoformat())
+    plan_path = DASH / "data" / "two_furnace.json"
+    plan = json.loads(plan_path.read_text()) if plan_path.exists() else None
+    data = dict(params=params, pre=pre, geo3d=geo, plan=plan, built=dt.date.today().isoformat())
     for marker, text in (("/*@CSS@*/", css), ("/*@ENGINE@*/", engine),
                          ("/*@DATA@*/", "window.CUPOLA_DATA = " + js_json(data) + ";"), ("/*@APP@*/", app)):
         assert marker in html, marker

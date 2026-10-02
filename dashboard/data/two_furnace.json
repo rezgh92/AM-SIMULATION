@@ -1,0 +1,6285 @@
+{
+ "generated": "2026-10-02",
+ "N": 8,
+ "preset": "two_furnace",
+ "preset_values": {
+  "h_conv": 15.0,
+  "has_air_bleed": 1.0,
+  "h2_max": 1.0,
+  "dp_max_C": -40.0,
+  "max_ramp_Kmin": 10.0,
+  "flow_slpm": 2.0,
+  "retort_L": 5.0
+ },
+ "variants": [
+  "char_yield=0.03",
+  "char_yield=0.08",
+  "half_thickness_mm=1.0",
+  "half_thickness_mm=4.0"
+ ],
+ "debind": {
+  "D2": {
+   "rank": 1,
+   "name": "N2 pyrolysis, then lean-air oxidation",
+   "gas": "N2; then 5 % air in N2",
+   "idea": "Remove the binder in N2, then oxidise part of the copper under one lean mixture, 1 % O2, while heating from 150 to 280 C and for 2 h at 280 C. The oxide carries the oxygen that takes the char away in the sintering furnace. Low oxygen keeps the heat of oxidation small without ever switching to full air.",
+   "pros": [
+    "The only oxidising debind that also passes with 8 mm walls, and with 3 % or 8 % char",
+    "One lean mixture, never full air",
+    "Same final part as D1"
+   ],
+   "cons": [
+    "Self-heating about 19 K, close to the 20 K limit",
+    "Needs a flowmeter to blend 5 % air into N2",
+    "Brown part carries about 5 % O by mass as oxide until furnace 2"
+   ],
+   "segments": [
+    {
+     "T_end_C": 470,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "binder pyrolysis, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 150,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.5,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool and settle, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 280.0,
+     "ramp_Kmin": 0.5,
+     "hold_h": 2.0,
+     "O2": 0.01,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "1 % O2 (5 % air in N2)",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 18.444444444444443,
+   "best_partner": "S2"
+  },
+  "D1": {
+   "rank": 2,
+   "name": "N2 pyrolysis, then graded oxidation to air",
+   "gas": "N2; then 2.5 % and 10 % air in N2; then air",
+   "idea": "Remove the binder in N2, then oxidise part of the copper on purpose. The oxide carries the oxygen that takes the char away later, in the sintering furnace. The oxygen is raised in steps so a thin oxide forms first and slows the reaction before air is let in.",
+   "pros": [
+    "Lowest self-heating of the oxidising routes",
+    "Air only touches copper that already has an oxide skin",
+    "Clears the carbon in furnace 2 as well as D2"
+   ],
+   "cons": [
+    "Overheats walls thicker than about 5 mm when the air goes in",
+    "Needs air blended into N2 at two ratios"
+   ],
+   "segments": [
+    {
+     "T_end_C": 470,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "binder pyrolysis, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 150,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.5,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool and settle, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 250.0,
+     "ramp_Kmin": 0.5,
+     "hold_h": 0.0,
+     "O2": 0.005,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "0.5 % O2 (2.5 % air in N2)",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 250.0,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.02,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "2 % O2 (10 % air in N2)",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 250.0,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 17.27777777777778,
+   "best_partner": "S2"
+  },
+  "D3": {
+   "rank": 3,
+   "name": "N2 pyrolysis only",
+   "gas": "N2",
+   "idea": "Decompose the binder without oxygen. Copper stays metallic, but about 0.4 % carbon stays behind as char, and the sintering furnace then has to remove it (S3).",
+   "pros": [
+    "Shortest and simplest debind",
+    "No oxide, no swelling, no exotherm"
+   ],
+   "cons": [
+    "Leaves ~4400 ppm char that dry H2 cannot remove",
+    "Works only with an oxidation step in furnace 2 (S3)"
+   ],
+   "segments": [
+    {
+     "T_end_C": 470,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "binder pyrolysis, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 10.88888888888889,
+   "best_partner": "S3"
+  },
+  "D4": {
+   "rank": 4,
+   "name": "Air burnout",
+   "gas": "air",
+   "idea": "Burn binder and char in air, as for ceramics. Carbon goes, but fresh copper oxidises fast in air and the heat of oxidation and of the burning binder overheats the part.",
+   "pros": [
+    "Removes carbon in one furnace",
+    "No gas blending needed"
+   ],
+   "cons": [
+    "Self-heating over 100 K: risk of cracks and of a runaway",
+    "Copper oxidises almost completely"
+   ],
+   "segments": [
+    {
+     "T_end_C": 150,
+     "ramp_Kmin": 1.0,
+     "hold_h": 0.5,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "solvent out, air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 380,
+     "ramp_Kmin": 0.5,
+     "hold_h": 2.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "burnout, air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 3.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.222222222222221,
+   "best_partner": "S2"
+  }
+ },
+ "sinter": {
+  "S2": {
+   "rank": 1,
+   "name": "As S1, sintered in pure H2",
+   "gas": "N2; then 1 % H2 in N2; then 100 % H2",
+   "idea": "The same route with pure hydrogen from the end of the 700 C reduction, if the furnace is rated for it. Hydrogen carries heat about seven times better than N2, so the part follows the furnace more closely and spends longer at the sintering temperature.",
+   "pros": [
+    "Highest density and conductivity of all routes",
+    "Same carbon and oxygen removal as S1"
+   ],
+   "cons": [
+    "Needs a hydrogen-rated furnace and safety case",
+    "Gain over 5 % H2 is small, about 0.5 % density",
+    "Must still start in N2, as S1"
+   ],
+   "segments": [
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "Cu2O + C -> Cu + CO, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 1.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.01,
+     "dp_C": -60.0,
+     "note": "reduce the rest of the oxide, 1 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 1.0,
+     "dp_C": -60.0,
+     "note": "sinter, 100 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 1.0,
+     "dp_C": -60.0,
+     "note": "cool, 100 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.833333333333334,
+   "best_partner": "D2"
+  },
+  "S1": {
+   "rank": 2,
+   "name": "N2 carbon-oxide hold, lean-H2 reduction, sinter in forming gas",
+   "gas": "N2; then 1 % H2 in N2; then 5 % H2 in N2",
+   "idea": "Heat the oxidised part in N2 to 700 C, where the oxide and the char react and leave as CO. Only then add hydrogen, at 1 % to reduce the rest of the oxide gently, and sinter for 4 h at 1050 C in 5 % H2.",
+   "pros": [
+    "Uses the oxide made in furnace 1 to remove the char",
+    "Non-flammable gases only",
+    "Gentle reduction: self-heating below 8 K"
+   ],
+   "cons": [
+    "Must start in N2: hydrogen before the 700 C hold removes the oxide the char needs",
+    "Slightly lower density than pure H2"
+   ],
+   "segments": [
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "Cu2O + C -> Cu + CO, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 1.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.01,
+     "dp_C": -60.0,
+     "note": "reduce the rest of the oxide, 1 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "sinter, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "cool, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 14.833333333333334,
+   "best_partner": "D2"
+  },
+  "S3": {
+   "rank": 3,
+   "name": "Oxidise in the sintering furnace, then as S1",
+   "gas": "N2; 2.5 %, 10 % air in N2, air; N2; 1 % and 5 % H2 in N2",
+   "idea": "For parts debound in N2 only (D3): the graded oxidation of D1 is done here, at the start of the sintering programme, followed by an N2 purge and the rest of S1.",
+   "pros": [
+    "Lets the debinding furnace stay N2-only",
+    "Same properties as D1 + S1"
+   ],
+   "cons": [
+    "Longest sintering run",
+    "Air and H2 in the same retort: purge well between them"
+   ],
+   "segments": [
+    {
+     "T_end_C": 150,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.5,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "heat, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 250,
+     "ramp_Kmin": 0.5,
+     "hold_h": 0.0,
+     "O2": 0.005,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "0.5 % O2 (2.5 % air in N2)",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 250,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.02,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "2 % O2 (10 % air in N2)",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 250,
+     "ramp_Kmin": 1.0,
+     "hold_h": 1.0,
+     "O2": 0.2095,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "air",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 250,
+     "ramp_Kmin": 1.0,
+     "hold_h": 0.5,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "purge, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "Cu2O + C -> Cu + CO, N2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 700.0,
+     "ramp_Kmin": 1.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.01,
+     "dp_C": -60.0,
+     "note": "reduce the rest of the oxide, 1 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050.0,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "sinter, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "cool, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 20.833333333333332,
+   "best_partner": "D2"
+  },
+  "S4": {
+   "rank": 4,
+   "name": "Conventional: reduce in forming gas, sinter",
+   "gas": "5 % H2 in N2",
+   "idea": "Reduce at 400 C and sinter for 4 h at 1050 C in forming gas. Good for clean powder; with char in the part the hydrogen removes the oxide before it can react with the carbon.",
+   "pros": [
+    "Simplest programme",
+    "Works if the debind left no char"
+   ],
+   "cons": [
+    "Traps the char: carbon holds the copper at low density"
+   ],
+   "segments": [
+    {
+     "T_end_C": 400,
+     "ramp_Kmin": 5.0,
+     "hold_h": 2.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "reduce oxide, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 1050,
+     "ramp_Kmin": 5.0,
+     "hold_h": 4.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "sinter, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 600,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.05,
+     "dp_C": -60.0,
+     "note": "cool, 5 % H2",
+     "x_h2o": null
+    },
+    {
+     "T_end_C": 25,
+     "ramp_Kmin": 5.0,
+     "hold_h": 0.0,
+     "O2": 0.0,
+     "H2": 0.0,
+     "dp_C": -60.0,
+     "note": "cool, N2",
+     "x_h2o": null
+    }
+   ],
+   "duration_h": 12.833333333333334,
+   "best_partner": "D4"
+  }
+ },
+ "combos": [
+  {
+   "tag": [
+    "combo",
+    "D2",
+    "S2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 25.227582693099976,
+   "n_fail": 0,
+   "failed": [],
+   "worst": "density",
+   "worst_index": 0.9814425912625971,
+   "t_debind_h": 18.444444444444443,
+   "t_sinter_h": 14.833333333333336,
+   "t_total_h": 33.27777777777778,
+   "kpi": {
+    "duration_h": 33.27777777777778,
+    "rho_final": 0.9679628828598653,
+    "rho_center_final": 0.9675559529402642,
+    "shrink_xy_pct": 15.769858108065593,
+    "shrink_z_pct": 19.911716786851162,
+    "C_final_ppm": 0.0004627566105334148,
+    "O_final_ppm": 9.57384878550831e-09,
+    "closed": 1.0,
+    "t_close_h": 26.4729269147126,
+    "C_at_close_ppm": 0.0004654444097061519,
+    "O_at_close_ppm": 3.275825275015505e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.09901577171764366,
+    "exo_max_K": 18.65439104676193,
+    "Pi_bloat_max": 0.024913697332004374,
+    "melt_margin_min_K": 14.619971371605516,
+    "binder_left_final": -1.0130907218320888e-09,
+    "grain_final_um": 30.427697358641385,
+    "p_trap_final_bar": 0.3599523124982126,
+    "O_peak_ppm": 52079.13459793854,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 95.09046088042815,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.09901577171764366,
+     "ok": true,
+     "value": 0.09901577171764366
+    },
+    "self_heating": {
+     "index": 0.9327195523380964,
+     "ok": true,
+     "value": 18.65439104676193
+    },
+    "binder_removed": {
+     "index": -1.0130907218320887e-06,
+     "ok": true,
+     "value": -1.0130907218320888e-09
+    },
+    "carbon_at_closure": {
+     "index": 2.3272220485307596e-06,
+     "ok": true,
+     "value": 0.0004654444097061519
+    },
+    "oxygen_at_closure": {
+     "index": 1.0919417583385017e-10,
+     "ok": true,
+     "value": 3.275825275015505e-08
+    },
+    "melting": {
+     "index": 0.7076005725678897,
+     "ok": true,
+     "value": 14.619971371605516
+    },
+    "bloating": {
+     "index": 0.024913697332004374,
+     "ok": true,
+     "value": 0.024913697332004374
+    },
+    "density": {
+     "index": 0.9814425912625971,
+     "ok": true,
+     "value": 0.9679628828598653
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D2",
+   "sinter": "S2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9679301642281325,
+     "C": 0.00019449093623653151,
+     "iacs": 95.08558409723584
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9680038460019381,
+     "C": 0.001260167187085634,
+     "iacs": 95.09656664200271
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9685314391371999,
+     "C": 0.0005763365883587635,
+     "iacs": 95.17521858885351
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9680938634170794,
+     "C": 0.006226040461267056,
+     "iacs": 95.10998464265077
+    }
+   },
+   "n_robust": 4,
+   "rank": 1
+  },
+  {
+   "tag": [
+    "combo",
+    "D2",
+    "S1",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 24.945274353027344,
+   "n_fail": 0,
+   "failed": [],
+   "worst": "density",
+   "worst_index": 0.9864989007756078,
+   "t_debind_h": 18.444444444444443,
+   "t_sinter_h": 14.833333333333336,
+   "t_total_h": 33.27777777777778,
+   "kpi": {
+    "duration_h": 33.27777777777778,
+    "rho_final": 0.9630015798832502,
+    "rho_center_final": 0.9628219560031396,
+    "shrink_xy_pct": 15.611424304755527,
+    "shrink_z_pct": 19.801079455203485,
+    "C_final_ppm": 0.00032653453232490975,
+    "O_final_ppm": 1.299883499290358e-08,
+    "closed": 1.0,
+    "t_close_h": 26.495824776847357,
+    "C_at_close_ppm": 0.00034013496737973536,
+    "O_at_close_ppm": 4.264403220727297e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.09901577171764366,
+    "exo_max_K": 18.65439104676193,
+    "Pi_bloat_max": 0.4011886923982096,
+    "melt_margin_min_K": 14.619966251928872,
+    "binder_left_final": -1.016061191284467e-09,
+    "grain_final_um": 29.31159696531838,
+    "p_trap_final_bar": 0.8288922456635164,
+    "O_peak_ppm": 52079.13459793854,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 94.35191002509882,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.09901577171764366,
+     "ok": true,
+     "value": 0.09901577171764366
+    },
+    "self_heating": {
+     "index": 0.9327195523380964,
+     "ok": true,
+     "value": 18.65439104676193
+    },
+    "binder_removed": {
+     "index": -1.016061191284467e-06,
+     "ok": true,
+     "value": -1.016061191284467e-09
+    },
+    "carbon_at_closure": {
+     "index": 1.7006748368986768e-06,
+     "ok": true,
+     "value": 0.00034013496737973536
+    },
+    "oxygen_at_closure": {
+     "index": 1.4214677402424322e-10,
+     "ok": true,
+     "value": 4.264403220727297e-08
+    },
+    "melting": {
+     "index": 0.7076006749614225,
+     "ok": true,
+     "value": 14.619966251928872
+    },
+    "bloating": {
+     "index": 0.4011886923982096,
+     "ok": true,
+     "value": 0.4011886923982096
+    },
+    "density": {
+     "index": 0.9864989007756078,
+     "ok": true,
+     "value": 0.9630015798832502
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D2",
+   "sinter": "S1",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.962972968228906,
+     "C": 0.00013679885981091115,
+     "iacs": 94.34765633470442
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9630287885925182,
+     "C": 0.0008931129343644135,
+     "iacs": 94.35595519847666
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9637050254519577,
+     "C": 0.0004070043151820832,
+     "iacs": 94.45651104616107
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.963288706663525,
+     "C": 0.004526698487144058,
+     "iacs": 94.39460061961644
+    }
+   },
+   "n_robust": 4,
+   "rank": 2
+  },
+  {
+   "tag": [
+    "combo",
+    "D2",
+    "S3",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 26.766172170639038,
+   "n_fail": 0,
+   "failed": [],
+   "worst": "density",
+   "worst_index": 0.9865236925545541,
+   "t_debind_h": 18.444444444444443,
+   "t_sinter_h": 20.833333333333336,
+   "t_total_h": 39.27777777777778,
+   "kpi": {
+    "duration_h": 39.27777777777778,
+    "rho_final": 0.9629773792254519,
+    "rho_center_final": 0.9627669017465424,
+    "shrink_xy_pct": 15.609415762309942,
+    "shrink_z_pct": 19.802881225451983,
+    "C_final_ppm": 0.0002096750172181268,
+    "O_final_ppm": 1.2641382876315975e-08,
+    "closed": 1.0,
+    "t_close_h": 32.496727653144234,
+    "C_at_close_ppm": 0.00021856873348650798,
+    "O_at_close_ppm": 4.2613475110307594e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.09901577171764366,
+    "exo_max_K": 18.65439104676193,
+    "Pi_bloat_max": 0.40091714031057124,
+    "melt_margin_min_K": 14.619967658838277,
+    "binder_left_final": -1.0143718594476879e-09,
+    "grain_final_um": 29.28324728406047,
+    "p_trap_final_bar": 0.8267627147514508,
+    "O_peak_ppm": 54810.75077641853,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 94.34831211278453,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.09901577171764366,
+     "ok": true,
+     "value": 0.09901577171764366
+    },
+    "self_heating": {
+     "index": 0.9327195523380964,
+     "ok": true,
+     "value": 18.65439104676193
+    },
+    "binder_removed": {
+     "index": -1.014371859447688e-06,
+     "ok": true,
+     "value": -1.0143718594476879e-09
+    },
+    "carbon_at_closure": {
+     "index": 1.09284366743254e-06,
+     "ok": true,
+     "value": 0.00021856873348650798
+    },
+    "oxygen_at_closure": {
+     "index": 1.4204491703435865e-10,
+     "ok": true,
+     "value": 4.2613475110307594e-08
+    },
+    "melting": {
+     "index": 0.7076006468232345,
+     "ok": true,
+     "value": 14.619967658838277
+    },
+    "bloating": {
+     "index": 0.40091714031057124,
+     "ok": true,
+     "value": 0.40091714031057124
+    },
+    "density": {
+     "index": 0.9865236925545541,
+     "ok": true,
+     "value": 0.9629773792254519
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D2",
+   "sinter": "S3",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.962944343595326,
+     "C": 8.791623601290403e-05,
+     "iacs": 94.3434007779239
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9630156641319504,
+     "C": 0.000572445980845611,
+     "iacs": 94.35400395146677
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9637123438814807,
+     "C": 0.00026689887433478947,
+     "iacs": 94.4575994834555
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.963013442898313,
+     "C": 0.00033069571470776215,
+     "iacs": 94.35367371631503
+    }
+   },
+   "n_robust": 4,
+   "rank": 3
+  },
+  {
+   "tag": [
+    "combo",
+    "D1",
+    "S2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 25.83931064605713,
+   "n_fail": 0,
+   "failed": [],
+   "worst": "density",
+   "worst_index": 0.981352800578919,
+   "t_debind_h": 17.27777777777778,
+   "t_sinter_h": 14.833333333333336,
+   "t_total_h": 32.111111111111114,
+   "kpi": {
+    "duration_h": 32.111111111111114,
+    "rho_final": 0.9680514484083365,
+    "rho_center_final": 0.9677166492267598,
+    "shrink_xy_pct": 15.777420619967264,
+    "shrink_z_pct": 19.904662808804463,
+    "C_final_ppm": 0.0017072367989184349,
+    "O_final_ppm": 1.0148278952274616e-08,
+    "closed": 1.0,
+    "t_close_h": 25.283487513926932,
+    "C_at_close_ppm": 0.0017335667497051994,
+    "O_at_close_ppm": 3.3208153159686755e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.06750423327086633,
+    "exo_max_K": 15.825581392535128,
+    "Pi_bloat_max": 0.027523216196017553,
+    "melt_margin_min_K": 14.61996927386781,
+    "binder_left_final": -1.0154856090577626e-09,
+    "grain_final_um": 30.51579903215201,
+    "p_trap_final_bar": 0.36578674607466943,
+    "O_peak_ppm": 43828.14944738624,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 95.1036621814873,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.06750423327086633,
+     "ok": true,
+     "value": 0.06750423327086633
+    },
+    "self_heating": {
+     "index": 0.7912790696267564,
+     "ok": true,
+     "value": 15.825581392535128
+    },
+    "binder_removed": {
+     "index": -1.0154856090577626e-06,
+     "ok": true,
+     "value": -1.0154856090577626e-09
+    },
+    "carbon_at_closure": {
+     "index": 8.667833748525998e-06,
+     "ok": true,
+     "value": 0.0017335667497051994
+    },
+    "oxygen_at_closure": {
+     "index": 1.1069384386562252e-10,
+     "ok": true,
+     "value": 3.3208153159686755e-08
+    },
+    "melting": {
+     "index": 0.7076006145226439,
+     "ok": true,
+     "value": 14.61996927386781
+    },
+    "bloating": {
+     "index": 0.027523216196017553,
+     "ok": true,
+     "value": 0.027523216196017553
+    },
+    "density": {
+     "index": 0.981352800578919,
+     "ok": true,
+     "value": 0.9680514484083365
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D1",
+   "sinter": "S2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9680228532596165,
+     "C": 0.0007205718476329881,
+     "iacs": 95.09939981287738
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9680662484855205,
+     "C": 0.004621863973181284,
+     "iacs": 95.10586829316043
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9683974526055519,
+     "C": 0.002116539940013918,
+     "iacs": 95.15524226276382
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9678507208799786,
+     "C": 0.00026869718929829463,
+     "iacs": 95.07374323651236
+    }
+   },
+   "n_robust": 3,
+   "rank": 4
+  },
+  {
+   "tag": [
+    "combo",
+    "D3",
+    "S3",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 22.81522846221924,
+   "n_fail": 0,
+   "failed": [],
+   "worst": "density",
+   "worst_index": 0.9864025555574721,
+   "t_debind_h": 10.88888888888889,
+   "t_sinter_h": 20.833333333333332,
+   "t_total_h": 31.72222222222222,
+   "kpi": {
+    "duration_h": 31.72222222222222,
+    "rho_final": 0.9630956394502658,
+    "rho_center_final": 0.9629745050110263,
+    "shrink_xy_pct": 15.619052793352495,
+    "shrink_z_pct": 19.79441327924719,
+    "C_final_ppm": 0.0012163155487620262,
+    "O_final_ppm": 1.373348471915269e-08,
+    "closed": 1.0,
+    "t_close_h": 24.896506453154057,
+    "C_at_close_ppm": 0.0012849643070832904,
+    "O_at_close_ppm": 4.371618195530975e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.10276192291783325,
+    "exo_max_K": 15.824952522540343,
+    "Pi_bloat_max": 0.40229724700395286,
+    "melt_margin_min_K": 14.619963965347551,
+    "binder_left_final": -1.0179614546252707e-09,
+    "grain_final_um": 29.391337449083537,
+    "p_trap_final_bar": 0.8350293877216122,
+    "O_peak_ppm": 43841.490330656765,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 94.36589429226034,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.10276192291783325,
+     "ok": true,
+     "value": 0.10276192291783325
+    },
+    "self_heating": {
+     "index": 0.7912476261270172,
+     "ok": true,
+     "value": 15.824952522540343
+    },
+    "binder_removed": {
+     "index": -1.0179614546252706e-06,
+     "ok": true,
+     "value": -1.0179614546252707e-09
+    },
+    "carbon_at_closure": {
+     "index": 6.424821535416452e-06,
+     "ok": true,
+     "value": 0.0012849643070832904
+    },
+    "oxygen_at_closure": {
+     "index": 1.4572060651769917e-10,
+     "ok": true,
+     "value": 4.371618195530975e-08
+    },
+    "melting": {
+     "index": 0.707600720693049,
+     "ok": true,
+     "value": 14.619963965347551
+    },
+    "bloating": {
+     "index": 0.40229724700395286,
+     "ok": true,
+     "value": 0.40229724700395286
+    },
+    "density": {
+     "index": 0.9864025555574721,
+     "ok": true,
+     "value": 0.9630956394502658
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D3",
+   "sinter": "S3",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9630671241380651,
+     "C": 0.0005121040851012806,
+     "iacs": 94.36165471789748
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9631047551920932,
+     "C": 0.0033038647717920375,
+     "iacs": 94.36724960769908
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9636257041945906,
+     "C": 0.0015061371299843055,
+     "iacs": 94.44471421543369
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9629649117693652,
+     "C": 0.0001888940303042289,
+     "iacs": 94.34645859346506
+    }
+   },
+   "n_robust": 3,
+   "rank": 5
+  },
+  {
+   "tag": [
+    "combo",
+    "D1",
+    "S1",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 27.35618567466736,
+   "n_fail": 0,
+   "failed": [],
+   "worst": "density",
+   "worst_index": 0.9864052028685744,
+   "t_debind_h": 17.27777777777778,
+   "t_sinter_h": 14.833333333333336,
+   "t_total_h": 32.111111111111114,
+   "kpi": {
+    "duration_h": 32.111111111111114,
+    "rho_final": 0.9630930546972947,
+    "rho_center_final": 0.962973958527611,
+    "shrink_xy_pct": 15.6189795879485,
+    "shrink_z_pct": 19.794337290664576,
+    "C_final_ppm": 0.0012188239432529779,
+    "O_final_ppm": 1.3779860818679727e-08,
+    "closed": 1.0,
+    "t_close_h": 25.285720787400493,
+    "C_at_close_ppm": 0.0012875042335656211,
+    "O_at_close_ppm": 4.371419577879468e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.06750423327086633,
+    "exo_max_K": 15.825581392535128,
+    "Pi_bloat_max": 0.40229749528730785,
+    "melt_margin_min_K": 14.619963853593617,
+    "binder_left_final": -1.0202850885478907e-09,
+    "grain_final_um": 29.390874385126168,
+    "p_trap_final_bar": 0.835025423142215,
+    "O_peak_ppm": 43828.14944738624,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 94.36550999605784,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.06750423327086633,
+     "ok": true,
+     "value": 0.06750423327086633
+    },
+    "self_heating": {
+     "index": 0.7912790696267564,
+     "ok": true,
+     "value": 15.825581392535128
+    },
+    "binder_removed": {
+     "index": -1.0202850885478907e-06,
+     "ok": true,
+     "value": -1.0202850885478907e-09
+    },
+    "carbon_at_closure": {
+     "index": 6.437521167828106e-06,
+     "ok": true,
+     "value": 0.0012875042335656211
+    },
+    "oxygen_at_closure": {
+     "index": 1.457139859293156e-10,
+     "ok": true,
+     "value": 4.371419577879468e-08
+    },
+    "melting": {
+     "index": 0.7076007229281276,
+     "ok": true,
+     "value": 14.619963853593617
+    },
+    "bloating": {
+     "index": 0.40229749528730785,
+     "ok": true,
+     "value": 0.40229749528730785
+    },
+    "density": {
+     "index": 0.9864052028685744,
+     "ok": true,
+     "value": 0.9630930546972947
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D1",
+   "sinter": "S1",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9630673937246971,
+     "C": 0.0005132018434828309,
+     "iacs": 94.3616947989664
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9631039344305099,
+     "C": 0.0033108463257836957,
+     "iacs": 94.36712757777967
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9636246343605733,
+     "C": 0.0015125908608771403,
+     "iacs": 94.44455511069918
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9629645265370681,
+     "C": 0.00018900498350787082,
+     "iacs": 94.34640132170749
+    }
+   },
+   "n_robust": 3,
+   "rank": 6
+  },
+  {
+   "tag": [
+    "combo",
+    "D1",
+    "S3",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 31.022549867630005,
+   "n_fail": 0,
+   "failed": [],
+   "worst": "density",
+   "worst_index": 0.9864682804623484,
+   "t_debind_h": 17.27777777777778,
+   "t_sinter_h": 20.833333333333336,
+   "t_total_h": 38.111111111111114,
+   "kpi": {
+    "duration_h": 38.111111111111114,
+    "rho_final": 0.963031471782087,
+    "rho_center_final": 0.9628778966302073,
+    "shrink_xy_pct": 15.61376974503742,
+    "shrink_z_pct": 19.79911095468252,
+    "C_final_ppm": 0.0005081494994331884,
+    "O_final_ppm": 1.3221096629400218e-08,
+    "closed": 1.0,
+    "t_close_h": 31.316896081000017,
+    "C_at_close_ppm": 0.000531364023315212,
+    "O_at_close_ppm": 4.294306887798022e-08,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.06750423327086633,
+    "exo_max_K": 15.825581392535128,
+    "Pi_bloat_max": 0.40167404223900616,
+    "melt_margin_min_K": 14.619965296485589,
+    "binder_left_final": -1.016872659102443e-09,
+    "grain_final_um": 29.339509595090476,
+    "p_trap_final_bar": 0.8311960257480673,
+    "O_peak_ppm": 49312.750940754246,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 94.35635411674694,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.06750423327086633,
+     "ok": true,
+     "value": 0.06750423327086633
+    },
+    "self_heating": {
+     "index": 0.7912790696267564,
+     "ok": true,
+     "value": 15.825581392535128
+    },
+    "binder_removed": {
+     "index": -1.016872659102443e-06,
+     "ok": true,
+     "value": -1.016872659102443e-09
+    },
+    "carbon_at_closure": {
+     "index": 2.6568201165760597e-06,
+     "ok": true,
+     "value": 0.000531364023315212
+    },
+    "oxygen_at_closure": {
+     "index": 1.4314356292660073e-10,
+     "ok": true,
+     "value": 4.294306887798022e-08
+    },
+    "melting": {
+     "index": 0.7076006940702882,
+     "ok": true,
+     "value": 14.619965296485589
+    },
+    "bloating": {
+     "index": 0.40167404223900616,
+     "ok": true,
+     "value": 0.40167404223900616
+    },
+    "density": {
+     "index": 0.9864682804623484,
+     "ok": true,
+     "value": 0.963031471782087
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D1",
+   "sinter": "S3",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9629981237229425,
+     "C": 0.00021412531850964364,
+     "iacs": 94.35139619490451
+    },
+    "char_yield=0.08": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9630791531518934,
+     "C": 0.0013774162557556942,
+     "iacs": 94.36344314932089
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 0,
+     "failed": [],
+     "rho": 0.9636551799006869,
+     "C": 0.0006547589769334855,
+     "iacs": 94.4490978501676
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9629142647273994,
+     "C": 0.00012010274433884488,
+     "iacs": 94.33892909170385
+    }
+   },
+   "n_robust": 3,
+   "rank": 7
+  },
+  {
+   "tag": [
+    "combo",
+    "D4",
+    "S2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 44.13132619857788,
+   "n_fail": 1,
+   "failed": [
+    "self_heating"
+   ],
+   "worst": "self_heating",
+   "worst_index": 10.238220292557315,
+   "t_debind_h": 14.222222222222221,
+   "t_sinter_h": 14.833333333333336,
+   "t_total_h": 29.055555555555557,
+   "kpi": {
+    "duration_h": 29.055555555555557,
+    "rho_final": 0.9646294564934124,
+    "rho_center_final": 0.9642466801317889,
+    "shrink_xy_pct": 15.647614550679279,
+    "shrink_z_pct": 19.867726836029675,
+    "C_final_ppm": 6.010749432328127e-07,
+    "O_final_ppm": 1.341226820459351e-08,
+    "closed": 1.0,
+    "t_close_h": 22.66465658435839,
+    "C_at_close_ppm": 8.059703729627063e-07,
+    "O_at_close_ppm": 2.646657490958361e-08,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.17378637503082303,
+    "exo_max_K": 204.7644058511463,
+    "Pi_bloat_max": 0.03871620033478759,
+    "melt_margin_min_K": 14.61996196473342,
+    "binder_left_final": -1.7682876350146965e-10,
+    "grain_final_um": 28.697021412735374,
+    "p_trap_final_bar": 0.2688833969810052,
+    "O_peak_ppm": 100974.69169259665,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 94.59403024535669,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.48907949009294804,
+     "ok": true,
+     "value": 0.48907949009294804
+    },
+    "thermal_stress": {
+     "index": 0.17378637503082303,
+     "ok": true,
+     "value": 0.17378637503082303
+    },
+    "self_heating": {
+     "index": 10.238220292557315,
+     "ok": false,
+     "value": 204.7644058511463
+    },
+    "binder_removed": {
+     "index": -1.7682876350146965e-07,
+     "ok": true,
+     "value": -1.7682876350146965e-10
+    },
+    "carbon_at_closure": {
+     "index": 4.029851864813531e-09,
+     "ok": true,
+     "value": 8.059703729627063e-07
+    },
+    "oxygen_at_closure": {
+     "index": 8.82219163652787e-11,
+     "ok": true,
+     "value": 2.646657490958361e-08
+    },
+    "melting": {
+     "index": 0.7076007607053316,
+     "ok": true,
+     "value": 14.61996196473342
+    },
+    "bloating": {
+     "index": 0.03871620033478759,
+     "ok": true,
+     "value": 0.03871620033478759
+    },
+    "density": {
+     "index": 0.9848341180181321,
+     "ok": true,
+     "value": 0.9646294564934124
+    },
+    "debind_guard": {
+     "index": 0.9803921879068309,
+     "ok": true,
+     "value": 1.0000000316649675
+    }
+   },
+   "debind": "D4",
+   "sinter": "S2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.964589383944884,
+     "C": 3.700855267423148e-07,
+     "iacs": 94.58806764988717
+    },
+    "char_yield=0.08": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9646721012351179,
+     "C": 9.457055508455539e-07,
+     "iacs": 94.60037570637905
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9652028908227182,
+     "C": 7.98130416194248e-07,
+     "iacs": 94.6793679806231
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.964206522722687,
+     "C": 1.5791420147314703e-07,
+     "iacs": 94.53110605332385
+    }
+   },
+   "n_robust": 0,
+   "rank": 8
+  },
+  {
+   "tag": [
+    "combo",
+    "D4",
+    "S1",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 44.52025628089905,
+   "n_fail": 1,
+   "failed": [
+    "self_heating"
+   ],
+   "worst": "self_heating",
+   "worst_index": 6.10502506597777,
+   "t_debind_h": 14.222222222222221,
+   "t_sinter_h": 14.833333333333336,
+   "t_total_h": 29.055555555555557,
+   "kpi": {
+    "duration_h": 29.055555555555557,
+    "rho_final": 0.9604761112507576,
+    "rho_center_final": 0.9599044582031686,
+    "shrink_xy_pct": 15.513903946105213,
+    "shrink_z_pct": 19.77574710083825,
+    "C_final_ppm": 2.3493548123004965e-07,
+    "O_final_ppm": 1.1449085479239948e-08,
+    "closed": 1.0,
+    "t_close_h": 22.734017697524614,
+    "C_at_close_ppm": 2.587767600571701e-07,
+    "O_at_close_ppm": 2.2345134631401406e-08,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.007039103082058983,
+    "exo_max_K": 122.1005013195554,
+    "Pi_bloat_max": 0.18592052705274087,
+    "melt_margin_min_K": 14.619978437594455,
+    "binder_left_final": -1.821272493208764e-10,
+    "grain_final_um": 27.87659258705581,
+    "p_trap_final_bar": 0.6864972967340555,
+    "O_peak_ppm": 100974.69169259665,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 93.97669246128166,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.48907949009294804,
+     "ok": true,
+     "value": 0.48907949009294804
+    },
+    "thermal_stress": {
+     "index": 0.007039103082058983,
+     "ok": true,
+     "value": 0.007039103082058983
+    },
+    "self_heating": {
+     "index": 6.10502506597777,
+     "ok": false,
+     "value": 122.1005013195554
+    },
+    "binder_removed": {
+     "index": -1.8212724932087639e-07,
+     "ok": true,
+     "value": -1.821272493208764e-10
+    },
+    "carbon_at_closure": {
+     "index": 1.2938838002858505e-09,
+     "ok": true,
+     "value": 2.587767600571701e-07
+    },
+    "oxygen_at_closure": {
+     "index": 7.448378210467135e-11,
+     "ok": true,
+     "value": 2.2345134631401406e-08
+    },
+    "melting": {
+     "index": 0.7076004312481109,
+     "ok": true,
+     "value": 14.619978437594455
+    },
+    "bloating": {
+     "index": 0.18592052705274087,
+     "ok": true,
+     "value": 0.18592052705274087
+    },
+    "density": {
+     "index": 0.9890927935343281,
+     "ok": true,
+     "value": 0.9604761112507576
+    },
+    "debind_guard": {
+     "index": 0.9803921879068309,
+     "ok": true,
+     "value": 1.0000000316649675
+    }
+   },
+   "debind": "D4",
+   "sinter": "S1",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9604410607948344,
+     "C": 1.4852537374603254e-07,
+     "iacs": 93.97148836136863
+    },
+    "char_yield=0.08": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9605221851148231,
+     "C": 3.6914854238112036e-07,
+     "iacs": 93.98353340096875
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9611415665511913,
+     "C": 2.497956431507899e-07,
+     "iacs": 94.07551363644349
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9599154090074817,
+     "C": 1.859051578708516e-07,
+     "iacs": 93.89345385174376
+    }
+   },
+   "n_robust": 0,
+   "rank": 9
+  },
+  {
+   "tag": [
+    "combo",
+    "D4",
+    "S3",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 46.75465512275696,
+   "n_fail": 1,
+   "failed": [
+    "self_heating"
+   ],
+   "worst": "self_heating",
+   "worst_index": 6.10502506597777,
+   "t_debind_h": 14.222222222222221,
+   "t_sinter_h": 20.833333333333336,
+   "t_total_h": 35.05555555555556,
+   "kpi": {
+    "duration_h": 35.05555555555556,
+    "rho_final": 0.9604655332737007,
+    "rho_center_final": 0.9598924284061129,
+    "shrink_xy_pct": 15.51374761767822,
+    "shrink_z_pct": 19.775160403168613,
+    "C_final_ppm": 2.3231832509274954e-07,
+    "O_final_ppm": 1.1409173283420628e-08,
+    "closed": 1.0,
+    "t_close_h": 28.71241352898969,
+    "C_at_close_ppm": 2.5640791852651724e-07,
+    "O_at_close_ppm": 2.2275505160167976e-08,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.007113384515933731,
+    "exo_max_K": 122.1005013195554,
+    "Pi_bloat_max": 0.1854752304537665,
+    "melt_margin_min_K": 14.619978558073171,
+    "binder_left_final": -1.8248857750919293e-10,
+    "grain_final_um": 27.870960005057334,
+    "p_trap_final_bar": 0.6855143676699248,
+    "O_peak_ppm": 101064.9503830451,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 93.97512189112236,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.48907949009294804,
+     "ok": true,
+     "value": 0.48907949009294804
+    },
+    "thermal_stress": {
+     "index": 0.007113384515933731,
+     "ok": true,
+     "value": 0.007113384515933731
+    },
+    "self_heating": {
+     "index": 6.10502506597777,
+     "ok": false,
+     "value": 122.1005013195554
+    },
+    "binder_removed": {
+     "index": -1.8248857750919292e-07,
+     "ok": true,
+     "value": -1.8248857750919293e-10
+    },
+    "carbon_at_closure": {
+     "index": 1.2820395926325861e-09,
+     "ok": true,
+     "value": 2.5640791852651724e-07
+    },
+    "oxygen_at_closure": {
+     "index": 7.425168386722658e-11,
+     "ok": true,
+     "value": 2.2275505160167976e-08
+    },
+    "melting": {
+     "index": 0.7076004288385366,
+     "ok": true,
+     "value": 14.619978558073171
+    },
+    "bloating": {
+     "index": 0.1854752304537665,
+     "ok": true,
+     "value": 0.1854752304537665
+    },
+    "density": {
+     "index": 0.9891036867944345,
+     "ok": true,
+     "value": 0.9604655332737007
+    },
+    "debind_guard": {
+     "index": 0.9803921879068309,
+     "ok": true,
+     "value": 1.0000000316649675
+    }
+   },
+   "debind": "D4",
+   "sinter": "S3",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9604265378608821,
+     "C": 1.4765055918098862e-07,
+     "iacs": 93.96933210342317
+    },
+    "char_yield=0.08": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9605068667453329,
+     "C": 3.6723959931020297e-07,
+     "iacs": 93.98125894705046
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9611299503357434,
+     "C": 2.486425298949507e-07,
+     "iacs": 94.07378831643518
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9599047873064206,
+     "C": 1.8588354905002267e-07,
+     "iacs": 93.89187725005485
+    }
+   },
+   "n_robust": 0,
+   "rank": 10
+  },
+  {
+   "tag": [
+    "combo",
+    "D4",
+    "S4",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 43.20935320854187,
+   "n_fail": 2,
+   "failed": [
+    "self_heating",
+    "density"
+   ],
+   "worst": "self_heating",
+   "worst_index": 6.10502506597777,
+   "t_debind_h": 14.222222222222221,
+   "t_sinter_h": 12.833333333333336,
+   "t_total_h": 27.055555555555557,
+   "kpi": {
+    "duration_h": 27.055555555555557,
+    "rho_final": 0.9226932314197115,
+    "rho_center_final": 0.8948398790027581,
+    "shrink_xy_pct": 14.543526780560601,
+    "shrink_z_pct": 18.340823737567614,
+    "C_final_ppm": 118.62296210779101,
+    "O_final_ppm": 0.7042246214692125,
+    "closed": 0.0,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.48907949009294804,
+    "Pi_th_max": 0.5445330146181472,
+    "exo_max_K": 122.1005013195554,
+    "Pi_bloat_max": 0.4028105114001515,
+    "melt_margin_min_K": 14.63581970937912,
+    "binder_left_final": -1.5959778589139444e-10,
+    "grain_final_um": 21.024932649345423,
+    "p_trap_final_bar": 0.2755599023648218,
+    "O_peak_ppm": 100971.97071658705,
+    "C_peak_ppm": 1327.389162307999,
+    "iacs": 88.42238272096179,
+    "debind_ramp_max_Kmin": 1.0000000316649675
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.48907949009294804,
+     "ok": true,
+     "value": 0.48907949009294804
+    },
+    "thermal_stress": {
+     "index": 0.5445330146181472,
+     "ok": true,
+     "value": 0.5445330146181472
+    },
+    "self_heating": {
+     "index": 6.10502506597777,
+     "ok": false,
+     "value": 122.1005013195554
+    },
+    "binder_removed": {
+     "index": -1.5959778589139443e-07,
+     "ok": true,
+     "value": -1.5959778589139444e-10
+    },
+    "carbon_at_closure": {
+     "index": 0.5931148105389551,
+     "ok": true,
+     "value": 118.62296210779101
+    },
+    "oxygen_at_closure": {
+     "index": 0.002347415404897375,
+     "ok": true,
+     "value": 0.7042246214692125
+    },
+    "melting": {
+     "index": 0.7072836058124177,
+     "ok": true,
+     "value": 14.63581970937912
+    },
+    "bloating": {
+     "index": 0.4028105114001515,
+     "ok": true,
+     "value": 0.4028105114001515
+    },
+    "density": {
+     "index": 1.029594634110703,
+     "ok": false,
+     "value": 0.9226932314197115
+    },
+    "debind_guard": {
+     "index": 0.9803921879068309,
+     "ok": true,
+     "value": 1.0000000316649675
+    }
+   },
+   "debind": "D4",
+   "sinter": "S4",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "self_heating",
+      "density"
+     ],
+     "rho": 0.9485902806347465,
+     "C": 88.55264139994286,
+     "iacs": 92.21740427447533
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.8586324960574561,
+     "C": 254.72135101524447,
+     "iacs": 79.26359874448467
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "rho": 0.9561005823280594,
+     "C": 77.27821180354915,
+     "iacs": 93.32777239940295
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 4,
+     "failed": [
+      "thermal_stress",
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.8782933743609063,
+     "C": 207.90110845578053,
+     "iacs": 82.03940323043263
+    }
+   },
+   "n_robust": 0,
+   "rank": 11
+  },
+  {
+   "tag": [
+    "combo",
+    "D3",
+    "S1",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 6.569004535675049,
+   "n_fail": 2,
+   "failed": [
+    "carbon_at_closure",
+    "density"
+   ],
+   "worst": "carbon_at_closure",
+   "worst_index": 19.20503870294968,
+   "t_debind_h": 10.88888888888889,
+   "t_sinter_h": 14.833333333333332,
+   "t_total_h": 25.72222222222222,
+   "kpi": {
+    "duration_h": 25.72222222222222,
+    "rho_final": 0.5613599626875492,
+    "rho_center_final": 0.5596211997345225,
+    "shrink_xy_pct": 0.626053916043734,
+    "shrink_z_pct": 0.7587193263088654,
+    "C_final_ppm": 3841.0077405899356,
+    "O_final_ppm": 27.344086965702214,
+    "closed": 0.0,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.14043566686236594,
+    "exo_max_K": 8.761592258210499,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.624147268377328,
+    "binder_left_final": -9.94610567186504e-10,
+    "grain_final_um": 9.593599263118588,
+    "p_trap_final_bar": 4.230245000460781e-06,
+    "O_peak_ppm": 243.6046864451783,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.384903916656334,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.14043566686236594,
+     "ok": true,
+     "value": 0.14043566686236594
+    },
+    "self_heating": {
+     "index": 0.43807961291052494,
+     "ok": true,
+     "value": 8.761592258210499
+    },
+    "binder_removed": {
+     "index": -9.94610567186504e-07,
+     "ok": true,
+     "value": -9.94610567186504e-10
+    },
+    "carbon_at_closure": {
+     "index": 19.20503870294968,
+     "ok": false,
+     "value": 3841.0077405899356
+    },
+    "oxygen_at_closure": {
+     "index": 0.09114695655234072,
+     "ok": true,
+     "value": 27.344086965702214
+    },
+    "melting": {
+     "index": 0.7075170546324534,
+     "ok": true,
+     "value": 14.624147268377328
+    },
+    "bloating": {
+     "index": 0.0,
+     "ok": true,
+     "value": 0.0
+    },
+    "density": {
+     "index": 1.6923187671807054,
+     "ok": false,
+     "value": 0.5613599626875492
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D3",
+   "sinter": "S1",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5911991112044868,
+     "C": 2111.6504773793185,
+     "iacs": 44.81655818857358
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5539298342052199,
+     "C": 6449.615322827571,
+     "iacs": 40.54430849532917
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5738135581874132,
+     "C": 3769.98402627319,
+     "iacs": 42.80632037126825
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5603101027998159,
+     "C": 3873.2711426465967,
+     "iacs": 41.26579026831192
+    }
+   },
+   "n_robust": 0,
+   "rank": 12
+  },
+  {
+   "tag": [
+    "combo",
+    "D3",
+    "S2",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 6.576472520828247,
+   "n_fail": 2,
+   "failed": [
+    "carbon_at_closure",
+    "density"
+   ],
+   "worst": "carbon_at_closure",
+   "worst_index": 19.499602428025707,
+   "t_debind_h": 10.88888888888889,
+   "t_sinter_h": 14.833333333333332,
+   "t_total_h": 25.72222222222222,
+   "kpi": {
+    "duration_h": 25.72222222222222,
+    "rho_final": 0.5612159497879835,
+    "rho_center_final": 0.5594998434012955,
+    "shrink_xy_pct": 0.6183044331395715,
+    "shrink_z_pct": 0.7493084156981022,
+    "C_final_ppm": 3899.9204856051415,
+    "O_final_ppm": 26.78289505584989,
+    "closed": 0.0,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.14043566686236594,
+    "exo_max_K": 8.761592258210499,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.62366872618054,
+    "binder_left_final": -9.936162124249966e-10,
+    "grain_final_um": 9.592688355324809,
+    "p_trap_final_bar": 4.228538907604231e-06,
+    "O_peak_ppm": 243.6046864451783,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.368558090005024,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.14043566686236594,
+     "ok": true,
+     "value": 0.14043566686236594
+    },
+    "self_heating": {
+     "index": 0.43807961291052494,
+     "ok": true,
+     "value": 8.761592258210499
+    },
+    "binder_removed": {
+     "index": -9.936162124249965e-07,
+     "ok": true,
+     "value": -9.936162124249966e-10
+    },
+    "carbon_at_closure": {
+     "index": 19.499602428025707,
+     "ok": false,
+     "value": 3899.9204856051415
+    },
+    "oxygen_at_closure": {
+     "index": 0.08927631685283298,
+     "ok": true,
+     "value": 26.78289505584989
+    },
+    "melting": {
+     "index": 0.7075266254763892,
+     "ok": true,
+     "value": 14.62366872618054
+    },
+    "bloating": {
+     "index": 0.0,
+     "ok": true,
+     "value": 0.0
+    },
+    "density": {
+     "index": 1.692753030912417,
+     "ok": false,
+     "value": 0.5612159497879835
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D3",
+   "sinter": "S2",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5907344554661992,
+     "C": 2189.904868137815,
+     "iacs": 44.76244221569925
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5539023186014538,
+     "C": 6499.8235537210585,
+     "iacs": 40.541205981938425
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5737617002451803,
+     "C": 3829.252396959355,
+     "iacs": 42.80036918556001
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5601792859731752,
+     "C": 3931.9806201497054,
+     "iacs": 41.25095603454609
+    }
+   },
+   "n_robust": 0,
+   "rank": 13
+  },
+  {
+   "tag": [
+    "combo",
+    "D3",
+    "S4",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 6.448643684387207,
+   "n_fail": 2,
+   "failed": [
+    "carbon_at_closure",
+    "density"
+   ],
+   "worst": "carbon_at_closure",
+   "worst_index": 20.34957124608997,
+   "t_debind_h": 10.88888888888889,
+   "t_sinter_h": 12.833333333333332,
+   "t_total_h": 23.72222222222222,
+   "kpi": {
+    "duration_h": 23.72222222222222,
+    "rho_final": 0.5591948712733223,
+    "rho_center_final": 0.5591148232828171,
+    "shrink_xy_pct": 0.5106620842714515,
+    "shrink_z_pct": 0.6181050012106892,
+    "C_final_ppm": 4069.9142492179935,
+    "O_final_ppm": 25.869376374542348,
+    "closed": 0.0,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.14604684431517787,
+    "exo_max_K": 8.680660922955667,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.624103228471085,
+    "binder_left_final": -9.845958028671697e-10,
+    "grain_final_um": 9.500158921252298,
+    "p_trap_final_bar": 4.227359428637716e-06,
+    "O_peak_ppm": 229.13652466211073,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.1393819455931,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.14604684431517787,
+     "ok": true,
+     "value": 0.14604684431517787
+    },
+    "self_heating": {
+     "index": 0.4340330461477834,
+     "ok": true,
+     "value": 8.680660922955667
+    },
+    "binder_removed": {
+     "index": -9.845958028671698e-07,
+     "ok": true,
+     "value": -9.845958028671697e-10
+    },
+    "carbon_at_closure": {
+     "index": 20.34957124608997,
+     "ok": false,
+     "value": 4069.9142492179935
+    },
+    "oxygen_at_closure": {
+     "index": 0.08623125458180783,
+     "ok": true,
+     "value": 25.869376374542348
+    },
+    "melting": {
+     "index": 0.7075179354305783,
+     "ok": true,
+     "value": 14.624103228471085
+    },
+    "bloating": {
+     "index": 0.0,
+     "ok": true,
+     "value": 0.0
+    },
+    "density": {
+     "index": 1.6988710891371186,
+     "ok": false,
+     "value": 0.5591948712733223
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D3",
+   "sinter": "S4",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5754592798089013,
+     "C": 2330.2977867051095,
+     "iacs": 42.99532199888126
+    },
+    "char_yield=0.08": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5536047002479831,
+     "C": 6685.67913135643,
+     "iacs": 40.50765304141491
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.559242928335941,
+     "C": 4069.0937569678736,
+     "iacs": 41.14482648035706
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5591625678528342,
+     "C": 4070.821567034737,
+     "iacs": 41.135722321643755
+    }
+   },
+   "n_robust": 0,
+   "rank": 14
+  },
+  {
+   "tag": [
+    "combo",
+    "D1",
+    "S4",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 21.120048999786377,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "carbon_at_closure",
+    "density"
+   ],
+   "worst": "carbon_at_closure",
+   "worst_index": 20.333349718409682,
+   "t_debind_h": 17.27777777777778,
+   "t_sinter_h": 12.833333333333332,
+   "t_total_h": 30.11111111111111,
+   "kpi": {
+    "duration_h": 30.11111111111111,
+    "rho_final": 0.5592086553456854,
+    "rho_center_final": 0.559128011815999,
+    "shrink_xy_pct": 0.5114211286964321,
+    "shrink_z_pct": 0.6190247003096339,
+    "C_final_ppm": 4066.6699436819363,
+    "O_final_ppm": 25.89453206496495,
+    "closed": 0.0,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.15300771289370377,
+    "exo_max_K": 34.734603321102895,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.624103140426996,
+    "binder_left_final": -9.85030606116554e-10,
+    "grain_final_um": 9.500262928038257,
+    "p_trap_final_bar": 4.2274615573576876e-06,
+    "O_peak_ppm": 43821.82268538441,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.14094356228807,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.15300771289370377,
+     "ok": true,
+     "value": 0.15300771289370377
+    },
+    "self_heating": {
+     "index": 1.7367301660551449,
+     "ok": false,
+     "value": 34.734603321102895
+    },
+    "binder_removed": {
+     "index": -9.85030606116554e-07,
+     "ok": true,
+     "value": -9.85030606116554e-10
+    },
+    "carbon_at_closure": {
+     "index": 20.333349718409682,
+     "ok": false,
+     "value": 4066.6699436819363
+    },
+    "oxygen_at_closure": {
+     "index": 0.0863151068832165,
+     "ok": true,
+     "value": 25.89453206496495
+    },
+    "melting": {
+     "index": 0.7075179371914601,
+     "ok": true,
+     "value": 14.624103140426996
+    },
+    "bloating": {
+     "index": 0.0,
+     "ok": true,
+     "value": 0.0
+    },
+    "density": {
+     "index": 1.698829213243739,
+     "ok": false,
+     "value": 0.5592086553456854
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D1",
+   "sinter": "S4",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5754966795526222,
+     "C": 2328.3648589839677,
+     "iacs": 42.99962028789912
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5536100390266818,
+     "C": 6680.452854478668,
+     "iacs": 40.50825484598751
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5592546596589039,
+     "C": 4066.403635403203,
+     "iacs": 41.146155594110446
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5593720204685134,
+     "C": 4022.6500827445084,
+     "iacs": 41.15945288955867
+    }
+   },
+   "n_robust": 0,
+   "rank": 15
+  },
+  {
+   "tag": [
+    "combo",
+    "D2",
+    "S4",
+    "nominal"
+   ],
+   "ok": true,
+   "wall_s": 20.903724193572998,
+   "n_fail": 3,
+   "failed": [
+    "self_heating",
+    "carbon_at_closure",
+    "density"
+   ],
+   "worst": "carbon_at_closure",
+   "worst_index": 20.344110083350802,
+   "t_debind_h": 18.444444444444443,
+   "t_sinter_h": 12.833333333333336,
+   "t_total_h": 31.27777777777778,
+   "kpi": {
+    "duration_h": 31.27777777777778,
+    "rho_final": 0.5591993175342922,
+    "rho_center_final": 0.5591178902907026,
+    "shrink_xy_pct": 0.5109148636562089,
+    "shrink_z_pct": 0.6184113739309272,
+    "C_final_ppm": 4068.8220166701603,
+    "O_final_ppm": 25.829850934713033,
+    "closed": 0.0,
+    "t_close_h": null,
+    "C_at_close_ppm": null,
+    "O_at_close_ppm": null,
+    "Pi_gas_max": 0.15450710201148818,
+    "Pi_th_max": 0.20404835105241534,
+    "exo_max_K": 35.979633875023296,
+    "Pi_bloat_max": 0.0,
+    "melt_margin_min_K": 14.624103218923892,
+    "binder_left_final": -9.850004023513605e-10,
+    "grain_final_um": 9.500206156279049,
+    "p_trap_final_bar": 4.22742946298767e-06,
+    "O_peak_ppm": 52073.74750308433,
+    "C_peak_ppm": 4381.333400997149,
+    "iacs": 41.13988566656843,
+    "debind_ramp_max_Kmin": 1.0000000522484072
+   },
+   "verdict": {
+    "gas_pressure": {
+     "index": 0.15450710201148818,
+     "ok": true,
+     "value": 0.15450710201148818
+    },
+    "thermal_stress": {
+     "index": 0.20404835105241534,
+     "ok": true,
+     "value": 0.20404835105241534
+    },
+    "self_heating": {
+     "index": 1.798981693751165,
+     "ok": false,
+     "value": 35.979633875023296
+    },
+    "binder_removed": {
+     "index": -9.850004023513606e-07,
+     "ok": true,
+     "value": -9.850004023513605e-10
+    },
+    "carbon_at_closure": {
+     "index": 20.344110083350802,
+     "ok": false,
+     "value": 4068.8220166701603
+    },
+    "oxygen_at_closure": {
+     "index": 0.08609950311571012,
+     "ok": true,
+     "value": 25.829850934713033
+    },
+    "melting": {
+     "index": 0.7075179356215222,
+     "ok": true,
+     "value": 14.624103218923892
+    },
+    "bloating": {
+     "index": 0.0,
+     "ok": true,
+     "value": 0.0
+    },
+    "density": {
+     "index": 1.6988575812089441,
+     "ok": false,
+     "value": 0.5591993175342922
+    },
+    "debind_guard": {
+     "index": 0.9803922080866737,
+     "ok": true,
+     "value": 1.0000000522484072
+    }
+   },
+   "debind": "D2",
+   "sinter": "S4",
+   "robust": {
+    "char_yield=0.03": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.575471791003453,
+     "C": 2329.633704774741,
+     "iacs": 42.99675987367264
+    },
+    "char_yield=0.08": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5536062889664306,
+     "C": 6683.973437001203,
+     "iacs": 40.50783212664415
+    },
+    "half_thickness_mm=1.0": {
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.559249635469065,
+     "C": 4067.5537492419344,
+     "iacs": 41.14558637102646
+    },
+    "half_thickness_mm=4.0": {
+     "n_fail": 3,
+     "failed": [
+      "self_heating",
+      "carbon_at_closure",
+      "density"
+     ],
+     "rho": 0.5591647618442106,
+     "C": 4070.2822908214252,
+     "iacs": 41.13597087350542
+    }
+   },
+   "n_robust": 0,
+   "rank": 16
+  }
+ ],
+ "sweeps": {
+  "sinter": {
+   "title": "Sintering temperature and hold",
+   "x": "Sinter",
+   "y": "Hold",
+   "xs": [
+    1040.0,
+    1050.0,
+    1060.0
+   ],
+   "ys": [
+    2.0,
+    3.0,
+    4.0
+   ],
+   "xu": "C",
+   "yu": "h",
+   "cells": [
+    {
+     "x": 1040.0,
+     "y": 2.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 31.211111111111112,
+      "rho_final": 0.9555988447262744,
+      "rho_center_final": 0.9554561484152369,
+      "shrink_xy_pct": 15.446904687657836,
+      "shrink_z_pct": 19.49403491570353,
+      "C_final_ppm": 0.0004628525496109032,
+      "O_final_ppm": 1.2951895111832865e-08,
+      "closed": 1.0,
+      "t_close_h": 26.538955373764676,
+      "C_at_close_ppm": 0.0004655827697922005,
+      "O_at_close_ppm": 3.236319379629862e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 24.619973121606563,
+      "binder_left_final": -1.0126744720754214e-09,
+      "grain_final_um": 21.341421325892203,
+      "p_trap_final_bar": 0.13360580465797567,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 93.25345609783372,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 31.211111111111112,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1040.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 1050.0,
+     "y": 2.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 31.27777777777778,
+      "rho_final": 0.9587381918354592,
+      "rho_center_final": 0.958555113653166,
+      "shrink_xy_pct": 15.529767087865064,
+      "shrink_z_pct": 19.60014013347329,
+      "C_final_ppm": 0.00046275554413066487,
+      "O_final_ppm": 1.2425106100806021e-08,
+      "closed": 1.0,
+      "t_close_h": 26.4729269147126,
+      "C_at_close_ppm": 0.0004654444097061519,
+      "O_at_close_ppm": 3.275825275015505e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 14.619971371605516,
+      "binder_left_final": -1.0127083452001898e-09,
+      "grain_final_um": 22.580481326953862,
+      "p_trap_final_bar": 0.16223031026851698,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 93.7187701030609,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 31.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 1060.0,
+     "y": 2.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 31.344444444444445,
+      "rho_final": 0.9616438017525271,
+      "rho_center_final": 0.9614184967629605,
+      "shrink_xy_pct": 15.606053742009385,
+      "shrink_z_pct": 19.698088571839023,
+      "C_final_ppm": 0.0004626644124974372,
+      "O_final_ppm": 1.1931974090591398e-08,
+      "closed": 1.0,
+      "t_close_h": 26.41413051413833,
+      "C_at_close_ppm": 0.00046536220641172813,
+      "O_at_close_ppm": 3.3218886957876994e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 4.619970316530498,
+      "binder_left_final": -1.0127102082397806e-09,
+      "grain_final_um": 23.866277447963746,
+      "p_trap_final_bar": 0.19431249844369614,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 94.15011902334538,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 31.344444444444445,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1060.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 1040.0,
+     "y": 3.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 32.21111111111111,
+      "rho_final": 0.9617997272343525,
+      "rho_center_final": 0.9615441744980049,
+      "shrink_xy_pct": 15.609881979493956,
+      "shrink_z_pct": 19.70382137634761,
+      "C_final_ppm": 0.00046285304722234533,
+      "O_final_ppm": 1.113749926238522e-08,
+      "closed": 1.0,
+      "t_close_h": 26.538955373764676,
+      "C_at_close_ppm": 0.0004655827697922005,
+      "O_at_close_ppm": 3.236319379629862e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 24.619973121606563,
+      "binder_left_final": -1.0128475885772147e-09,
+      "grain_final_um": 25.409783161334218,
+      "p_trap_final_bar": 0.22118778479190104,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 94.17328520458706,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.21111111111111,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1040.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 3.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 1050.0,
+     "y": 3.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 32.27777777777778,
+      "rho_final": 0.9644537459378262,
+      "rho_center_final": 0.9641506246159418,
+      "shrink_xy_pct": 15.679144555221091,
+      "shrink_z_pct": 19.79317718519875,
+      "C_final_ppm": 0.00046275602848727665,
+      "O_final_ppm": 1.0702885620727702e-08,
+      "closed": 1.0,
+      "t_close_h": 26.4729269147126,
+      "C_at_close_ppm": 0.0004654444097061519,
+      "O_at_close_ppm": 3.275825275015505e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 14.619971371605516,
+      "binder_left_final": -1.0128836136133223e-09,
+      "grain_final_um": 26.83037764972508,
+      "p_trap_final_bar": 0.26149788165875765,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 94.56788630966868,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 3.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 1060.0,
+     "y": 3.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 32.34444444444444,
+      "rho_final": 0.9669159215443929,
+      "rho_center_final": 0.966563191747218,
+      "shrink_xy_pct": 15.743084054477585,
+      "shrink_z_pct": 19.875947210556088,
+      "C_final_ppm": 0.00046266497915742994,
+      "O_final_ppm": 1.0294144937270724e-08,
+      "closed": 1.0,
+      "t_close_h": 26.41413051413833,
+      "C_at_close_ppm": 0.00046536220641172813,
+      "O_at_close_ppm": 3.3218886957876994e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 4.619970316530498,
+      "binder_left_final": -1.012918980199028e-09,
+      "grain_final_um": 28.29779345130877,
+      "p_trap_final_bar": 0.3064481232126885,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 94.93444990637474,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.34444444444444,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1060.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 3.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 1040.0,
+     "y": 4.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 33.21111111111111,
+      "rho_final": 0.9655988267442809,
+      "rho_center_final": 0.9652456050417585,
+      "shrink_xy_pct": 15.708647935607335,
+      "shrink_z_pct": 19.832199533234206,
+      "C_final_ppm": 0.0004628536300507182,
+      "O_final_ppm": 9.952495131538148e-09,
+      "closed": 1.0,
+      "t_close_h": 26.538955373764676,
+      "C_at_close_ppm": 0.0004655827697922005,
+      "O_at_close_ppm": 3.236319379629862e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0008818806542361512,
+      "melt_margin_min_K": 24.619973121606563,
+      "binder_left_final": -1.0130551003988453e-09,
+      "grain_final_um": 28.86050896614194,
+      "p_trap_final_bar": 0.308580370751232,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 94.73830543551531,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.21111111111111,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1040.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 1050.0,
+     "y": 4.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 33.27777777777778,
+      "rho_final": 0.9679628828598653,
+      "rho_center_final": 0.9675559529402642,
+      "shrink_xy_pct": 15.769858108065593,
+      "shrink_z_pct": 19.911716786851162,
+      "C_final_ppm": 0.0004627566105334148,
+      "O_final_ppm": 9.57384878550831e-09,
+      "closed": 1.0,
+      "t_close_h": 26.4729269147126,
+      "C_at_close_ppm": 0.0004654444097061519,
+      "O_at_close_ppm": 3.275825275015505e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.024913697332004374,
+      "melt_margin_min_K": 14.619971371605516,
+      "binder_left_final": -1.0130907218320888e-09,
+      "grain_final_um": 30.427697358641385,
+      "p_trap_final_bar": 0.3599523124982126,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.09046088042815,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 1060.0,
+     "y": 4.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 33.34444444444444,
+      "rho_final": 0.9701570460254515,
+      "rho_center_final": 0.9696940657613102,
+      "shrink_xy_pct": 15.826392941670242,
+      "shrink_z_pct": 19.98547111802178,
+      "C_final_ppm": 0.0004626655747340038,
+      "O_final_ppm": 9.216805971127057e-09,
+      "closed": 1.0,
+      "t_close_h": 26.41413051413833,
+      "C_at_close_ppm": 0.00046536220641172813,
+      "O_at_close_ppm": 3.3218886957876994e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.05152479548571193,
+      "melt_margin_min_K": 4.619970316530498,
+      "binder_left_final": -1.013123469800492e-09,
+      "grain_final_um": 32.04198869128582,
+      "p_trap_final_bar": 0.4170048863087795,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.41769370082554,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.34444444444444,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1060.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    }
+   ],
+   "note": "Every cell passes. 1060 C uses most of the melting margin; 1050 C for 4 h is the default."
+  },
+  "carbothermic": {
+   "title": "N2 carbon-oxide hold",
+   "x": "Hold at",
+   "y": "Time",
+   "xs": [
+    600.0,
+    650.0,
+    700.0
+   ],
+   "ys": [
+    1.0,
+    2.0,
+    3.0
+   ],
+   "xu": "C",
+   "yu": "h",
+   "cells": [
+    {
+     "x": 600.0,
+     "y": 1.0,
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "kpi": {
+      "duration_h": 32.27777777777778,
+      "rho_final": 0.6039380410429471,
+      "rho_center_final": 0.603857320978767,
+      "shrink_xy_pct": 2.858544852348488,
+      "shrink_z_pct": 3.4766422961613253,
+      "C_final_ppm": 1540.1692059628044,
+      "O_final_ppm": 30.32139157566266,
+      "closed": 0.0,
+      "t_close_h": null,
+      "C_at_close_ppm": null,
+      "O_at_close_ppm": null,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.1279339535824987,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 14.623000678193193,
+      "binder_left_final": -1.000970688574228e-09,
+      "grain_final_um": 9.871181174146379,
+      "p_trap_final_bar": 4.227508187876435e-06,
+      "O_peak_ppm": 52079.134597939366,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 46.30845023384242,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 650.0,
+     "y": 1.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 32.27777777777778,
+      "rho_final": 0.9532622321063333,
+      "rho_center_final": 0.953158783391647,
+      "shrink_xy_pct": 15.423343335890339,
+      "shrink_z_pct": 19.341658629296777,
+      "C_final_ppm": 132.40278830022982,
+      "O_final_ppm": 1.1956941321646961e-08,
+      "closed": 1.0,
+      "t_close_h": 26.14453171443165,
+      "C_at_close_ppm": 133.362339547494,
+      "O_at_close_ppm": 2.4515646443320798e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 14.619989956238214,
+      "binder_left_final": -1.0018241371425406e-09,
+      "grain_final_um": 26.018243177131396,
+      "p_trap_final_bar": 0.1797562337338133,
+      "O_peak_ppm": 52079.134597940974,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 92.90761907245154,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 650.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 650.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 700.0,
+     "y": 1.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 32.27777777777778,
+      "rho_final": 0.9682660177988865,
+      "rho_center_final": 0.9678609270930421,
+      "shrink_xy_pct": 15.793895058347541,
+      "shrink_z_pct": 19.891074112427308,
+      "C_final_ppm": 0.04616352496971226,
+      "O_final_ppm": 9.65771747553196e-09,
+      "closed": 1.0,
+      "t_close_h": 25.439444269909643,
+      "C_at_close_ppm": 0.046400572574387344,
+      "O_at_close_ppm": 3.340554836417299e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.028603066771575553,
+      "melt_margin_min_K": 14.619970791052765,
+      "binder_left_final": -1.0128095164583558e-09,
+      "grain_final_um": 30.590550721447094,
+      "p_trap_final_bar": 0.36815289386354044,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.1356477212496,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 600.0,
+     "y": 2.0,
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "kpi": {
+      "duration_h": 33.27777777777778,
+      "rho_final": 0.6483244600798179,
+      "rho_center_final": 0.6482496794668993,
+      "shrink_xy_pct": 4.961551278409093,
+      "shrink_z_pct": 6.061947396676848,
+      "C_final_ppm": 1059.5767642630512,
+      "O_final_ppm": 29.728995621746442,
+      "closed": 0.0,
+      "t_close_h": null,
+      "C_at_close_ppm": null,
+      "O_at_close_ppm": null,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.12068860750810284,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 14.6226318426734,
+      "binder_left_final": -1.000804466517325e-09,
+      "grain_final_um": 10.300458364956114,
+      "p_trap_final_bar": 4.229957133823945e-06,
+      "O_peak_ppm": 52079.134597939366,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 51.629198246603416,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 650.0,
+     "y": 2.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 33.27777777777778,
+      "rho_final": 0.9672411582522215,
+      "rho_center_final": 0.9670024694449542,
+      "shrink_xy_pct": 15.783472768452544,
+      "shrink_z_pct": 19.82604551804803,
+      "C_final_ppm": 34.692501282193625,
+      "O_final_ppm": 1.1354744202824047e-08,
+      "closed": 1.0,
+      "t_close_h": 26.460377289925162,
+      "C_at_close_ppm": 34.82457044343484,
+      "O_at_close_ppm": 3.288344179604614e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.06778482972107942,
+      "melt_margin_min_K": 14.619976233204397,
+      "binder_left_final": -1.0021431435055752e-09,
+      "grain_final_um": 30.227570543915633,
+      "p_trap_final_bar": 0.35178491780729526,
+      "O_peak_ppm": 52079.134597940974,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 94.98290540441116,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 650.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 650.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 700.0,
+     "y": 2.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 33.27777777777778,
+      "rho_final": 0.9679628828598653,
+      "rho_center_final": 0.9675559529402642,
+      "shrink_xy_pct": 15.769858108065593,
+      "shrink_z_pct": 19.911716786851162,
+      "C_final_ppm": 0.0004627566105334148,
+      "O_final_ppm": 9.57384878550831e-09,
+      "closed": 1.0,
+      "t_close_h": 26.4729269147126,
+      "C_at_close_ppm": 0.0004654444097061519,
+      "O_at_close_ppm": 3.275825275015505e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.024913697332004374,
+      "melt_margin_min_K": 14.619971371605516,
+      "binder_left_final": -1.0130907218320888e-09,
+      "grain_final_um": 30.427697358641385,
+      "p_trap_final_bar": 0.3599523124982126,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.09046088042815,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 600.0,
+     "y": 3.0,
+     "n_fail": 2,
+     "failed": [
+      "carbon_at_closure",
+      "density"
+     ],
+     "kpi": {
+      "duration_h": 34.27777777777778,
+      "rho_final": 0.7143555366949979,
+      "rho_center_final": 0.7142835898807344,
+      "shrink_xy_pct": 7.744686837517845,
+      "shrink_z_pct": 9.52412927726195,
+      "C_final_ppm": 729.3317859033314,
+      "O_final_ppm": 28.58729951145471,
+      "closed": 0.0,
+      "t_close_h": null,
+      "C_at_close_ppm": null,
+      "O_at_close_ppm": null,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.11079026389309486,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.0,
+      "melt_margin_min_K": 14.622223969325887,
+      "binder_left_final": -1.0006932528817572e-09,
+      "grain_final_um": 11.149327029632829,
+      "p_trap_final_bar": 4.233645202575e-06,
+      "O_peak_ppm": 52079.134597939366,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 59.88578300303265,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 34.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 3.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 650.0,
+     "y": 3.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 34.27777777777778,
+      "rho_final": 0.9680677327536877,
+      "rho_center_final": 0.9678221741022995,
+      "shrink_xy_pct": 15.795772816529096,
+      "shrink_z_pct": 19.871096421175626,
+      "C_final_ppm": 8.793319369614712,
+      "O_final_ppm": 1.1315709753699641e-08,
+      "closed": 1.0,
+      "t_close_h": 27.436362442303306,
+      "C_at_close_ppm": 8.828309001385778,
+      "O_at_close_ppm": 3.339870732053925e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.07292471144303016,
+      "melt_margin_min_K": 14.619969383884381,
+      "binder_left_final": -1.002505126010219e-09,
+      "grain_final_um": 30.517268127429638,
+      "p_trap_final_bar": 0.36539488054432745,
+      "O_peak_ppm": 52079.134597940974,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.10608954032418,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 34.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 650.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 3.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 650.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 700.0,
+     "y": 3.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 34.27777777777778,
+      "rho_final": 0.9676058402064365,
+      "rho_center_final": 0.9672129650988858,
+      "shrink_xy_pct": 15.747186054882079,
+      "shrink_z_pct": 19.925278193678043,
+      "C_final_ppm": 4.6756546260925455e-06,
+      "O_final_ppm": 9.600929848079412e-09,
+      "closed": 1.0,
+      "t_close_h": 27.496142801635315,
+      "C_at_close_ppm": 4.682318697041835e-06,
+      "O_at_close_ppm": 3.2320228374244594e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.02068614878618676,
+      "melt_margin_min_K": 14.61997149165336,
+      "binder_left_final": -1.0125818973797634e-09,
+      "grain_final_um": 30.242289844830644,
+      "p_trap_final_bar": 0.3508234241343639,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.03724735481846,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 34.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 3.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    }
+   ],
+   "note": "At 600 C the oxide and the char barely react and the carbon stays. The onset temperature is an estimate, so 700 C keeps a margin."
+  },
+  "oxidation": {
+   "title": "Lean-air oxidation in furnace 1",
+   "x": "Up to",
+   "y": "O2",
+   "xs": [
+    250.0,
+    280.0,
+    310.0
+   ],
+   "ys": [
+    0.5,
+    1.0,
+    2.0
+   ],
+   "xu": "C",
+   "yu": "% O2",
+   "cells": [
+    {
+     "x": 250.0,
+     "y": 0.5,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 32.111111111111114,
+      "rho_final": 0.9681156253237253,
+      "rho_center_final": 0.9679709559876954,
+      "shrink_xy_pct": 15.789151883002683,
+      "shrink_z_pct": 19.887657941014446,
+      "C_final_ppm": 0.010352595755812502,
+      "O_final_ppm": 1.0682490404521158e-08,
+      "closed": 1.0,
+      "t_close_h": 25.234994915089676,
+      "C_at_close_ppm": 0.013360291588454741,
+      "O_at_close_ppm": 3.422521788498409e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.06750423327086633,
+      "exo_max_K": 10.247130090434894,
+      "Pi_bloat_max": 0.03226952909337685,
+      "melt_margin_min_K": 14.619966714803695,
+      "binder_left_final": -1.017688378826726e-09,
+      "grain_final_um": 30.60029591396323,
+      "p_trap_final_bar": 0.3759577704828274,
+      "O_peak_ppm": 32670.88449042414,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.11322856724219,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.111111111111114,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 250.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.005,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 0.5 % O2 (2 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 280.0,
+     "y": 0.5,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 33.27777777777778,
+      "rho_final": 0.9681445227310324,
+      "rho_center_final": 0.9679821631162887,
+      "shrink_xy_pct": 15.787120916826824,
+      "shrink_z_pct": 19.893912892066734,
+      "C_final_ppm": 0.004499981665735378,
+      "O_final_ppm": 9.599078152480766e-09,
+      "closed": 1.0,
+      "t_close_h": 26.383364256697245,
+      "C_at_close_ppm": 0.006728548527239187,
+      "O_at_close_ppm": 3.4633619526320186e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.06750423327086633,
+      "exo_max_K": 10.247130090434894,
+      "Pi_bloat_max": 0.03257073050833653,
+      "melt_margin_min_K": 14.619970741093539,
+      "binder_left_final": -1.0160996944557352e-09,
+      "grain_final_um": 30.561750542401917,
+      "p_trap_final_bar": 0.3765817945225382,
+      "O_peak_ppm": 38508.52521218991,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.11753619699338,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.005,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 0.5 % O2 (2 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 310.0,
+     "y": 0.5,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 34.44444444444444,
+      "rho_final": 0.968155242451204,
+      "rho_center_final": 0.9680007772649611,
+      "shrink_xy_pct": 15.786276740513705,
+      "shrink_z_pct": 19.896409286880345,
+      "C_final_ppm": 0.0023730806060636303,
+      "O_final_ppm": 8.541518665420886e-09,
+      "closed": 1.0,
+      "t_close_h": 27.55545917761103,
+      "C_at_close_ppm": 0.004645991394465324,
+      "O_at_close_ppm": 3.454234153612068e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.06750423327086633,
+      "exo_max_K": 10.247130090434894,
+      "Pi_bloat_max": 0.03302560932516684,
+      "melt_margin_min_K": 14.61997518532985,
+      "binder_left_final": -1.015013771327815e-09,
+      "grain_final_um": 30.50984676499713,
+      "p_trap_final_bar": 0.3775511270179722,
+      "O_peak_ppm": 44039.7359506168,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.11913416242484,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 34.44444444444444,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 310.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.005,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 0.5 % O2 (2 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 250.0,
+     "y": 1.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 32.111111111111114,
+      "rho_final": 0.9680296225279983,
+      "rho_center_final": 0.9677209211757066,
+      "shrink_xy_pct": 15.777934711222786,
+      "shrink_z_pct": 19.901879489024353,
+      "C_final_ppm": 0.0022489949801098733,
+      "O_final_ppm": 1.0553851714079862e-08,
+      "closed": 1.0,
+      "t_close_h": 25.281563970750344,
+      "C_at_close_ppm": 0.0022599296534943415,
+      "O_at_close_ppm": 3.324253972695665e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.027589135496874195,
+      "melt_margin_min_K": 14.61996759950739,
+      "binder_left_final": -1.0157610159146383e-09,
+      "grain_final_um": 30.525536059490932,
+      "p_trap_final_bar": 0.3659335023333985,
+      "O_peak_ppm": 42071.742820134255,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.10040882859228,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.111111111111114,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 250.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 280.0,
+     "y": 1.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 33.27777777777778,
+      "rho_final": 0.9679628828598653,
+      "rho_center_final": 0.9675559529402642,
+      "shrink_xy_pct": 15.769858108065593,
+      "shrink_z_pct": 19.911716786851162,
+      "C_final_ppm": 0.0004627566105334148,
+      "O_final_ppm": 9.57384878550831e-09,
+      "closed": 1.0,
+      "t_close_h": 26.4729269147126,
+      "C_at_close_ppm": 0.0004654444097061519,
+      "O_at_close_ppm": 3.275825275015505e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.024913697332004374,
+      "melt_margin_min_K": 14.619971371605516,
+      "binder_left_final": -1.0130907218320888e-09,
+      "grain_final_um": 30.427697358641385,
+      "p_trap_final_bar": 0.3599523124982126,
+      "O_peak_ppm": 52079.13459793854,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.09046088042815,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 310.0,
+     "y": 1.0,
+     "n_fail": 0,
+     "failed": [],
+     "kpi": {
+      "duration_h": 34.44444444444444,
+      "rho_final": 0.9678361070209675,
+      "rho_center_final": 0.96734628795887,
+      "shrink_xy_pct": 15.762051151231681,
+      "shrink_z_pct": 19.916073045444037,
+      "C_final_ppm": 8.956658973130416e-05,
+      "O_final_ppm": 8.515073931615436e-09,
+      "closed": 1.0,
+      "t_close_h": 27.661772789577757,
+      "C_at_close_ppm": 9.047368320759981e-05,
+      "O_at_close_ppm": 3.232547062415594e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.09901577171764366,
+      "exo_max_K": 18.65439104676193,
+      "Pi_bloat_max": 0.02155535126383059,
+      "melt_margin_min_K": 14.619975557372527,
+      "binder_left_final": -1.0086394453068836e-09,
+      "grain_final_um": 30.290960599914314,
+      "p_trap_final_bar": 0.3527047649144352,
+      "O_peak_ppm": 62250.64075864536,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.0715651250751,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 34.44444444444444,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 310.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.01,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 1 % O2 (5 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 250.0,
+     "y": 2.0,
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "kpi": {
+      "duration_h": 32.111111111111114,
+      "rho_final": 0.9680331822231902,
+      "rho_center_final": 0.9676985116220767,
+      "shrink_xy_pct": 15.777139218146418,
+      "shrink_z_pct": 19.903686805083087,
+      "C_final_ppm": 0.0018290211981437754,
+      "O_final_ppm": 1.039149320709594e-08,
+      "closed": 1.0,
+      "t_close_h": 25.272424138568528,
+      "C_at_close_ppm": 0.0018354364206495694,
+      "O_at_close_ppm": 3.341383742826492e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.16653990543963554,
+      "exo_max_K": 32.98897275561745,
+      "Pi_bloat_max": 0.02725076544004068,
+      "melt_margin_min_K": 14.61996840770962,
+      "binder_left_final": -1.0154562320644444e-09,
+      "grain_final_um": 30.51624129930617,
+      "p_trap_final_bar": 0.365095845766866,
+      "O_peak_ppm": 43388.36246454832,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.10093943216233,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 32.111111111111114,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 250.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.02,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 2 % O2 (10 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 280.0,
+     "y": 2.0,
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "kpi": {
+      "duration_h": 33.27777777777778,
+      "rho_final": 0.9679458292398287,
+      "rho_center_final": 0.9675095711977145,
+      "shrink_xy_pct": 15.76841384378408,
+      "shrink_z_pct": 19.913052262796594,
+      "C_final_ppm": 0.00034163610518245897,
+      "O_final_ppm": 9.436534064631215e-09,
+      "closed": 1.0,
+      "t_close_h": 26.48779220656591,
+      "C_at_close_ppm": 0.00034273529048971837,
+      "O_at_close_ppm": 3.248158018495988e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.16653990543963554,
+      "exo_max_K": 32.98897275561745,
+      "Pi_bloat_max": 0.024087598830708212,
+      "melt_margin_min_K": 14.61997223005028,
+      "binder_left_final": -1.0122817563904265e-09,
+      "grain_final_um": 30.406045704983192,
+      "p_trap_final_bar": 0.358311043445526,
+      "O_peak_ppm": 53967.50912719505,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.08791899100167,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 33.27777777777778,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 280.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.02,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 2 % O2 (10 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    },
+    {
+     "x": 310.0,
+     "y": 2.0,
+     "n_fail": 1,
+     "failed": [
+      "self_heating"
+     ],
+     "kpi": {
+      "duration_h": 34.44444444444444,
+      "rho_final": 0.9677756269029141,
+      "rho_center_final": 0.967227779896624,
+      "shrink_xy_pct": 15.759504379799537,
+      "shrink_z_pct": 19.915910408397043,
+      "C_final_ppm": 5.453961816358124e-05,
+      "O_final_ppm": 8.312931888412248e-09,
+      "closed": 1.0,
+      "t_close_h": 27.69327410385024,
+      "C_at_close_ppm": 5.473768256507804e-05,
+      "O_at_close_ppm": 3.1764640198319766e-08,
+      "Pi_gas_max": 0.15450710201148818,
+      "Pi_th_max": 0.16653990543963554,
+      "exo_max_K": 32.98897275561745,
+      "Pi_bloat_max": 0.019682145764633174,
+      "melt_margin_min_K": 14.619976565187471,
+      "binder_left_final": -1.0057989614209095e-09,
+      "grain_final_um": 30.2406799454307,
+      "p_trap_final_bar": 0.34876279493620066,
+      "O_peak_ppm": 65241.00349293863,
+      "C_peak_ppm": 4381.333400997149,
+      "iacs": 95.06255108699783,
+      "debind_ramp_max_Kmin": 1.0000000522484072
+     },
+     "t_total_h": 34.44444444444444,
+     "segments": [
+      {
+       "T_end_C": 470,
+       "ramp_Kmin": 1.0,
+       "hold_h": 1.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 binder pyrolysis, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 150,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.5,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool and settle, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 310.0,
+       "ramp_Kmin": 0.5,
+       "hold_h": 2.0,
+       "O2": 0.02,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 2 % O2 (10 % air in N2)",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 3.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F1 \u00b7 cool, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 Cu2O + C -> Cu + CO, N2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 700.0,
+       "ramp_Kmin": 1.0,
+       "hold_h": 2.0,
+       "O2": 0.0,
+       "H2": 0.01,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 reduce the rest of the oxide, 1 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 1050.0,
+       "ramp_Kmin": 5.0,
+       "hold_h": 4.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 sinter, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 600,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 1.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, 100 % H2",
+       "x_h2o": null
+      },
+      {
+       "T_end_C": 25,
+       "ramp_Kmin": 5.0,
+       "hold_h": 0.0,
+       "O2": 0.0,
+       "H2": 0.0,
+       "dp_C": -60.0,
+       "note": "F2 \u00b7 cool, N2",
+       "x_h2o": null
+      }
+     ]
+    }
+   ],
+   "note": "The oxygen level, not the temperature, sets the heat. 0.5 % runs coolest but leaves char in the centre of 8 mm walls; 1 % is the default."
+  }
+ },
+ "ledger": [
+  {
+   "row": 1,
+   "furnace": 1,
+   "note": "binder pyrolysis, N2",
+   "T": 470,
+   "t_end_h": 8.416666666666666,
+   "C": 4374.24079149353,
+   "O": 193.40923731449092,
+   "rho": 0.5505779006182148,
+   "binder": -9.485183380605878e-10
+  },
+  {
+   "row": 2,
+   "furnace": 1,
+   "note": "cool and settle, N2",
+   "T": 150,
+   "t_end_h": 10.694444444444445,
+   "C": 4372.363054356091,
+   "O": 222.46539611770078,
+   "rho": 0.5506655287248292,
+   "binder": -9.50347826782764e-10
+  },
+  {
+   "row": 3,
+   "furnace": 1,
+   "note": "1 % O2 (5 % air in N2)",
+   "T": 280.0,
+   "t_end_h": 17.02777777777778,
+   "C": 4145.144737270904,
+   "O": 51954.41844865047,
+   "rho": 0.7131344376457552,
+   "binder": -9.506610004994947e-10
+  },
+  {
+   "row": 4,
+   "furnace": 1,
+   "note": "cool, N2",
+   "T": 25,
+   "t_end_h": 18.444444444444443,
+   "C": 4144.6162710966,
+   "O": 52073.74750308433,
+   "rho": 0.7135297872821742,
+   "binder": -9.507218983392256e-10
+  },
+  {
+   "row": 5,
+   "furnace": 2,
+   "note": "Cu2O + C -> Cu + CO, N2",
+   "T": 700.0,
+   "t_end_h": 22.694444444444443,
+   "C": 0.4290435551755716,
+   "O": 46851.218159705255,
+   "rho": 0.7340737007147784,
+   "binder": -9.704711903106677e-10
+  },
+  {
+   "row": 6,
+   "furnace": 2,
+   "note": "reduce the rest of the oxide, 1 % H2",
+   "T": 700.0,
+   "t_end_h": 24.694444444444443,
+   "C": 0.00047791871160331195,
+   "O": 4.02934013463802e-06,
+   "rho": 0.6353376054907787,
+   "binder": -1.0021190821922312e-09
+  },
+  {
+   "row": 7,
+   "furnace": 2,
+   "note": "sinter, 100 % H2",
+   "T": 1050.0,
+   "t_end_h": 29.86111111111111,
+   "C": 0.0004627361072176738,
+   "O": 1.0043784816789018e-08,
+   "rho": 0.9668852121765006,
+   "binder": -1.0086477048373865e-09
+  },
+  {
+   "row": 8,
+   "furnace": 2,
+   "note": "cool, 100 % H2",
+   "T": 600,
+   "t_end_h": 31.36111111111111,
+   "C": 0.0004627377661705662,
+   "O": 9.57417051817092e-09,
+   "rho": 0.9679612663521211,
+   "binder": -1.0091965021136765e-09
+  },
+  {
+   "row": 9,
+   "furnace": 2,
+   "note": "cool, N2",
+   "T": 25,
+   "t_end_h": 33.27777777777778,
+   "C": 0.0004627566105334148,
+   "O": 9.57384878550831e-09,
+   "rho": 0.9679628828598653,
+   "binder": -1.0130907218320888e-09
+  }
+ ],
+ "assumptions": [
+  "All gases are dry (no humidifier). Lean mixtures are blended from the cylinders with two flowmeters: air into N2 in both furnaces, H2 into N2 in the sintering furnace.",
+  "The part cools to room temperature in furnace 1 and is moved to furnace 2. A brown part with oxide on it is fragile and should be handled on its setter.",
+  "Default slurry and part: 12 um copper at 55 vol%, 5 mm thickest wall, 5 % char yield, 2 slpm in a 5 L retort. Each pairing was also run with 3 % and 8 % char and with 2 mm and 8 mm walls; with 8 mm walls the step to full air in D1 overheats the part, and D2 does not.",
+  "The model has no rate data for char on copper or for this binder; the carbothermic onset (600 C) and the char yield are estimates. Check the plan with LECO carbon and oxygen on coupons after each furnace.",
+  "Swelling of the brown part by the oxide (4-5 % O by mass) is reversible on reduction in the model, but cracking from it is not modelled. Inspect parts after furnace 1.",
+  "Sintering at 1050 C keeps 15 K of the model's melting margin (pure copper 1085 C, less 15 K margin and 5 K furnace uniformity). 1060 C adds about 0.2 % density but uses most of that margin: survey the furnace first.",
+  "100 % H2 (S2) gives the best part, but only by about 0.5 % density over 5 % H2 (S1). If the sintering furnace is not rated for pure hydrogen, S1 is the choice."
+ ]
+}
